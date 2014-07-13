@@ -16,6 +16,6 @@
 // @grant					GM_listValues
 // @grant					GM_deleteValue
 // @homepageURL				https://git.oschina.net/coldfire/GM
-// @updateURL				https://git.oschina.net/coldfire/GM/raw/master/tieba_enhance.user.js
+// @updateURL				https://git.oschina.net/coldfire/GM/raw/master/meta/tieba_enhance.meta.js
 // @downloadURL				https://git.oschina.net/coldfire/GM/raw/master/tieba_enhance.user.js
 // ==/UserScript==

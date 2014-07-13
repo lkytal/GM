@@ -11,7 +11,7 @@
 // @grant					GM_getValue
 // @grant					GM_setValue
 // @homepageURL				https://git.oschina.net/coldfire/GM
-// @updateURL				https://git.oschina.net/coldfire/GM/raw/master/scroll.user.js
+// @updateURL				https://git.oschina.net/coldfire/GM/raw/master/meta/scroll.meta.js
 // @downloadURL				https://git.oschina.net/coldfire/GM/raw/master/scroll.user.js
 // ==/UserScript==
 

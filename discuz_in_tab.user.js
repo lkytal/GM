@@ -21,7 +21,7 @@
 // @grant					unsafeWindow
 // @run-at					document-end
 // @homepageURL				https://git.oschina.net/coldfire/GM
-// @updateURL				https://git.oschina.net/coldfire/GM/raw/master/discuz_in_tab.user.js
+// @updateURL				https://git.oschina.net/coldfire/GM/raw/master/meta/discuz_in_tab.meta.js
 // @downloadURL				https://git.oschina.net/coldfire/GM/raw/master/discuz_in_tab.user.js
 // ==/UserScript==
 

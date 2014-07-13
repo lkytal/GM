@@ -13,7 +13,7 @@
 // @icon					http://lkytal.qiniudn.com/ic.ico
 // @grant					unsafeWindow
 // @homepageURL				https://git.oschina.net/coldfire/GM
-// @updateURL				https://git.oschina.net/coldfire/GM/raw/master/linkMix.user.js
+// @updateURL				https://git.oschina.net/coldfire/GM/raw/master/meta/linkMix.meta.js
 // @downloadURL				https://git.oschina.net/coldfire/GM/raw/master/linkMix.user.js
 // ==/UserScript==
 

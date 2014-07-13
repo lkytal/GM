@@ -20,7 +20,7 @@
 // @grant					GM_registerMenuCommand
 // @charset					UTF-8
 // @homepageURL				http://git.oschina.net/coldfire/GM
-// @updateURL				https://git.oschina.net/coldfire/GM/raw/master/popsearch.user.js
+// @updateURL				https://git.oschina.net/coldfire/GM/raw/master/meta/popsearch.meta.js
 // @downloadURL				https://git.oschina.net/coldfire/GM/raw/master/popsearch.user.js
 // ==/UserScript==
 
