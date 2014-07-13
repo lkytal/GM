@@ -13,18 +13,18 @@ GM script for Firefox
 
 Popup search/translate(etc) button for selected texts
 
-
 ![Function](http://lkytal.qiniudn.com/t.png)
 
 GM的"用户脚本设置"下的"Popup Search设置"打开选项选择需要的项目
 
 ![Set](http://lkytal.qiniudn.com/set.png)
 
-
 Also in (http://userscripts.org:8080/scripts/show/187031)
 
 Update Log:
 
+* 2.7.1 : Meta info added
+* 2.7.0 : Switch to git
 * 2.6.8 : New setting window
 * 2.6.7 : New style code
 * 2.6.6 : Clean up codes
@@ -68,7 +68,9 @@ __修改小尾巴之后记得点击"保存当前尾巴"按钮!__
 
 ![Win](http://lkytal.qiniudn.com/win.jpg)
 
-* Update Log:
+Update Log:
+
+* 5.7.7 : Meta info added
 * 5.7.6 : 修复样式
 * 5.7.5 : clear Link
 * 5.7.4 : 新的提醒样式
@@ -76,4 +78,3 @@ __修改小尾巴之后记得点击"保存当前尾巴"按钮!__
 * 5.7.2 : 新版的时间兼容处理
 * 5.7.1 : 新版的时间处理
 * 5.7.0 : little fix
-

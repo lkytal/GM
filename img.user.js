@@ -5,11 +5,11 @@
 // @author					lkytal
 // @license					GPL
 // @include					*
-// @version					3.0.1
+// @version					3.0.2
 // @icon					http://lkytal.qiniudn.com/ic.ico
 // @grant					GM_openInTab
 // @homepageURL				https://git.oschina.net/coldfire/GM
-// @updateURL				https://git.oschina.net/coldfire/GM/raw/master/img.user.js
+// @updateURL				https://git.oschina.net/coldfire/GM/raw/master/meta/img.meta.js
 // @downloadURL				https://git.oschina.net/coldfire/GM/raw/master/img.user.js
 // ==/UserScript==
 

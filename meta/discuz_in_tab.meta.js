@@ -16,11 +16,11 @@
 // @namespace				Lkytal
 // @author					lkytal
 // @homepage				http://coldfire.qiniudn.com/
-// @version					1.2.9
+// @version					1.3.0
 // @icon					http://lkytal.qiniudn.com/ic.ico
 // @grant					unsafeWindow
 // @run-at					document-end
 // @homepageURL				https://git.oschina.net/coldfire/GM
-// @updateURL				https://git.oschina.net/coldfire/GM/raw/master/discuz_in_tab.user.js
+// @updateURL				https://git.oschina.net/coldfire/GM/raw/master/meta/discuz_in_tab.meta.js
 // @downloadURL				https://git.oschina.net/coldfire/GM/raw/master/discuz_in_tab.user.js
 // ==/UserScript==

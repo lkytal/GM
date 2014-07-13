@@ -6,12 +6,12 @@
 // @include					*
 // @exclude					*pan.baidu.com/*
 // @exclude					*c5.yunpan.360.cn/*
-// @version					1.3.6
+// @version					1.3.7
 // @icon					http://lkytal.qiniudn.com/ic.ico
 // @grant					GM_getValue
 // @grant					GM_setValue
 // @homepageURL				https://git.oschina.net/coldfire/GM
-// @updateURL				https://git.oschina.net/coldfire/GM/raw/master/scroll.user.js
+// @updateURL				https://git.oschina.net/coldfire/GM/raw/master/meta/scroll.meta.js
 // @downloadURL				https://git.oschina.net/coldfire/GM/raw/master/scroll.user.js
 // ==/UserScript==
 

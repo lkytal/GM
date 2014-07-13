@@ -12,6 +12,6 @@
 // @grant					GM_getValue
 // @grant					GM_setValue
 // @homepageURL				https://git.oschina.net/coldfire/GM
-// @updateURL				https://git.oschina.net/coldfire/GM/raw/master/color.meta.js
+// @updateURL				https://git.oschina.net/coldfire/GM/raw/master/meta/color.meta.js
 // @downloadURL				https://git.oschina.net/coldfire/GM/raw/master/color.user.js
 // ==/UserScript==

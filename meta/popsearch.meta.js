@@ -7,7 +7,7 @@
 // @description				Popup Search Box and translate Button (etc) for selected Text
 // @include					*
 // @require					http://code.jquery.com/jquery-2.1.1.min.js
-// @version					2.7.0
+// @version					2.7.1
 // @icon					http://lkytal.qiniudn.com/ic.ico
 // @grant					GM_xmlhttpRequest
 // @grant					GM_addStyle
@@ -20,6 +20,6 @@
 // @grant					GM_registerMenuCommand
 // @charset					UTF-8
 // @homepageURL				http://git.oschina.net/coldfire/GM
-// @updateURL				https://git.oschina.net/coldfire/GM/raw/master/popsearch.user.js
+// @updateURL				https://git.oschina.net/coldfire/GM/raw/master/meta/popsearch.meta.js
 // @downloadURL				https://git.oschina.net/coldfire/GM/raw/master/popsearch.user.js
 // ==/UserScript==
