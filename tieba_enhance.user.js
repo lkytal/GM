@@ -5,9 +5,10 @@
 // @description				Multiply Enhance for tieba
 // @include					http://tieba.baidu.com/*
 // @include					https://tieba.baidu.com/*
-// @version					5.8.2
+// @version					5.8.4
 // @author					lkytal
 // @icon					http://lkytal.qiniudn.com/ic.ico
+// @require					http://code.jquery.com/jquery-2.1.1.min.js
 // @grant					unsafeWindow
 // @grant					GM_addStyle
 // @grant					GM_xmlhttpRequest
@@ -20,7 +21,6 @@
 // @downloadURL				https://git.oschina.net/coldfire/GM/raw/master/tieba_enhance.user.js
 // ==/UserScript==
 
-//var $ = unsafeWindow.$;
 var tail_cur = "";
 var _style_setted = 0;
 
@@ -239,23 +239,12 @@ function checkFather(that, e)
 	catch (exp) { }
 }
 
-//设置窗口
-if ($(".nav_left").length !== 0)
+$("#tb_nav > ul.nav_list").append('<li id="setting_btn" class="j_tbnav_tab"><div class="tbnav_tab_inner"><p class="space"><a style="cursor:pointer;-moz-user-select:none;" class="nav_icon icon_tie  j_tbnav_tab_a">设置</a></p></div></li>');
+
+$("#setting_btn").click(function ()
 {
-	$(".nav_left").append('<li id="setting_btn"><a style="cursor:pointer;-moz-user-select:none;">设置</a></li>');
-	$("#setting_btn").click(function ()
-	{
-		open_setting_window();
-	});
-}
-else
-{
-	$(".nav_list").append('<li id="setting_btn" class="j_tbnav_tab"><a style="cursor:pointer;-moz-user-select:none;">设置</a></li>');
-	$("#setting_btn").click(function ()
-	{
-		open_setting_window();
-	});
-}
+	open_setting_window();
+});
 
 function open_setting_window()
 {
@@ -264,7 +253,8 @@ function open_setting_window()
 		if (window.innerHeight <= 727)
 		{
 			GM_addStyle('#setting_window{top:50px;}#setting_out_div{max-height:' + (window.innerHeight - 227) + 'px;}');
-		} else
+		}
+		else
 		{
 			GM_addStyle('#setting_window{top:' + ((window.innerHeight - 627) / 2) + 'px;}#setting_out_div{max-height:500px;}');
 		}
@@ -760,38 +750,39 @@ setTimeout(CheckPost, 500);
 function ClearLink()
 {
 	var urls = document.querySelectorAll('a[href^="http://jump.bdimg.com"]');
+	
 	for (var i = 0; i < urls.length; i++)
 	{
-		var a = urls[i];
-		var url = a.textContent;
+		var url = urls[i].textContent;
 		if (url.indexOf("http") !== 0)
 		{
 			url = "http://" + url;
 		}
-		a.href = url;
+		urls[i].href = url;
 	}
 }
 
 setTimeout(ClearLink, 500);
 
-$('#container').on('click', 'a',
-	function (event)
-	{
-		var link = event.target;
-		console.log(link.attr('href').indexOf("http://jump.bdimg.com"));
-		if (link.attr('href').indexOf("http://jump.bdimg.com") === 0)
-		{
-			console.log(link);
-			var url = link.text;
-			if (url.indexOf("http") !== 0)
-			{
-				url = "http://" + url;
-			}
-			link.attr("href", url);
-		}
+//$('#container').on('click', 'a',
+//	function (event)
+//	{
+//		var link = event.target;
+//		console.log(link.attr('href').indexOf("http://jump.bdimg.com"));
+//		if (link.attr('href').indexOf("http://jump.bdimg.com") === 0)
+//		{
+//			console.log(link);
+//			var url = link.text;
+//			if (url.indexOf("http") !== 0)
+//			{
+//				url = "http://" + url;
+//			}
+//			link.attr("href", url);
+//		}
 
-		return true;
-	});
+//		return true;
+//	}
+//);
 
 //Tail*/
 
@@ -904,6 +895,7 @@ function TailInit()
 		{
 			if (event.ctrlKey && event.keyCode == 13)
 			{
+				AddTail();
 				AddTail();
 			}
 		};

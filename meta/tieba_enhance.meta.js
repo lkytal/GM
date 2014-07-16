@@ -5,9 +5,10 @@
 // @description				Multiply Enhance for tieba
 // @include					http://tieba.baidu.com/*
 // @include					https://tieba.baidu.com/*
-// @version					5.8.2
+// @version					5.8.4
 // @author					lkytal
 // @icon					http://lkytal.qiniudn.com/ic.ico
+// @require					http://code.jquery.com/jquery-2.1.1.min.js
 // @grant					unsafeWindow
 // @grant					GM_addStyle
 // @grant					GM_xmlhttpRequest
