@@ -6,7 +6,7 @@
 // @description					Multiply Enhance for tieba
 // @include						http://tieba.baidu.com/*
 // @include						https://tieba.baidu.com/*
-// @version						5.8.5
+// @version						5.8.6
 // @author						lkytal
 // @require						http://code.jquery.com/jquery-2.1.1.min.js
 // @icon						http://lkytal.qiniudn.com/ic.ico

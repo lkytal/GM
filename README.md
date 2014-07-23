@@ -23,6 +23,7 @@ Also in (http://userscripts.org:8080/scripts/show/187031)
 
 Update Log:
 
+* 2.7.2 : Update Method change
 * 2.7.1 : Meta info added
 * 2.7.0 : Switch to git
 * 2.6.8 : New setting window
@@ -70,6 +71,7 @@ __修改小尾巴之后记得点击"保存当前尾巴"按钮!__
 
 Update Log:
 
+* 5.8.6 : coffee script
 * 5.8.5 : Fix recent img
 * 5.8.4 : Fix jquery
 * 5.8.2 : Clear tieba link function
