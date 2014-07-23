@@ -7,7 +7,7 @@
 // @description				Popup Search Box and translate Button (etc) for selected Text
 // @include					*
 // @require					http://code.jquery.com/jquery-2.1.1.min.js
-// @version					2.7.1
+// @version					2.7.2
 // @icon					http://lkytal.qiniudn.com/ic.ico
 // @grant					GM_xmlhttpRequest
 // @grant					GM_addStyle
@@ -24,7 +24,7 @@
 // @downloadURL				https://git.oschina.net/coldfire/GM/raw/master/popsearch.user.js
 // ==/UserScript==
 
-"use strict";;
+"use strict";
 var GetOpt, InTextBox, Init, Inter, Load, MouseIn, OpenSet, SaveOpt, SetOpt, SettingWin, ShowBar, TimeOutHide, bTrans, baiduico, bingicon, fixPos, getLastRange, get_offsets_and_remove, get_selection_offsets, gicon, ie, pending, ticon, tip, tipdown, tipup, txt;
 
 tipdown = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAkAAAAJCAYAAADgkQYQAAAAXElEQVQYlYXMsQ5AQBREUSoVjQ+f+S0lSi2livJlr4ZEZDcmud3JVJIW2yPQVqXZPmwjaQXqEuJJ0vCLbrgDfRZFxBsH0GTRCybbcxF9HhPQZdEHbkUUEUg6JU0Xm2KvCU6v27kAAAAASUVORK5CYII=";
