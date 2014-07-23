@@ -5,7 +5,7 @@
 // @description				Multiply Enhance for tieba
 // @include					http://tieba.baidu.com/*
 // @include					https://tieba.baidu.com/*
-// @version					5.8.4
+// @version					5.8.5
 // @author					lkytal
 // @icon					http://lkytal.qiniudn.com/ic.ico
 // @require					http://code.jquery.com/jquery-2.1.1.min.js
@@ -884,8 +884,7 @@ function TailInit()
 				tailContent = eval(tail_data[_tail_cur].split("!分隔!")[0]);
 			}
 
-			$("#ueditor_replace").append("<br>");
-			$("#ueditor_replace").append(tailContent);
+			$("#ueditor_replace").append("<br>" + tailContent);
 		};
 
 		var SendBt = $('a.ui_btn.ui_btn_m.j_submit.poster_submit[title="Ctrl+Enter快捷发表"]')[0];
@@ -895,7 +894,6 @@ function TailInit()
 		{
 			if (event.ctrlKey && event.keyCode == 13)
 			{
-				AddTail();
 				AddTail();
 			}
 		};
