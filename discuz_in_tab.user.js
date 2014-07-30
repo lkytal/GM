@@ -25,7 +25,7 @@
 // @downloadURL				https://git.oschina.net/coldfire/GM/raw/master/discuz_in_tab.user.js
 // ==/UserScript==
 
-var x = document.getElementById('atarget');
+var x = document.getElementById("atarget");
 
 if (x)
 {

@@ -7,7 +7,7 @@
 // @description				Popup Search Box and translate Button (etc) for selected Text
 // @include					*
 // @require					http://code.jquery.com/jquery-2.1.1.min.js
-// @version					2.7.2
+// @version					2.7.3
 // @icon					http://lkytal.qiniudn.com/ic.ico
 // @grant					GM_xmlhttpRequest
 // @grant					GM_addStyle
