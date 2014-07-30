@@ -18,9 +18,9 @@
 // ==/UserScript==
 
 "use strict";
-var Init, LinkPage, excludedTags, filter, linkPack, linkify, observer, setHttp, setLink, url_regexp, xpath;
+var LinkPage, excludedTags, filter, linkMixInit, linkPack, linkify, observer, setHttp, setLink, url_regexp, xpath;
 
-url_regexp = /((https?:\/\/|www\\.)[\\x21-\\x7e]+\\w|(\\w[\\w._-]+\\.(com|cn|org|net|info|tv|cc))(\/[\\x21-\\x7e]*\\w)?)/gi;
+url_regexp = /((https?:\/\/|www\.)[\x21-\x7e]+\w|(\w[\w._-]+\.(com|cn|org|net|info|tv|cc))(\/[\x21-\x7e]*\w)?)/gi;
 
 setHttp = function(event) {
   var url;
@@ -106,7 +106,7 @@ observer = new window.MutationObserver(function(mutations) {
   }
 });
 
-Init = function() {
+linkMixInit = function() {
   linkify(document.body);
   return observer.observe(document.body, {
     childList: true,
@@ -115,5 +115,5 @@ Init = function() {
 };
 
 if (!(window !== window.top || window.document.title === "")) {
-  Init();
+  linkMixInit();
 }
