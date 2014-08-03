@@ -6,7 +6,7 @@
 // @description					Multiply Enhance for tieba
 // @include						http://tieba.baidu.com/*
 // @include						https://tieba.baidu.com/*
-// @version						5.8.7
+// @version						5.9.0
 // @author						lkytal
 // @require						http://code.jquery.com/jquery-2.1.1.min.js
 // @icon						http://lkytal.qiniudn.com/ic.ico
@@ -21,52 +21,73 @@
 // @updateURL					https://git.oschina.net/coldfire/GM/raw/master/meta/tieba_enhance.meta.js
 // @downloadURL					https://git.oschina.net/coldfire/GM/raw/master/tieba_enhance.user.js
 // ==/UserScript==
+;
+var CheckPost, NodeInsertListener, SmileConfig, SmileInit, TailInit, checkFather, count, fentie_date, fentie_forbidden, fentie_open, log, maxCount, maxHeight, maxWidth, open_setting_window, saveConfig, smiley_delay, smiley_height, smiley_max, smiley_open, smiley_width, tail_cur, tail_data, tail_open, x, _style_setted;
 
-"use strict";
-var CheckPost, ClearLink, NodeInsertListener, SmileConfig, SmileInit, TailInit, checkFather, load, maxCount, maxHeight, maxWidth, open_setting_window, saveConfig, tail_cur, _style_setted;
+count = 0;
 
-load = function() {
-  var fentie_date, fentie_forbidden, fentie_open, smiley_delay, smiley_height, smiley_max, smiley_open, smiley_width, tail_cur, tail_data, tail_open, x;
-  GM_addStyle(".smiley{position:relative;}.lzl_panel_wrapper{position:relative !important;}#recent_img{-moz-box-sizing:border-box !important;position:absolute;min-height:90px;background:#FFF;border:1px solid #999;box-shadow:0 0 3px #999;z-index:1;top:50px;left:0;text-align:center;padding:6px;-moz-user-select:none;cursor:default;}#recent_img.lzl{left:auto;right:0px;}#recent_img > p{line-height:25px;font-size:15px;color:#111;height:30px;-moz-user-select:none;cursor:default;}#recent_img > div{cursor:pointer;display:inline-block;margin:2px;overflow:hidden;width:50px;height:50px;float:left;background-position:50% 50%;background-repeat:no-repeat;-moz-transition:0.15s;}#recent_img > div:hover{box-shadow:0 0 2px #999;}#recent_img > div:active{box-shadow:0 0 3px #444;}#setting_shadow{position:fixed;z-index:999999999;bottom:0;left:0;width:10000px;height:10000px;background:rgba(0,0,0,0.6);-moz-transition:0.5s;}#setting_window{position:fixed;left:-moz-calc(50% - 320px);left:-webkit-calc(50% - 320px);width:600px;background:#FFF;box-shadow:0 0 5px #222;padding:20px 20px 50px 20px;z-index:1000000000;-moz-transition:0.5s ease all;}#setting_out_div{overflow-y:scroll;padding:0 10px 0 0;}.setting_btn_inside{font-size:16px;padding:4px;-moz-user-select:none;cursor:default;}.setting_btn_inside:hover{background:#DDD;}.setting_btn_inside:active{box-shadow:0 0 3px #999 inset;}#setting_reset{position:absolute;top:14px;right:14px;}#setting_save{display:inline-block;position:absolute;right:15px;bottom:10px;}#setting_clear_smiley{display:inline-block;right:22px;float:right;}.setting_sp_btn{font-size:12px;padding:4px;-moz-user-select:none;cursor:default;display:inline-block;position:relative;}.setting_sp_btn.close{background:#DDD;}.setting_sp_btn::before{position:absolute;right:-26px;top:0;content:\"\";width:26px;height:26px;background:#6B4;-moz-transition:0.3s;}.setting_sp_btn.close::before{background:#C54;}.setting_sp_btn:hover{background:#DDD;}.setting_sp_btn:active{box-shadow:0 0 3px #999 inset;}#setting_sp_q_c{margin:0 0 0 40px !important;}#setting_window .setting_title{font-size:34px;height:42px;line-height:42px;padding:7px 10px;margin:0 0 0 -7px;-moz-user-select:none;cursor:default;display:inline-block;}#setting_window p{font-size:18px;height:42px;line-height:50px;-moz-user-select:none;cursor:default;}#setting_window p.setting_hide{height:10px;line-height:10px;-moz-user-select:none;cursor:default;}#setting_window p.setting_hide.sp{background:#CCC !important;height:1px !important;margin:8px 0 !important;}#setting_window p.setting_hiding_sp{height:1px;line-height:1px;-moz-user-select:none;cursor:default;}#setting_window .setting_input{-moz-appearance:none;border:none;background:#DDD;height:28px;padding:0px 7px !important;width:100px;margin:0 10px 0 0 !important;font-size:14px !important;}#setting_window span{font-size:14px !important;margin:0 10px 0 0 !important;-moz-user-select:none;cursor:default;display:inline-block;}.setting_textarea{-moz-appearance:none !important;border:none;background:#DDD;margin:10px 0 0 0 !important;padding:7px !important;width:550px;height:100px;-moz-box-sizing:border-box;font-size:12px !important;}#tail_select{display:inline-block;height:26px !important;line-height:26px !important;width:450px !important;margin:0px 0 0 40px !important;vertical-align:top !important;text-align:center !important;font-size:12px !Important;-moz-box-sizing:border-box !Important;position:relative !important;cursor:default !important;}#tail_select_text{height:26px;float:left;min-width:100px !important;background:#DDD !important;padding:0 5px !important;-moz-box-sizing:border-box !Important;}#tail_option_box{float:left;position:absolute !important;bottom:30px;left:0;min-width:100px;background:#EEE !important;box-shadow:0 0 3px #666 !important;display:inline-block;}.tail_option{padding:0 8px !important;width:auto !important;font-size:12px !important;height:24px !important;line-height:24px !important;cursor:default !important;}.tail_option:hover{background:#DDD !important;}#tail_type{background:#DDD !important;position:absolute !important;top:0;right:0px;}#tail_type_text{width:80px !important;text-align:center !important;}#tail_type_box{position:absolute !important;width:80px !important;bottom:30px;right:0px;background:#EEE;box-shadow:0 0 3px #666;}.tail_type_option:hover{background:#DDD;}#tail_save{font-size:12px !important;position:absolute;top:0;right:90px;height:26px !important;padding:0 !important;width:86px !important;}#tail_new{font-size:12px !important;-moz-box-sizing:border-box !Important;padding:0 !important;height:26px !important;width:60px !important;position:absolute !important;top:0 !important;right:180px !important;}#tail_delete{font-size:12px !important;-moz-box-sizing:border-box !Important;padding:0 !important;height:26px !important;width:60px !important;position:absolute !important;top:0 !important;right:250px !important;}#tail_data + span{display:block !Important;margin:5px 0 -3px 0 !important;font-size:12px !Important;}#tail_use{display:inline-block !important;background:#EEE;height:30px;width:auto;position:relative !important;cursor:default;}#tail_use_text{display:inline-block !important;background:#EEE;height:30px;width:auto;padding:0 10px;line-height:30px !important;text-align:center !important;box-shadow:0 0 3px #666;}#tail_use_box_out{position:absolute !important;width:300px !important;}#tail_use_box{position:absolute !important;background:#EEE;bottom:35px;left:0;box-shadow:0 0 3px #666;z-index:100;}.tail_use_option{padding:0 10px;line-height:30px !important;}.tail_use_option:hover{background:#DDD;}");
-  smiley_open = GM_getValue("smiley_open", 1);
-  smiley_height = GM_getValue("smiley_height", 500);
-  smiley_width = GM_getValue("smiley_width", 500);
-  smiley_delay = GM_getValue("smiley_delay", 240);
-  smiley_max = GM_getValue("smiley_max", 20);
-  fentie_open = GM_getValue("fentie_open", 1);
-  fentie_date = GM_getValue("fentie_date", 30);
-  fentie_forbidden = GM_getValue("fentie_forbidden", 1);
-  tail_open = GM_getValue("tail_open", 1);
-  tail_data = JSON.parse(GM_getValue("tail_data", "{\"Default\":\" !分隔!html\"}"));
-  if (GM_getValue("tail_adopt", 0) < 2) {
-    GM_setValue("tail_adopt", 2);
-    if (typeof localStorage["tail_data"] === "string") {
-      GM_setValue("tail_data", localStorage["tail_data"]);
-      tail_data = JSON.parse(localStorage["tail_data"]);
-    }
-    GM_setValue("smiley_open", smiley_open);
-    GM_setValue("smiley_height", smiley_height);
-    GM_setValue("smiley_width", smiley_width);
-    GM_setValue("smiley_delay", smiley_delay);
-    GM_setValue("smiley_max", smiley_max);
-    GM_setValue("fentie_open", fentie_open);
-    GM_setValue("fentie_date", fentie_date);
-    GM_setValue("fentie_forbidden", fentie_forbidden);
-    GM_setValue("tail_open", tail_open);
-    GM_setValue("tail_data", JSON.stringify(tail_data));
+log = function(msg) {
+  var text;
+  count += 1;
+  text = "hit at : " + count;
+  if (msg != null) {
+    text = "hit " + count + " : " + msg;
   }
+  return console.log(text);
+};
+
+GM_addStyle(".smiley{position:relative;}.lzl_panel_wrapper{position:relative !important;}#recent_img{-moz-box-sizing:border-box !important;position:absolute;min-height:90px;background:#FFF;border:1px solid #999;box-shadow:0 0 3px #999;z-index:1;top:50px;left:0;text-align:center;padding:6px;-moz-user-select:none;cursor:default;}#recent_img.lzl{left:auto;right:0px;}#recent_img > p{line-height:25px;font-size:15px;color:#111;height:30px;-moz-user-select:none;cursor:default;}#recent_img > div{cursor:pointer;display:inline-block;margin:2px;overflow:hidden;width:50px;height:50px;float:left;background-position:50% 50%;background-repeat:no-repeat;-moz-transition:0.15s;}#recent_img > div:hover{box-shadow:0 0 2px #999;}#recent_img > div:active{box-shadow:0 0 3px #444;}#setting_shadow{position:fixed;z-index:999999999;bottom:0;left:0;width:10000px;height:10000px;background:rgba(0,0,0,0.6);-moz-transition:0.5s;}#setting_window{position:fixed;left:-moz-calc(50% - 320px);left:-webkit-calc(50% - 320px);width:600px;background:#FFF;box-shadow:0 0 5px #222;padding:20px 20px 50px 20px;z-index:1000000000;-moz-transition:0.5s ease all;}#setting_out_div{overflow-y:scroll;padding:0 10px 0 0;}.setting_btn_inside{font-size:16px;padding:4px;-moz-user-select:none;cursor:default;}.setting_btn_inside:hover{background:#DDD;}.setting_btn_inside:active{box-shadow:0 0 3px #999 inset;}#setting_reset{position:absolute;top:14px;right:14px;}#setting_save{display:inline-block;position:absolute;right:15px;bottom:10px;}#setting_clear_smiley{display:inline-block;right:22px;float:right;}.setting_sp_btn{font-size:12px;padding:4px;-moz-user-select:none;cursor:default;display:inline-block;position:relative;}.setting_sp_btn.close{background:#DDD;}.setting_sp_btn::before{position:absolute;right:-26px;top:0;content:\"\";width:26px;height:26px;background:#6B4;-moz-transition:0.3s;}.setting_sp_btn.close::before{background:#C54;}.setting_sp_btn:hover{background:#DDD;}.setting_sp_btn:active{box-shadow:0 0 3px #999 inset;}#setting_sp_q_c{margin:0 0 0 40px !important;}#setting_window .setting_title{font-size:34px;height:42px;line-height:42px;padding:7px 10px;margin:0 0 0 -7px;-moz-user-select:none;cursor:default;display:inline-block;}#setting_window p{font-size:18px;height:42px;line-height:50px;-moz-user-select:none;cursor:default;}#setting_window p.setting_hide{height:10px;line-height:10px;-moz-user-select:none;cursor:default;}#setting_window p.setting_hide.sp{background:#CCC !important;height:1px !important;margin:8px 0 !important;}#setting_window p.setting_hiding_sp{height:1px;line-height:1px;-moz-user-select:none;cursor:default;}#setting_window .setting_input{-moz-appearance:none;border:none;background:#DDD;height:28px;padding:0px 7px !important;width:100px;margin:0 10px 0 0 !important;font-size:14px !important;}#setting_window span{font-size:14px !important;margin:0 10px 0 0 !important;-moz-user-select:none;cursor:default;display:inline-block;}.setting_textarea{-moz-appearance:none !important;border:none;background:#DDD;margin:10px 0 0 0 !important;padding:7px !important;width:550px;height:100px;-moz-box-sizing:border-box;font-size:12px !important;}#tail_select{display:inline-block;height:26px !important;line-height:26px !important;width:450px !important;margin:0px 0 0 40px !important;vertical-align:top !important;text-align:center !important;font-size:12px !Important;-moz-box-sizing:border-box !Important;position:relative !important;cursor:default !important;}#tail_select_text{height:26px;float:left;min-width:100px !important;background:#DDD !important;padding:0 5px !important;-moz-box-sizing:border-box !Important;}#tail_option_box{float:left;position:absolute !important;bottom:30px;left:0;min-width:100px;background:#EEE !important;box-shadow:0 0 3px #666 !important;display:inline-block;}.tail_option{padding:0 8px !important;width:auto !important;font-size:12px !important;height:24px !important;line-height:24px !important;cursor:default !important;}.tail_option:hover{background:#DDD !important;}#tail_type{background:#DDD !important;position:absolute !important;top:0;right:0px;}#tail_type_text{width:80px !important;text-align:center !important;}#tail_type_box{position:absolute !important;width:80px !important;bottom:30px;right:0px;background:#EEE;box-shadow:0 0 3px #666;}.tail_type_option:hover{background:#DDD;}#tail_save{font-size:12px !important;position:absolute;top:0;right:90px;height:26px !important;padding:0 !important;width:86px !important;}#tail_new{font-size:12px !important;-moz-box-sizing:border-box !Important;padding:0 !important;height:26px !important;width:60px !important;position:absolute !important;top:0 !important;right:180px !important;}#tail_delete{font-size:12px !important;-moz-box-sizing:border-box !Important;padding:0 !important;height:26px !important;width:60px !important;position:absolute !important;top:0 !important;right:250px !important;}#tail_data + span{display:block !Important;margin:5px 0 -3px 0 !important;font-size:12px !Important;}#tail_use{display:inline-block !important;background:#EEE;height:30px;width:auto;position:relative !important;cursor:default;}#tail_use_text{display:inline-block !important;background:#EEE;height:30px;width:auto;padding:0 10px;line-height:30px !important;text-align:center !important;box-shadow:0 0 3px #666;}#tail_use_box_out{position:absolute !important;width:300px !important;}#tail_use_box{position:absolute !important;background:#EEE;bottom:35px;left:0;box-shadow:0 0 3px #666;z-index:100;}.tail_use_option{padding:0 10px;line-height:30px !important;}.tail_use_option:hover{background:#DDD;}");
+
+smiley_open = GM_getValue("smiley_open", 1);
+
+smiley_height = GM_getValue("smiley_height", 500);
+
+smiley_width = GM_getValue("smiley_width", 500);
+
+smiley_delay = GM_getValue("smiley_delay", 240);
+
+smiley_max = GM_getValue("smiley_max", 20);
+
+fentie_open = GM_getValue("fentie_open", 1);
+
+fentie_date = GM_getValue("fentie_date", 30);
+
+fentie_forbidden = GM_getValue("fentie_forbidden", 1);
+
+tail_open = GM_getValue("tail_open", 1);
+
+tail_cur = GM_getValue("tail_cur", "");
+
+tail_data = JSON.parse(GM_getValue("tail_data", "{\"Default\":\" !分隔!html\"}"));
+
+maxCount = smiley_max;
+
+maxHeight = smiley_height;
+
+maxWidth = smiley_width;
+
+_style_setted = 0;
+
+if (GM_getValue("tail_adopt", 0) < 2) {
+  GM_setValue("tail_adopt", 2);
+  if (typeof localStorage["tail_data"] === "string") {
+    GM_setValue("tail_data", localStorage["tail_data"]);
+    tail_data = JSON.parse(localStorage["tail_data"]);
+  }
+  GM_setValue("smiley_open", smiley_open);
+  GM_setValue("smiley_height", smiley_height);
+  GM_setValue("smiley_width", smiley_width);
+  GM_setValue("smiley_delay", smiley_delay);
+  GM_setValue("smiley_max", smiley_max);
+  GM_setValue("fentie_open", fentie_open);
+  GM_setValue("fentie_date", fentie_date);
+  GM_setValue("fentie_forbidden", fentie_forbidden);
+  GM_setValue("tail_open", tail_open);
+  GM_setValue("tail_data", JSON.stringify(tail_data));
   for (x in tail_data) {
     tail_data[x] = tail_data[x].replace(/!逗号!/g, ",").replace(/!引号!/g, "\"");
   }
-  unsafeWindow.tail_data = tail_data;
-  for (x in tail_data) {
-    if (GM_getValue("tail_cur", "") === "") {
-      GM_setValue("tail_cur", x);
-    }
-    tail_cur = GM_getValue("tail_cur", "");
-    break;
-  }
-};
+}
 
 saveConfig = function() {
   GM_setValue("tieba_smile_config", JSON.stringify(SmileConfig));
@@ -194,7 +215,7 @@ checkFather = function(that, e) {
 };
 
 open_setting_window = function() {
-  var e, x, _style_setted, _tmp;
+  var e, _tmp;
   if (_style_setted === 0) {
     if (window.innerHeight <= 727) {
       GM_addStyle("#setting_window{top:50px;}#setting_out_div{max-height:" + (window.innerHeight - 227) + "px;}");
@@ -346,7 +367,6 @@ open_setting_window = function() {
     }
   });
   $("#setting_sp_smiley").click(function() {
-    var smiley_open;
     $("#setting_sp_smiley + div").slideToggle("slow");
     if (smiley_open) {
       smiley_open = 0;
@@ -362,7 +382,6 @@ open_setting_window = function() {
     GM_setValue("tieba_smile_config", JSON.stringify(SmileConfig));
   });
   $("#fentie_open").click(function() {
-    var fentie_open;
     $("#fentie_open + div").slideToggle("slow");
     if (fentie_open) {
       fentie_open = 0;
@@ -373,7 +392,6 @@ open_setting_window = function() {
     }
   });
   $("#fentie_forbidden").click(function() {
-    var fentie_forbidden;
     if (fentie_forbidden) {
       fentie_forbidden = 0;
       $("#fentie_forbidden").attr("class", "setting_sp_btn close");
@@ -383,7 +401,6 @@ open_setting_window = function() {
     }
   });
   $("#tail_open").click(function() {
-    var tail_open;
     if (tail_open) {
       tail_open = 0;
       $("#tail_select,#tail_select + div").toggle("slow");
@@ -514,7 +531,6 @@ open_setting_window = function() {
     });
   });
   $("#setting_save").click(function() {
-    var fentie_date, smiley_delay, smiley_height, smiley_max, smiley_width;
     smiley_height = $("#smiley_height")[0].value;
     smiley_width = $("#smiley_width")[0].value;
     smiley_delay = $("#smiley_delay")[0].value;
@@ -546,6 +562,7 @@ CheckPost = function() {
     date_str = $("#j_p_postlist ul.p_tail > li:nth-child(2) > span")[0].textContent;
     if (date_str === "1970-01-01 07:00") {
       setTimeout(CheckPost, 1000);
+      return;
     }
     date_str = date_str.replace(" ", "-").replace(":", "-").split("-");
     date_time = new Date(date_str[0], date_str[1] - 1, date_str[2], date_str[3], date_str[4]);
@@ -566,21 +583,50 @@ CheckPost = function() {
   }
 };
 
-ClearLink = function() {
-  var link, url, urls, _i, _len;
-  urls = document.querySelectorAll("a[href^=\"http://jump.bdimg.com\"]");
-  for (_i = 0, _len = urls.length; _i < _len; _i++) {
-    link = urls[_i];
-    url = link.textContent;
+CheckPost();
+
+
+/*
+ClearLink = ->
+	for link in document.querySelectorAll('a[href^="http://jump.bdimg.com"]')
+		url = link.textContent
+		url = "http://" + url if url.indexOf("http") isnt 0
+		link.href = url
+	return
+
+setTimeout ClearLink, 1000
+ */
+
+if (!GM_getValue("tieba_smile_config")) {
+  SmileConfig = ["http://imgsrc.baidu.com/forum/pic/item/8989a544ebf81a4c82fc0a3ad72a6059272da6b6.jpg", "http://imgsrc.baidu.com/forum/pic/item/5f0e68ed2e738bd42bb054c2a18b87d6257ff9ef.jpg", "http://imgsrc.baidu.com/forum/pic/item/16a9927eca806538e37b42e097dda144af3482ef.jpg", "http://imgsrc.baidu.com/forum/pic/item/dcc451da81cb39dbe027d6f6d0160924aa1830ae.jpg", "http://imgsrc.baidu.com/forum/pic/item/a5be42fbfbedab64aa7b3a14f736afc378311e0d.jpg"];
+  GM_setValue("tieba_smile_config", JSON.stringify(SmileConfig));
+}
+
+SmileConfig = JSON.parse(GM_getValue("tieba_smile_config"));
+
+$("#tb_nav > ul.nav_list").append("<li id=\"setting_btn\" class=\"j_tbnav_tab\">\n	<div class=\"tbnav_tab_inner\">\n		<p class=\"space\">\n			<a style=\"cursor:pointer;-moz-user-select:none;\" class=\"nav_icon icon_tie j_tbnav_tab_a\">设置</a>\n		</p>\n	</div>\n</li>");
+
+$("#setting_btn").click(function() {
+  return open_setting_window();
+});
+
+window.StopPost = 0;
+
+jQuery("body").on("mouseover", "a", function(event) {
+  var link, url;
+  link = event.target;
+  url = link.textContent;
+  if (link.href.indexOf("http://jump.bdimg.com") === 0) {
     if (url.indexOf("http") !== 0) {
       url = "http://" + url;
     }
     link.href = url;
   }
-};
+  return true;
+});
 
 TailInit = function() {
-  var SendBt, tail_cur, x;
+  var SendBt, i;
   if (document.querySelector(".ui_btn.ui_btn_m.j_submit.poster_submit")) {
     if (smiley_open) {
       SmileInit();
@@ -600,7 +646,13 @@ TailInit = function() {
     if (tail_cur === "不使用小尾巴" || tail_cur === "随机小尾巴") {
       $("#tail_use_text")[0].innerHTML = tail_cur;
     } else if (typeof tail_data[tail_cur] === "undefined") {
-      tail_cur = tail_data[0];
+      for (i in tail_data) {
+        if (!(i != null)) {
+          continue;
+        }
+        tail_cur = i;
+        break;
+      }
       GM_setValue("tail_cur", tail_cur);
     } else {
       $("#tail_use_text")[0].innerHTML = tail_cur;
@@ -611,12 +663,12 @@ TailInit = function() {
       $("#tail_use_box").append("<div class='tail_use_option'>" + x + "</div>");
     }
     $(".tail_use_option").click(function() {
-      $("#tail_use_text")[0].innerHTML = this.innerHTML;
       tail_cur = this.innerHTML;
+      $("#tail_use_text")[0].innerHTML = tail_cur;
       GM_setValue("tail_cur", tail_cur);
     });
     window.AddTail = function(e) {
-      var at, i, max, tailContent, xx;
+      var at, max, tailContent, xx;
       if (StopPost === 1 && !confirm("这可能是一个坟贴, 确认要回复么?")) {
         $("#ueditor_replace").empty();
       }
@@ -656,57 +708,9 @@ TailInit = function() {
       }
     };
   } else {
-    setTimeout(TailInit, 500);
+    setTimeout(TailInit, 100);
   }
 };
-
-tail_cur = "";
-
-_style_setted = 0;
-
-maxCount = smiley_max;
-
-maxHeight = smiley_height;
-
-maxWidth = smiley_width;
-
-load();
-
-if (!GM_getValue("tieba_smile_config")) {
-  SmileConfig = ["http://imgsrc.baidu.com/forum/pic/item/8989a544ebf81a4c82fc0a3ad72a6059272da6b6.jpg", "http://imgsrc.baidu.com/forum/pic/item/5f0e68ed2e738bd42bb054c2a18b87d6257ff9ef.jpg", "http://imgsrc.baidu.com/forum/pic/item/16a9927eca806538e37b42e097dda144af3482ef.jpg", "http://imgsrc.baidu.com/forum/pic/item/dcc451da81cb39dbe027d6f6d0160924aa1830ae.jpg", "http://imgsrc.baidu.com/forum/pic/item/a5be42fbfbedab64aa7b3a14f736afc378311e0d.jpg"];
-  GM_setValue("tieba_smile_config", JSON.stringify(SmileConfig));
-}
-
-SmileConfig = JSON.parse(GM_getValue("tieba_smile_config"));
-
-$("#tb_nav > ul.nav_list").append("<li id=\"setting_btn\" class=\"j_tbnav_tab\">\n	<div class=\"tbnav_tab_inner\">\n		<p class=\"space\">\n			<a style=\"cursor:pointer;-moz-user-select:none;\" class=\"nav_icon icon_tie j_tbnav_tab_a\">设置</a>\n		</p>\n	</div>\n</li>");
-
-$("#setting_btn").click(function() {
-  return open_setting_window();
-});
-
-window.StopPost = 0;
-
-setTimeout(ClearLink, 1000);
-
-setTimeout(ClearLink, 5000);
-
-setTimeout(ClearLink, 10000);
-
-jQuery("document").on("click", "a", function(event) {
-  var link, url;
-  alert("Get");
-  link = event.target;
-  if (link.attr("href").indexOf("http://jump.bdimg.com") === 0) {
-    console.log(link);
-    url = link.text;
-    if (url.indexOf("http") !== 0) {
-      url = "http://" + url;
-    }
-    link.attr("href", url);
-  }
-  return true;
-});
 
 if (window === window.top && window.document.title !== "") {
   setTimeout(TailInit, 120);
