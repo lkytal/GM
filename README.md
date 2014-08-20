@@ -21,6 +21,8 @@ GM的"用户脚本设置"下的"Popup Search设置"打开选项选择需要的�
 
 Update Log:
 
+* 2.7.5 : Exclude test page
+* 2.7.4 : Fix up
 * 2.7.3 : UI improve
 * 2.7.2 : Update Method change
 * 2.7.1 : Meta info added
@@ -70,6 +72,8 @@ __修改小尾巴之后记得点击"保存当前尾巴"按钮!__
 
 Update Log:
 
+* 5.9.0 : New backend
+* 5.8.7 : fix up
 * 5.8.6 : coffee script
 * 5.8.5 : Fix recent img
 * 5.8.4 : Fix jquery
