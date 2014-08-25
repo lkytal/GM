@@ -7,7 +7,7 @@
 // @include					*
 // @exclude					*/test/index.html*
 // @require					http://code.jquery.com/jquery-2.1.1.min.js
-// @version					2.7.4
+// @version					2.7.5
 // @icon					http://lkytal.qiniudn.com/ic.ico
 // @grant					GM_xmlhttpRequest
 // @grant					GM_addStyle
@@ -131,7 +131,7 @@ Init = function() {
     fixPos(document.defaultView.getSelection());
     return GM_xmlhttpRequest({
       method: 'POST',
-      url: 'http://123.205.250.144/translate_a/t',
+      url: 'http://61.19.1.118/translate_a/t',
       data: "client=p&text=" + popData.text + "&langpair=auto|auto",
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded'
@@ -242,8 +242,8 @@ ShowBar = function() {
   $('#Gspan').empty().hide();
   fixPos(sel, event);
   $('#sbaidu').attr('href', "http://www.baidu.com/s?wd=" + popData.text);
-  $('#sbing').attr('href', "http://bing.com/search?q=" + popData.text + "&form=MOZSBR");
-  $('#sgoogle').attr('href', "https://www.google.com/search?newwindow=1&q=" + popData.text);
+  $('#sbing').attr('href', "http://bing.com/search?q=" + popData.text);
+  $('#sgoogle').attr('href', "https://www.google.com/search?q=" + popData.text);
   UrlText = seltxt;
   if (UrlText.indexOf('http') === -1) {
     UrlText = 'http://' + UrlText;
