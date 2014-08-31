@@ -16,7 +16,7 @@
 // @namespace				Lkytal
 // @author					lkytal
 // @homepage				http://coldfire.qiniudn.com/
-// @version					1.3.1
+// @version					1.3.2
 // @icon					http://lkytal.qiniudn.com/ic.ico
 // @grant					unsafeWindow
 // @run-at					document-end
