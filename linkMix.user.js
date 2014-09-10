@@ -14,8 +14,7 @@
 // @homepageURL				https://git.oschina.net/coldfire/GM
 // @updateURL				https://git.oschina.net/coldfire/GM/raw/master/meta/linkMix.meta.js
 // @downloadURL				https://git.oschina.net/coldfire/GM/raw/master/linkMix.user.js
-// ==/UserScript==
-
+// ==/UserScript==;
 "use strict";
 var LinkPage, excludedTags, filter, linkMixInit, linkPack, linkify, observer, setHttp, setLink, url_regexp, xpath;
 
@@ -53,7 +52,7 @@ setLink = function(candidate) {
 
 excludedTags = "a,applet,input,button,area,pre,embed,frame,frameset,head,iframe,img,map,meta,noscript,object,option,param,script,select,style,textarea,code".split(",");
 
-xpath = "//text()[not(ancestor::" + excludedTags.join(') and not(ancestor::') + ")]";
+xpath = "//text()[not(ancestor::" + (excludedTags.join(') and not(ancestor::')) + ")]";
 
 filter = new RegExp("^(textarea|input|button|pre|select|option|meta|link|noscript|a|html|head|object|embed|script|style|frameset|frame|iframe|img|code)$", "i");
 
