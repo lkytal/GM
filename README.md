@@ -9,12 +9,12 @@ GM script for Firefox
 
 点击下面的链接安装GM脚本
 
-* [Popup Search](#https://git.oschina.net/coldfire/GM/raw/master/popupsearch.user.js)
-* [Text to link](#https://git.oschina.net/coldfire/GM/raw/master/linkMix.user.js)
-* [Tieba enhance](#https://git.oschina.net/coldfire/GM/raw/master/tieba_enhance.user.js)
-* [Scroll with mouse plus](#https://git.oschina.net/coldfire/GM/raw/master/Scroll.user.js)
-* [Search Image with google & baidu](#https://git.oschina.net/coldfire/GM/raw/master/img.user.js)
-* [Discuz新标签打开](#https://git.oschina.net/coldfire/GM/raw/master/discuz_in_tab.user.js)
+* [Popup Search](https://git.oschina.net/coldfire/GM/raw/master/popsearch.user.js)
+* [Text to link](https://git.oschina.net/coldfire/GM/raw/master/linkMix.user.js)
+* [Tieba enhance](https://git.oschina.net/coldfire/GM/raw/master/tieba_enhance.user.js)
+* [Scroll with mouse plus](https://git.oschina.net/coldfire/GM/raw/master/scroll.user.js)
+* [Search Image with google & baidu](https://git.oschina.net/coldfire/GM/raw/master/img.user.js)
+* [Discuz新标签打开](https://git.oschina.net/coldfire/GM/raw/master/discuz_in_tab.user.js)
 
 ## 文件说明
 
