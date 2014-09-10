@@ -15,7 +15,7 @@
 // @downloadURL				https://git.oschina.net/coldfire/GM/raw/master/scroll.user.js
 // ==/UserScript==
 
-function ScrollPlus()
+function scrollPlus()
 {
     //###Customization: |可自定义的东西：
 
@@ -49,6 +49,11 @@ function ScrollPlus()
 
     document.addEventListener('mousemove', function (event)
     {
+		if (document.body.contentEditable == "true")
+		{
+			return;
+		}
+		
         var dheightMax = Math.max(document.body.scrollHeight, document.documentElement.scrollHeight);
         var cwidthMax = Math.max(document.body.clientWidth, document.documentElement.clientWidth) - ScrollbarWidth;
         var cwinHeight = window.innerHeight;
@@ -64,15 +69,17 @@ function ScrollPlus()
                         VScrollOn = 1;
                         break;
                     case 2:
-                        if (event.ctrlKey) VScrollOn = 1;
+                        if (event.ctrlKey)
+							VScrollOn = 1;
                         break;
                     case 3:
-                        if (event.clientY > cwinHeight / 2 - 50 && event.clientY < cwinHeight / 2 + 50) VScrollOn = 1;
+                        if (event.clientY > cwinHeight / 2 - 50 && event.clientY < cwinHeight / 2 + 50)
+							VScrollOn = 1;
+						break;
                 }
             }
 
             if (event.clientX < ((1 - VScrollonWidth / 100) * cwidthMax)) VScrollOn = 0;
-            if (document.body.contentEditable == "true") VScrollOn = 0;
         }
 
         if (VScrollOn)
@@ -126,4 +133,4 @@ function ScrollPlus()
     }
 }
 
-ScrollPlus();
+scrollPlus();

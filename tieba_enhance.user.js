@@ -20,9 +20,10 @@
 // @updateURL					https://git.oschina.net/coldfire/GM/raw/master/meta/tieba_enhance.meta.js
 // @downloadURL					https://git.oschina.net/coldfire/GM/raw/master/tieba_enhance.user.js
 // ==/UserScript==
-;
+
 "use strict";
-var CheckPost, NodeInsertListener, SmileConfig, SmileInit, TailInit, checkFather, clearLink, count, fentie_date, fentie_forbidden, fentie_open, log, maxCount, maxHeight, maxWidth, open_setting_window, saveConfig, smiley_delay, smiley_height, smiley_max, smiley_open, smiley_width, tail_data, tail_open, tiebaData, x, _style_setted;
+var CheckPost, NodeInsertListener, SmileConfig, SmileInit, TailInit, checkFather, clearLink, count, fentie_date, fentie_forbidden, fentie_open, log, maxCount, maxHeight, maxWidth, open_setting_window, saveConfig, smiley_delay, smiley_height, smiley_max, smiley_open, smiley_width, tail_data, tail_open, tiebaData, x, _style_setted,
+  __hasProp = {}.hasOwnProperty;
 
 count = 0;
 
@@ -583,7 +584,7 @@ CheckPost = function() {
   }
 };
 
-CheckPost();
+setTimeout(CheckPost, 800);
 
 
 /*
@@ -604,7 +605,7 @@ if (!GM_getValue("tieba_smile_config")) {
 
 SmileConfig = JSON.parse(GM_getValue("tieba_smile_config"));
 
-$("#tb_nav > ul.nav_list").append("<li id=\"setting_btn\" class=\"j_tbnav_tab\">\n	<div class=\"tbnav_tab_inner\">\n		<p class=\"space\">\n			<a style=\"cursor:pointer;-moz-user-select:none;\" class=\"nav_icon icon_tie j_tbnav_tab_a\">设置</a>\n		</p>\n	</div>\n</li>");
+$("#tb_nav").find("ul:first").append("             \n<li id=\"setting_btn\" class=\"star_nav_tab\">\n	<div class=\"star_nav_tab_inner\">\n		<div class=\"space\">\n			<a style=\"cursor:pointer;-moz-user-select:none;\" class=\"star_nav_ico star_nav_ico_good\">设置</a>\n		</div>\n	</div>\n</li>");
 
 $("#setting_btn").click(function() {
   return open_setting_window();
@@ -647,6 +648,7 @@ TailInit = function() {
       $("#tail_use_text")[0].innerHTML = tiebaData.tail_cur;
     } else if (typeof tail_data[tiebaData.tail_cur] === "undefined") {
       for (i in tail_data) {
+        if (!__hasProp.call(tail_data, i)) continue;
         if (!(i != null)) {
           continue;
         }
