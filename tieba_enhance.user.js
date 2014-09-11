@@ -5,7 +5,7 @@
 // @description					贴吧小尾巴, 坟贴提醒, 去除跳转, 最近表情等功能
 // @include						http://tieba.baidu.com/*
 // @include						https://tieba.baidu.com/*
-// @version						5.9.2
+// @version						5.9.3
 // @author						lkytal
 // @require						http://code.jquery.com/jquery-2.1.1.min.js
 // @icon						http://lkytal.qiniudn.com/ic.ico
@@ -605,7 +605,7 @@ if (!GM_getValue("tieba_smile_config")) {
 
 SmileConfig = JSON.parse(GM_getValue("tieba_smile_config"));
 
-$("#tb_nav").find("ul:first").append("             \n<li id=\"setting_btn\" class=\"star_nav_tab\">\n	<div class=\"star_nav_tab_inner\">\n		<div class=\"space\">\n			<a style=\"cursor:pointer;-moz-user-select:none;\" class=\"star_nav_ico star_nav_ico_good\">设置</a>\n		</div>\n	</div>\n</li>");
+$("#tb_nav").find("ul:first").append("<li id=\"setting_btn\" class=\"star_nav_tab\">\n	<div class=\"star_nav_tab_inner\">\n		<div class=\"space\">\n			<a style=\"cursor:pointer;-moz-user-select:none;\" class=\"star_nav_ico star_nav_ico_good\">设置</a>\n		</div>\n	</div>\n</li>");
 
 $("#setting_btn").click(function() {
   return open_setting_window();

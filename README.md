@@ -1,9 +1,10 @@
-GM script for Firefox
-========================
+#GM script for Firefox
 
-修改、原创、自用的GM脚本
+原创 & 修改的GM脚本
 
 个人主页: http://coldfire.qiniudn.com/
+
+微博： http://weibo.com/u/3836876207
 
 ## 安装链接
 
@@ -16,7 +17,7 @@ GM script for Firefox
 * [Search Image with google & baidu](https://git.oschina.net/coldfire/GM/raw/master/img.user.js)
 * [Discuz新标签打开](https://git.oschina.net/coldfire/GM/raw/master/discuz_in_tab.user.js)
 
-## 文件说明
+## 部分文件说明
 
 ### popupsearch.user.js
 
@@ -83,6 +84,8 @@ __修改小尾巴之后记得点击"保存当前尾巴"按钮!__
 
 Update Log:
 
+* 5.9.3 : Fix for new navtab
+* 5.9.2 : clearLink fix
 * 5.9.0 : New backend
 * 5.8.7 : fix up
 * 5.8.6 : coffee script

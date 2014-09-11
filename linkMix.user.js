@@ -14,7 +14,8 @@
 // @homepageURL				https://git.oschina.net/coldfire/GM
 // @updateURL				https://git.oschina.net/coldfire/GM/raw/master/meta/linkMix.meta.js
 // @downloadURL				https://git.oschina.net/coldfire/GM/raw/master/linkMix.user.js
-// ==/UserScript==;
+// ==/UserScript==
+
 "use strict";
 var LinkPage, excludedTags, filter, linkMixInit, linkPack, linkify, observer, setHttp, setLink, url_regexp, xpath;
 
