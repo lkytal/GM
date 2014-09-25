@@ -2,7 +2,7 @@
 
 原创 & 修改的GM脚本
 
-个人主页: http://coldfire.qiniudn.com/
+个人主页: http://lkytal.github.io/
 
 微博： http://weibo.com/u/3836876207
 

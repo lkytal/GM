@@ -5,7 +5,7 @@
 // @description					贴吧小尾巴, 坟贴提醒, 去除跳转, 最近表情等功能
 // @include						http://tieba.baidu.com/*
 // @include						https://tieba.baidu.com/*
-// @version						5.9.3
+// @version						5.9.4
 // @author						lkytal
 // @require						http://code.jquery.com/jquery-2.1.1.min.js
 // @icon						http://lkytal.qiniudn.com/ic.ico
@@ -22,20 +22,8 @@
 // ==/UserScript==
 
 "use strict";
-var CheckPost, NodeInsertListener, SmileConfig, SmileInit, TailInit, checkFather, clearLink, count, fentie_date, fentie_forbidden, fentie_open, log, maxCount, maxHeight, maxWidth, open_setting_window, saveConfig, smiley_delay, smiley_height, smiley_max, smiley_open, smiley_width, tail_data, tail_open, tiebaData, x, _style_setted,
+var CheckPost, NodeInsertListener, SmileConfig, SmileInit, TailInit, checkFather, clearLink, fentie_date, fentie_forbidden, fentie_open, maxCount, maxHeight, maxWidth, open_setting_window, saveConfig, smiley_delay, smiley_height, smiley_max, smiley_open, smiley_width, tail_data, tail_open, tiebaData, x, _style_setted,
   __hasProp = {}.hasOwnProperty;
-
-count = 0;
-
-log = function(msg) {
-  var text;
-  count += 1;
-  text = "hit at : " + count;
-  if (msg != null) {
-    text = "hit " + count + " : " + msg;
-  }
-  return console.log(text);
-};
 
 tiebaData = {
   StopPost: 0
@@ -229,7 +217,7 @@ open_setting_window = function() {
   }
   _tmp = document.createElement("div");
   _tmp.id = "setting_shadow";
-  _tmp.innerHTML += "<div id=\"setting_window\"style=\"top:-100%;\"><div id=\"setting_reset\"class=\"setting_btn_inside\">重置</div><div id=\"setting_save\"class=\"setting_btn_inside\">保存</div><div id=\"setting_close\"class=\"setting_title setting_btn_inside\">设置</div><p class=\"setting_hiding_sp\"></p><div id=\"setting_out_div\"><div id=\"setting_sp_smiley\"class=\"setting_sp_btn\">最近使用的表情</div><div class=\"setting_sp\"><p>最近使用的表情仅获取符合以下条件的图片</p><span>图片宽度≤</span><input class=\"setting_input\"type=\"number\"id=\"smiley_width\"></input><span>图片高度≤</span><input class=\"setting_input\"type=\"number\"id=\"smiley_height\"></input><p>最近使用的表情窗口弹出延迟</p><input class=\"setting_input\"type=\"number\"id=\"smiley_delay\"></input><span>延迟时间(毫秒)</span><div id=\"setting_clear_smiley\"class=\"setting_btn_inside\">清空最近表情</div><p class=\"setting_hide\"></p><input class=\"setting_input\"type=\"number\"id=\"smiley_max\"></input><span>最大表情数量</span><p class=\"setting_hide\"></p><p class=\"setting_hide\"><div id=\"smiley_close_after_click\"class=\"setting_sp_btn\">点击表情后关闭窗口</div></div><p class=\"setting_hide sp\"></p><div id=\"fentie_open\"class=\"setting_sp_btn\">坟贴检测</div><div class=\"setting_sp\"><p class=\"setting_hide\"></p><span>超过</span><input class=\"setting_input\"type=\"number\"id=\"fentie_date\"></input><span>天的帖子视为坟贴</span><div id=\"fentie_forbidden\"class=\"setting_sp_btn\">坟贴禁回</div></div><p class=\"setting_hide sp\"></p><div id=\"tail_open\"class=\"setting_sp_btn\">小尾巴</div><div id=\"tail_select\"><div id=\"tail_select_text\"contenteditable=\"true\"></div><div id=\"tail_option_box\"></div><div id=\"tail_type\"><div id=\"tail_type_text\"></div><div id=\"tail_type_box\"><div class=\"tail_type_option\">html</div><div class=\"tail_type_option\">javascript</div></div></div><div id=\"tail_save\"class=\"setting_btn_inside\">保存当前尾巴</div><div id=\"tail_new\"class=\"setting_btn_inside\">新建尾巴</div><div id=\"tail_delete\"class=\"setting_btn_inside\">删除尾巴</div></div><div class=\"setting_sp\"><textarea class=\"setting_textarea\"id=\"tail_data\"></textarea><span>预览</span><div class=\"setting_textarea\"id=\"tail_data_show\"></div><p class=\"hiding_margin\"style=\"width:1px;height:20px;\"></p></div></div></div>";
+  _tmp.innerHTML += "<div id=\"setting_window\" style=\"top:-100%;\">\n	<div id=\"setting_reset\" class=\"setting_btn_inside\">重置</div>\n	<div id=\"setting_save\" class=\"setting_btn_inside\">保存</div>\n	<div id=\"setting_close\" class=\"setting_title setting_btn_inside\">设置</div>\n	<p class=\"setting_hiding_sp\"></p>\n	<div id=\"setting_out_div\">\n		<div id=\"setting_sp_smiley\" class=\"setting_sp_btn\">最近使用的表情</div>\n		<div class=\"setting_sp\">\n			<p>最近使用的表情仅获取符合以下条件的图片</p><span>图片宽度≤</span>\n			<input class=\"setting_input\" type=\"number\" id=\"smiley_width\"></input><span>图片高度≤</span>\n			<input class=\"setting_input\" type=\"number\" id=\"smiley_height\"></input>\n			<p>最近使用的表情窗口弹出延迟</p>\n			<input class=\"setting_input\" type=\"number\" id=\"smiley_delay\"></input><span>延迟时间(毫秒)</span>\n			<div id=\"setting_clear_smiley\" class=\"setting_btn_inside\">清空最近表情</div>\n			<p class=\"setting_hide\"></p>\n			<input class=\"setting_input\" type=\"number\" id=\"smiley_max\"></input><span>最大表情数量</span>\n			<p class=\"setting_hide\"></p>\n			<p class=\"setting_hide\">\n				<div id=\"smiley_close_after_click\" class=\"setting_sp_btn\">点击表情后关闭窗口</div>\n		</div>\n		<p class=\"setting_hide sp\"></p>\n		<div id=\"fentie_open\" class=\"setting_sp_btn\">坟贴检测</div>\n		<div class=\"setting_sp\">\n			<p class=\"setting_hide\"></p><span>超过</span>\n			<input class=\"setting_input\" type=\"number\" id=\"fentie_date\"></input><span>天的帖子视为坟贴</span>\n			<div id=\"fentie_forbidden\" class=\"setting_sp_btn\">坟贴禁回</div>\n		</div>\n		<p class=\"setting_hide sp\"></p>\n		<div id=\"tail_open\" class=\"setting_sp_btn\">小尾巴</div>\n		<div id=\"tail_select\">\n			<div id=\"tail_select_text\" contenteditable=\"true\"></div>\n			<div id=\"tail_option_box\"></div>\n			<div id=\"tail_type\">\n				<div id=\"tail_type_text\"></div>\n				<div id=\"tail_type_box\">\n					<div class=\"tail_type_option\">html</div>\n					<div class=\"tail_type_option\">javascript</div>\n				</div>\n			</div>\n			<div id=\"tail_save\" class=\"setting_btn_inside\">保存当前尾巴</div>\n			<div id=\"tail_new\" class=\"setting_btn_inside\">新建尾巴</div>\n			<div id=\"tail_delete\" class=\"setting_btn_inside\">删除尾巴</div>\n		</div>\n		<div class=\"setting_sp\">\n			<textarea class=\"setting_textarea\" id=\"tail_data\"></textarea><span>预览</span>\n			<div class=\"setting_textarea\" id=\"tail_data_show\"></div>\n			<p class=\"hiding_margin\" style=\"width:1px;height:20px;\"></p>\n		</div>\n	</div>\n</div>";
   document.body.appendChild(_tmp);
   $("#smiley_height")[0].value = smiley_height;
   $("#smiley_width")[0].value = smiley_width;
