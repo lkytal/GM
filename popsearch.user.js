@@ -7,7 +7,7 @@
 // @include					*
 // @exclude					*/test/index.html*
 // @require					http://code.jquery.com/jquery-2.1.1.min.js
-// @version					2.8.0
+// @version					2.8.1
 // @icon					http://lkytal.qiniudn.com/ic.ico
 // @grant					GM_xmlhttpRequest
 // @grant					GM_addStyle
@@ -137,6 +137,7 @@ Init = function() {
   });
   praseTranslation = function(responseDetails) {
     var Rst, Rtxt, line, means, usage, _i, _j, _k, _len, _len1, _len2, _ref, _ref1, _ref2;
+    log(responseDetails.finalUrl);
     if (!popData.bTrans) {
       return;
     }
@@ -167,14 +168,17 @@ Init = function() {
     return fixPos(document.defaultView.getSelection());
   };
   $('#gtrans').on("click", function(event) {
-    var ajaxTranslation;
-    event.preventDefault();
+    var addr, addrList, ajaxTranslation, _i, _len;
     popData.bTrans = 1;
     $("#Gspan").empty().append("<div style='padding:10px;'><img src=" + popData.pending + " /></div>").show();
     $('#popupwapper').hide();
     fixPos(document.defaultView.getSelection());
     ajaxTranslation = function(addr, callback) {
-      log(addr);
+      if (callback == null) {
+        callback = function(err) {
+          return log("Err: " + addr);
+        };
+      }
       return GM_xmlhttpRequest({
         method: 'POST',
         timeout: 4000,
@@ -188,11 +192,12 @@ Init = function() {
         ontimeout: callback
       });
     };
-    return ajaxTranslation("translate.google.com", function(err) {
-      return ajaxTranslation("220.255.6.54", function() {
-        return $('#Gspan').empty().append("Connection Error").show();
-      });
-    });
+    addrList = ["translate.google.com", "173.194.120.88", "220.255.6.54", "220.255.5.212"];
+    for (_i = 0, _len = addrList.length; _i < _len; _i++) {
+      addr = addrList[_i];
+      ajaxTranslation(addr);
+    }
+    return event.preventDefault();
   });
   if (!GetOpt('Open_st')) {
     $('#openurl').hide();

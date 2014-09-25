@@ -33,6 +33,8 @@ GM的"用户脚本设置"下的"Popup Search设置"打开选项选择需要的�
 
 Update Log:
 
+* 2.8.1 : Multiply tranlate address
+* 2.8.0 : More translation methods
 * 2.7.5 : Exclude test page
 * 2.7.4 : Fix up
 * 2.7.3 : UI improve
@@ -84,6 +86,7 @@ __修改小尾巴之后记得点击"保存当前尾巴"按钮!__
 
 Update Log:
 
+*.5.9.4 : Html code cleanup
 * 5.9.3 : Fix for new navtab
 * 5.9.2 : clearLink fix
 * 5.9.0 : New backend
