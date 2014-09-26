@@ -5,7 +5,7 @@
 // @description					贴吧小尾巴, 坟贴提醒, 去除跳转, 最近表情等功能
 // @include						http://tieba.baidu.com/*
 // @include						https://tieba.baidu.com/*
-// @version						5.9.4
+// @version						5.9.5
 // @author						lkytal
 // @require						http://code.jquery.com/jquery-2.1.1.min.js
 // @icon						http://lkytal.qiniudn.com/ic.ico
@@ -47,7 +47,7 @@ fentie_forbidden = GM_getValue("fentie_forbidden", 1);
 
 tail_open = GM_getValue("tail_open", 1);
 
-tiebaData.tail_cur = GM_getValue("tiebaData.tail_cur", "");
+tiebaData.tail_cur = GM_getValue("tail_cur", "");
 
 tail_data = JSON.parse(GM_getValue("tail_data", "{\"Default\":\" !分隔!html\"}"));
 
@@ -550,7 +550,7 @@ CheckPost = function() {
   if ($("#j_core_title_wrap").length && fentie_open) {
     date_str = $("#j_p_postlist ul.p_tail > li:nth-child(2) > span")[0].textContent;
     if (date_str === "1970-01-01 07:00") {
-      setTimeout(CheckPost, 1000);
+      setTimeout(CheckPost, 500);
       return;
     }
     date_str = date_str.replace(" ", "-").replace(":", "-").split("-");
@@ -623,7 +623,6 @@ TailInit = function() {
       return;
     }
     $(".poster_posting_status.j_posting_status").after("<span id=\"tail_use\" style=\"margin-left: 20px;\">\n	<span id=\"tail_use_text\" class=\"ui_btn\" style=\"color:black;\"></span>\n	<div id=\"tail_use_box_out\">\n		<div id=\"tail_use_box\" style=\"display:none;\"></div>\n	</div>\n</span>");
-    log('add');
     $("#tail_use_text").click(function() {
       return $("#tail_use_box").slideToggle(400);
     });
@@ -643,19 +642,21 @@ TailInit = function() {
         tiebaData.tail_cur = i;
         break;
       }
-      GM_setValue("tiebaData.tail_cur", tiebaData.tail_cur);
+      GM_setValue("tail_cur", tiebaData.tail_cur);
+      $("#tail_use_text")[0].innerHTML = tiebaData.tail_cur;
     } else {
       $("#tail_use_text")[0].innerHTML = tiebaData.tail_cur;
     }
     $("#tail_use_box").append("<div class=\"tail_use_option\">不使用小尾巴</div>");
     $("#tail_use_box").append("<div class=\"tail_use_option\">随机小尾巴</div>");
     for (x in tail_data) {
+      if (!__hasProp.call(tail_data, x)) continue;
       $("#tail_use_box").append("<div class='tail_use_option'>" + x + "</div>");
     }
     $(".tail_use_option").click(function() {
       tiebaData.tail_cur = this.innerHTML;
       $("#tail_use_text")[0].innerHTML = tiebaData.tail_cur;
-      GM_setValue("tiebaData.tail_cur", tiebaData.tail_cur);
+      GM_setValue("tail_cur", tiebaData.tail_cur);
     });
     AddTail = function(e) {
       var at, max, tailContent, xx;

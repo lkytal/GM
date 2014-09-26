@@ -86,7 +86,8 @@ __修改小尾巴之后记得点击"保存当前尾巴"按钮!__
 
 Update Log:
 
-*.5.9.4 : Html code cleanup
+* 5.9.5 : fix tail box may not shown
+* 5.9.4 : Html code cleanup
 * 5.9.3 : Fix for new navtab
 * 5.9.2 : clearLink fix
 * 5.9.0 : New backend
