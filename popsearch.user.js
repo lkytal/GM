@@ -7,7 +7,7 @@
 // @include					*
 // @exclude					*/test/index.html*
 // @require					http://code.jquery.com/jquery-2.1.1.min.js
-// @version					2.8.1
+// @version					2.8.2
 // @icon					http://lkytal.qiniudn.com/ic.ico
 // @grant					GM_xmlhttpRequest
 // @grant					GM_addStyle
@@ -25,7 +25,7 @@
 // ==/UserScript==
 
 "use strict";
-var GetOpt, InTextBox, Init, Load, OpenSet, SaveOpt, SetOpt, SettingWin, ShowBar, TimeOutHide, count, fixPos, getLastRange, get_offsets_and_remove, get_selection_offsets, log, popData;
+var GetOpt, InTextBox, Init, Load, OpenSet, SaveOpt, SetOpt, SettingWin, ShowBar, TimeOutHide, addCSS, ajaxTranslation, count, fixPos, getLastRange, get_offsets_and_remove, get_selection_offsets, log, popData, praseTranslation;
 
 popData = {};
 
@@ -88,7 +88,7 @@ TimeOutHide = function() {
 };
 
 Init = function() {
-  var $DivBox, praseTranslation;
+  var $DivBox;
   $('body').append("<span id=\"ShowUpBox\">\n	<span id=\"showupbody\">\n		<span id=\"popupwapper\" />\n		<span id=\"Gspan\" />\n	</span>\n</span>");
   $DivBox = $('#ShowUpBox');
   $DivBox.hide();
@@ -135,63 +135,12 @@ Init = function() {
   $('#sgoogle, #sbing, #sbaidu, #openurl').on("click", function(event) {
     return $('#ShowUpBox').hide();
   });
-  praseTranslation = function(responseDetails) {
-    var Rst, Rtxt, line, means, usage, _i, _j, _k, _len, _len1, _len2, _ref, _ref1, _ref2;
-    log(responseDetails.finalUrl);
-    if (!popData.bTrans) {
-      return;
-    }
-    Rtxt = JSON.parse(responseDetails.responseText);
-    Rst = '<div style="padding:10px;font-size:13px;overflow:auto;">';
-    _ref = Rtxt.sentences;
-    for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-      line = _ref[_i];
-      Rst += line.trans + '<br>';
-    }
-    Rst += '<br><ul style="font-size:13px;list-style-position:inside;">';
-    if (Rtxt.dict != null) {
-      _ref1 = Rtxt.dict;
-      for (_j = 0, _len1 = _ref1.length; _j < _len1; _j++) {
-        usage = _ref1[_j];
-        Rst += "<li>" + usage.pos + " : ";
-        _ref2 = usage.entry;
-        for (_k = 0, _len2 = _ref2.length; _k < _len2; _k++) {
-          means = _ref2[_k];
-          if (means.score > 0.005 || means.score > usage.entry[0].score / 4) {
-            Rst += means.word + ', ';
-          }
-        }
-        Rst += '</li>';
-      }
-    }
-    $('#Gspan').empty().append(Rst + '</ul></div>').show();
-    return fixPos(document.defaultView.getSelection());
-  };
   $('#gtrans').on("click", function(event) {
-    var addr, addrList, ajaxTranslation, _i, _len;
+    var addr, addrList, _i, _len;
     popData.bTrans = 1;
     $("#Gspan").empty().append("<div style='padding:10px;'><img src=" + popData.pending + " /></div>").show();
     $('#popupwapper').hide();
     fixPos(document.defaultView.getSelection());
-    ajaxTranslation = function(addr, callback) {
-      if (callback == null) {
-        callback = function(err) {
-          return log("Err: " + addr);
-        };
-      }
-      return GM_xmlhttpRequest({
-        method: 'POST',
-        timeout: 4000,
-        url: "http://" + addr + "/translate_a/t",
-        data: "client=p&text=" + popData.text + "&langpair=auto|auto",
-        headers: {
-          'Content-Type': 'application/x-www-form-urlencoded'
-        },
-        onload: praseTranslation,
-        onerror: callback,
-        ontimeout: callback
-      });
-    };
     addrList = ["translate.google.com", "173.194.120.88", "220.255.6.54", "220.255.5.212"];
     for (_i = 0, _len = addrList.length; _i < _len; _i++) {
       addr = addrList[_i];
@@ -219,19 +168,71 @@ Init = function() {
   if (GetOpt('Dis_st')) {
     popData.tip = popData.tipup;
     $DivBox.append('<span id=popuptip></span>');
-    $('#popuptip').css({
+    return $('#popuptip').css({
       'margin-top': '-2px',
       'margin-bottom': '0px'
     });
   } else {
     popData.tip = popData.tipdown;
     $DivBox.prepend('<span id=popuptip></span>');
-    $('#popuptip').css({
+    return $('#popuptip').css({
       'margin-top': '0px',
       'margin-bottom': '-2px'
     });
   }
-  return GM_addStyle("#ShowUpBox{\n	width:auto; height:auto; position:absolute; z-index:10240; display:inline-block;\n	line-height:0; vertical-align:baseline;\n}\n#showupbody{\n	all: unset; display: block; border:solid 2px rgb(144,144,144); background:rgba(252, 252, 252, 1);\n	border-radius:1px; max-width: 750px; min-height: 20px; max-height: 500px; min-width: 20px;\n}\n#popupwapper{\n	margin: 3px 2px 3.8px 2px; display:block; line-height: 0;\n}\n#Gspan{\n	line-height: normal; width: auto; font-size: 16px; overflow: auto; display: none;\n}\n#ShowUpBox img{\n	margin: 0px 2px 0px 2px; height: 20px; width: 20px; border-radius: 0px; padding: 0px;\n	display: inline-block; -moz-transition-duration: 0.1s;\n}\n#ShowUpBox img:hover{\n	margin: -1px 1px -1px 1px; height: 22px; width: 22px;\n}\n#popuptip{\n	display:inline-block; clear:both; height:9px; width:9px;\n	background: url(" + popData.tip + ") 0px 0px no-repeat transparent;\n}\n#ShowUpBox a{\n	text-decoration: none; display:inline-block;\n}");
+};
+
+praseTranslation = function(responseDetails) {
+  var Rst, Rtxt, line, means, usage, _i, _j, _k, _len, _len1, _len2, _ref, _ref1, _ref2;
+  log(responseDetails.finalUrl);
+  if (!popData.bTrans) {
+    return;
+  }
+  Rtxt = JSON.parse(responseDetails.responseText);
+  Rst = '<div style="padding:10px;font-size:13px;overflow:auto;">';
+  _ref = Rtxt.sentences;
+  for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+    line = _ref[_i];
+    Rst += line.trans + '<br>';
+  }
+  Rst += '<br><ul style="font-size:13px;list-style-position:inside;">';
+  if (Rtxt.dict != null) {
+    _ref1 = Rtxt.dict;
+    for (_j = 0, _len1 = _ref1.length; _j < _len1; _j++) {
+      usage = _ref1[_j];
+      Rst += "<li>" + usage.pos + " : ";
+      _ref2 = usage.entry;
+      for (_k = 0, _len2 = _ref2.length; _k < _len2; _k++) {
+        means = _ref2[_k];
+        if (means.score > 0.005 || means.score > usage.entry[0].score / 4) {
+          Rst += means.word + ', ';
+        }
+      }
+      Rst += '</li>';
+    }
+  }
+  $('#Gspan').empty().append(Rst + '</ul></div>').show();
+  return fixPos(document.defaultView.getSelection());
+};
+
+ajaxTranslation = function(addr, callback) {
+  if (callback == null) {
+    callback = function(err) {
+      return log("Err: " + addr);
+    };
+  }
+  return GM_xmlhttpRequest({
+    method: 'POST',
+    timeout: 4000,
+    url: "http://" + addr + "/translate_a/t",
+    data: "client=p&text=" + popData.text + "&langpair=auto|auto",
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded'
+    },
+    onload: praseTranslation,
+    onerror: callback,
+    ontimeout: callback
+  });
 };
 
 document.onmouseup = function(event) {
@@ -318,7 +319,6 @@ OpenSet = function() {
 
 SettingWin = function() {
   var item, _i, _len, _ref;
-  GM_addStyle("#popup_setting{\n	all: unset; display:none; text-align: justify; position:fixed; z-index:102400;\n	box-shadow:0 0 5px #222; -moz-user-select:none; font-family:\"Microsoft YaHei\";\n	left:-moz-calc(50% - 340px); left:-webkit-calc(50% - 340px); width:auto;\n	top: -moz-calc(50% - 160px); top: -webkit-calc(50% - 160px); background: white;\n}\n#pop_st_wapper{\n	padding:30px 40px 20px 40px;\n}\n#popup_title{\n	font-size:28px; text-align:center; background:rgba(0,0,0,0.45); color:white; padding: 5px;\n}\n#option_box { margin-right: -85px; }\n#popup_tip{\n	display:inline-block; font-size:12px; color:red; margin-top: 20px;\n}\n.setting_btn{\n	display:inline-block; font-size:16px; cursor:default; float: right; border: 2px solid #20CC66;\n	padding: 2px 10px; border-radius: 4px; font-weight: bold; margin: 10px 0px 10px 15px; color: #20CC66;\n}\n.setting_btn:hover { box-shadow: 0px 0px 2px #20CC66; }\n\n.setting_sp_btn{\n	min-width:120px; height:18px; font-size:12px; padding:4px; -moz-user-select:none; cursor:default;\n	position:relative; margin: 5px 85px 5px 0px; display:inline-block;\n}\n.setting_sp_btn.close {background:#DDD;border:none;}\n.setting_sp_btn::before{\n	position:absolute; right:-26px;t op:0; content:\" \"; width:26px; height:26px;\n	background:#6B4; transition:0.3s;\n}\n.setting_sp_btn.close::before{background:#C54;}\n.setting_sp_btn:hover {background:#DDD;}\n.setting_sp_btn:active {box-shadow:0 0 3px #999 inset;}");
   $("body").append("<span id=\"popup_setting\">\n	<div id=\"popup_title\">PopUp Search设置</div>\n	<div id=\"pop_st_wapper\">\n		<div id=\"option_box\">\n			<div id=\"rol1\">\n				<span id=\"Google_st\">Google搜索</span>\n				<span id=\"Bing_st\">Bing搜索</span>\n				<span id=\"Baidu_st\">Baidu搜索</span>\n			</div>\n			<div id=\"rol2\">\n				<span id=\"Open_st\">打开选中网址按钮</span>\n				<span id=\"Fade_st\">超时自动隐藏</span>\n				<span id=\"Dis_st\">显示于文字上方</span>\n			</div>\n			<div id=\"rol3\">\n				<span id=\"Tab_st\">新标签页打开</span>\n				<span id=\"Copy_st\">选中自动复制</span>\n				<span id=\"Ctrl_st\">仅按下Ctrl时显示</span>\n			</div>\n			<div id=\"rol4\">\n				<span id=\"Round_st\">使用直角风格</span>\n			</div>\n		</div>\n		<br>\n		<div id = \"btnarea\">\n			<div id=\"popup_tip\">请在GreaseMonkey的\"用户脚本命令\"菜单的\"Popup Search设置\"下打开此选项</div>\n			<div id=\"popup_close\" class=\"setting_btn\">Close</div>\n			<div id=\"popup_save\" class=\"setting_btn\">Save</div>\n		</div>\n	</div>\n</span>");
   $("#rol1 > span, #rol2 > span, #rol3 > span, #rol4 > span").addClass("setting_sp_btn");
   _ref = $("#popup_setting .setting_sp_btn");
@@ -354,6 +354,7 @@ SettingWin = function() {
 
 Load = function() {
   var UpdateAlert, popupmenu;
+  addCSS();
   popData.mouseIn = 0;
   popData.bTrans = 0;
   popData.tipdown = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAkAAAAJCAYAAADgkQYQAAAAXElEQVQYlYXMsQ5AQBREUSoVjQ+f+S0lSi2livJlr4ZEZDcmud3JVJIW2yPQVqXZPmwjaQXqEuJJ0vCLbrgDfRZFxBsH0GTRCybbcxF9HhPQZdEHbkUUEUg6JU0Xm2KvCU6v27kAAAAASUVORK5CYII=";
@@ -390,15 +391,20 @@ Load = function() {
     popupmenu = document.body.appendChild(document.createElement("menu"));
     popupmenu.outerHTML = '<menu id="userscript-popup" type="context"><menuitem id="Popupset" label="Popup Search设置"></menuitem></menu>';
     document.querySelector("#Popupset").addEventListener("click", OpenSet, false);
-    return document.body.addEventListener("contextmenu", (function() {
+    return $(document).on("contextmenu", function() {
       return document.body.setAttribute("contextmenu", "userscript-popup");
-    }), false);
+    });
   }
 };
 
 if (!(window !== window.top || window.document.title === "")) {
   setTimeout(Load, 70);
 }
+
+addCSS = function() {
+  GM_addStyle("#ShowUpBox{\n	width:auto; height:auto; position:absolute; z-index:10240; display:inline-block;\n	line-height:0; vertical-align:baseline;\n}\n#showupbody{\n	all: unset; display: block; border:solid 2px rgb(144,144,144); background:rgba(252, 252, 252, 1);\n	border-radius:1px; max-width: 750px; min-height: 20px; max-height: 500px; min-width: 20px;\n}\n#popupwapper{\n	margin: 3px 2px 3.8px 2px; display:block; line-height: 0;\n}\n#Gspan{\n	line-height: normal; width: auto; font-size: 16px; overflow: auto; display: none;\n}\n#ShowUpBox img{\n	margin: 0px 2px 0px 2px; height: 20px; width: 20px; border-radius: 0px; padding: 0px;\n	display: inline-block; -moz-transition-duration: 0.1s;\n}\n#ShowUpBox img:hover{\n	margin: -1px 1px -1px 1px; height: 22px; width: 22px;\n}\n#popuptip{\n	display:inline-block; clear:both; height:9px; width:9px;\n	background: url(" + popData.tip + ") 0px 0px no-repeat transparent;\n}\n#ShowUpBox a{\n	text-decoration: none; display:inline-block;\n}");
+  return GM_addStyle("#popup_setting{\n	all: unset; display:none; text-align: justify; position:fixed; z-index:102400;\n	box-shadow:0 0 5px #222; -moz-user-select:none; font-family:\"Microsoft YaHei\";\n	left:-moz-calc(50% - 340px); left:-webkit-calc(50% - 340px); width:auto;\n	top: -moz-calc(50% - 160px); top: -webkit-calc(50% - 160px); background: white;\n}\n#pop_st_wapper{\n	padding:30px 40px 20px 40px;\n}\n#popup_title{\n	font-size:28px; text-align:center; background:rgba(0,0,0,0.45); color:white; padding: 5px;\n}\n#option_box { margin-right: -85px; }\n#popup_tip{\n	display:inline-block; font-size:12px; color:red; margin-top: 20px;\n}\n.setting_btn{\n	display:inline-block; font-size:16px; cursor:default; float: right; border: 2px solid #20CC66;\n	padding: 2px 10px; border-radius: 4px; font-weight: bold; margin: 10px 0px 10px 15px; color: #20CC66;\n}\n.setting_btn:hover { box-shadow: 0px 0px 2px #20CC66; }\n\n.setting_sp_btn{\n	min-width:120px; height:18px; font-size:12px; padding:4px; -moz-user-select:none; cursor:default;\n	position:relative; margin: 5px 85px 5px 0px; display:inline-block;\n}\n.setting_sp_btn.close {background:#DDD;border:none;}\n.setting_sp_btn::before{\n	position:absolute; right:-26px;t op:0; content:\" \"; width:26px; height:26px;\n	background:#6B4; transition:0.3s;\n}\n.setting_sp_btn.close::before{background:#C54;}\n.setting_sp_btn:hover {background:#DDD;}\n.setting_sp_btn:active {box-shadow:0 0 3px #999 inset;}");
+};
 
 getLastRange = function(selection) {
   var rangeNum, _i, _ref;
