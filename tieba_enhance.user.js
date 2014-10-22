@@ -5,7 +5,7 @@
 // @description					贴吧小尾巴, 坟贴提醒, 去除跳转, 最近表情等功能
 // @include						http://tieba.baidu.com/*
 // @include						https://tieba.baidu.com/*
-// @version						5.9.5
+// @version						5.9.6
 // @author						lkytal
 // @require						http://code.jquery.com/jquery-2.1.1.min.js
 // @icon						http://lkytal.qiniudn.com/ic.ico
@@ -688,7 +688,7 @@ TailInit = function() {
         tailContent = tail_data[tiebaData.tail_cur].split("!分隔!")[0];
       } else {
         if (tail_data[tiebaData.tail_cur].split("!分隔!")[1] === "javascript") {
-          tailContent = eval_(tail_data[tiebaData.tail_cur].split("!分隔!")[0]);
+          tailContent = eval(tail_data[tiebaData.tail_cur].split("!分隔!")[0]);
         }
       }
       return $("#ueditor_replace").append("<br>" + tailContent);
