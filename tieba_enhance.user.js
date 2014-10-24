@@ -659,7 +659,7 @@ TailInit = function() {
       GM_setValue("tail_cur", tiebaData.tail_cur);
     });
     AddTail = function(e) {
-      var at, max, tailContent, xx;
+      var key, tailContent, tailList, value;
       if (tiebaData.StopPost === 1) {
         if (!confirm("这可能是一个坟贴, 确认要回复么?")) {
           $("#ueditor_replace").empty();
@@ -669,19 +669,16 @@ TailInit = function() {
         return;
       }
       if (tiebaData.tail_cur === "随机小尾巴") {
-        max = 0;
-        for (xx in tail_data) {
-          max++;
-        }
-        at = parseInt(Math.random() * max + 1);
-        i = 0;
-        for (xx in tail_data) {
-          i++;
-          if (i === at) {
-            tiebaData.tail_cur = xx;
-            break;
+        tailList = (function() {
+          var _results;
+          _results = [];
+          for (key in tail_data) {
+            value = tail_data[key];
+            _results.push(value);
           }
-        }
+          return _results;
+        })();
+        tiebaData.tail_cur = tailList[parseInt(Math.random() * tailList.length)];
       }
       tailContent = void 0;
       if (tail_data[tiebaData.tail_cur].split("!分隔!")[1] === "html") {
