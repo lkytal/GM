@@ -17,7 +17,7 @@
 // ==/UserScript==
 
 "use strict";
-var LinkPage, excludedTags, filter, linkMixInit, linkPack, linkify, observer, setHttp, setLink, url_regexp, xpath;
+var excludedTags, filter, linkMixInit, linkPack, linkify, observePage, observer, setHttp, setLink, url_regexp, xpath;
 
 url_regexp = /((https?:\/\/|www\.)[\x21-\x7e]+\w|(\w[\w._-]+\.(com|cn|org|net|info|tv|cc))(\/[\x21-\x7e]*\w)?)/gi;
 
@@ -51,11 +51,11 @@ setLink = function(candidate) {
   return candidate.parentNode.replaceChild(span, candidate);
 };
 
-excludedTags = "a,applet,input,button,area,pre,embed,frame,frameset,head,iframe,img,map,meta,noscript,object,option,param,script,select,style,textarea,code".split(",");
+excludedTags = "a,svg,canvas,applet,input,button,area,pre,embed,frame,frameset,head,iframe,img,map,meta,noscript,object,option,param,script,select,style,textarea,code".split(",");
 
 xpath = "//text()[not(ancestor::" + (excludedTags.join(') and not(ancestor::')) + ")]";
 
-filter = new RegExp("^(textarea|input|button|pre|select|option|meta|link|noscript|a|html|head|object|embed|script|style|frameset|frame|iframe|img|code)$", "i");
+filter = new RegExp("^(" + (excludedTags.join('|')) + ")$", "i");
 
 linkPack = function(result, start) {
   var i, _i, _j, _ref, _ref1;
@@ -65,7 +65,7 @@ linkPack = function(result, start) {
     }
     setTimeout(function() {
       return linkPack(result, start + 10000);
-    }, 10);
+    }, 20);
   } else {
     for (i = _j = start, _ref1 = result.snapshotLength; start <= _ref1 ? _j <= _ref1 : _j >= _ref1; i = start <= _ref1 ? ++_j : --_j) {
       setLink(result.snapshotItem(i));
@@ -79,7 +79,7 @@ linkify = function(doc) {
   return linkPack(result, 0);
 };
 
-LinkPage = function(root) {
+observePage = function(root) {
   var tW;
   tW = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, {
     acceptNode: function(a) {
@@ -97,15 +97,20 @@ observer = new window.MutationObserver(function(mutations) {
   var Node, mutation, _i, _j, _len, _len1, _ref;
   for (_i = 0, _len = mutations.length; _i < _len; _i++) {
     mutation = mutations[_i];
-    _ref = mutation.addedNodes;
-    for (_j = 0, _len1 = _ref.length; _j < _len1; _j++) {
-      Node = _ref[_j];
-      LinkPage(Node);
+    if (mutation.type === "childList") {
+      _ref = mutation.addedNodes;
+      for (_j = 0, _len1 = _ref.length; _j < _len1; _j++) {
+        Node = _ref[_j];
+        observePage(Node);
+      }
     }
   }
 });
 
 linkMixInit = function() {
+  if (window !== window.top || window.document.title === "") {
+    return;
+  }
   linkify(document.body);
   return observer.observe(document.body, {
     childList: true,
@@ -113,6 +118,4 @@ linkMixInit = function() {
   });
 };
 
-if (!(window !== window.top || window.document.title === "")) {
-  linkMixInit();
-}
+setTimeout(linkMixInit, 100);
