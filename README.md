@@ -14,6 +14,7 @@
 * [Text to link](https://git.oschina.net/coldfire/GM/raw/master/linkMix.user.js)
 * [Tieba enhance](https://git.oschina.net/coldfire/GM/raw/master/tieba_enhance.user.js)
 * [Scroll with mouse plus](https://git.oschina.net/coldfire/GM/raw/master/scroll.user.js)
+* [Select like Opera](https://git.oschina.net/coldfire/GM/raw/master/select.user.js)
 * [Search Image with google & baidu](https://git.oschina.net/coldfire/GM/raw/master/img.user.js)
 * [Discuz新标签打开](https://git.oschina.net/coldfire/GM/raw/master/discuz_in_tab.user.js)
 
@@ -33,6 +34,8 @@ GM的"用户脚本设置"下的"Popup Search设置"打开选项选择需要的�
 
 Update Log:
 
+* 2.8.5 : Translate sync
+* 2.8.4 : cleanup
 * 2.8.2 : better css style
 * 2.8.1 : Multiply tranlate address
 * 2.8.0 : More translation methods
@@ -87,6 +90,8 @@ __修改小尾巴之后记得点击"保存当前尾巴"按钮!__
 
 Update Log:
 
+* 5.9.7 : Fix eval
+* 5.9.5 : Fix tail trigger
 * 5.9.5 : fix tail box may not shown
 * 5.9.4 : Html code cleanup
 * 5.9.3 : Fix for new navtab
