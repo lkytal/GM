@@ -4,7 +4,7 @@
 // @author					lkytal
 // @homepage				http://lkytal.github.io/
 // @icon					http://lkytal.qiniudn.com/ic.ico
-// @version					1.0.1
+// @version					1.0.2
 // @description				Select like opera
 // @include					*
 // @grant					unsafeWindow
@@ -36,7 +36,9 @@ selectLikeOpera = function() {
 			qq: function(x, y) {
 				if (w) {
 					return document.caretRangeFromPoint(x, y)
-				} else {
+				}
+				else
+				{
 					var a = document.createRange();
 					var p = document.caretPositionFromPoint(x, y);
 					a.setStart(p.offsetNode, p.offset);
@@ -65,7 +67,9 @@ selectLikeOpera = function() {
 					s.push([n.style.getPropertyValue(o[i].p), n.style.getPropertyPriority(o[i].p)]);
 					n.style.setProperty(o[i].p, o[i].v, 'important');
 				}
-			} else if (n) {
+			}
+			else if (n)
+			{
 				for (var i = o.length; i-- > 0;) {
 					n.style.removeProperty(o[i].p);
 					if (s[i][0] !== null) n.style.setProperty(o[i].p, s[i][0], s[i][1]);
@@ -75,15 +79,25 @@ selectLikeOpera = function() {
 		}
 	})();
 	
-	var k = function(a, b) {
+	var toggleEvent = function(a, b) {
 		if (b === undefined) b = true;
 		if (a.constructor !== Array) a = [a];
-		var c = b ? 'addEventListener' : 'removeEventListener';
-		for (var i = 0, len = a.length; i < len; i += 1) document[c](a[i], E[a[i]], true);
+
+		for (var i = 0, len = a.length; i < len; i += 1)
+		{
+			if (b)
+			{
+				document.addEventListener(a[i], E[a[i]], true);
+			}
+			else
+			{
+				document.removeEventListener(a[i], E[a[i]], true);
+			}
+		}
 	};
 	
-	var l = function(a) {
-		k(a, false);
+	var removeEvent = function(a) {
+		toggleEvent(a, false);
 	};
 	
 	var m, q, u, v, z, A = function() {
@@ -93,7 +107,7 @@ selectLikeOpera = function() {
 	
 	var B, s = document.getSelection();
 	
-selectEvent = function(e) {
+	selectEvent = function(e) {
 		if (e.which < 2) {
 			A();
 			var x = e.clientX,
@@ -121,7 +135,7 @@ selectEvent = function(e) {
 				x: x,
 				y: y
 			};
-			k(['mousemove', 'mouseup', 'dragend', 'dragstart']);
+			toggleEvent(['mousemove', 'mouseup', 'dragend', 'dragstart']);
 			j(n);
 		}
 	};
@@ -134,7 +148,7 @@ selectEvent = function(e) {
 					if (B.c++ < 12) {
 						var r = B.n.getBoundingClientRect();
 						if (Math.round(r.left) !== B.x || Math.round(r.top) !== B.y) {
-							l(['mousemove', 'mouseup', 'dragend', 'dragstart', 'click']);
+							removeEvent(['mousemove', 'mouseup', 'dragend', 'dragstart', 'click']);
 							j();
 							s.removeAllRanges();
 							return;
@@ -161,7 +175,7 @@ selectEvent = function(e) {
 					if (c > D || d > D) {
 						q = false;
 						z = true;
-						k('click');
+						toggleEvent('click');
 					}
 				}
 				if (u) {
@@ -170,21 +184,21 @@ selectEvent = function(e) {
 				}
 			},
 			'dragstart': function(e) {
-				l('dragstart');
+				removeEvent('dragstart');
 				if (u) return g(e);
 			},
 			'mouseup': function(e) {
-				l(['mousemove', 'mouseup', 'dragstart', 'dragend']);
+				removeEvent(['mousemove', 'mouseup', 'dragstart', 'dragend']);
 				if (!u && z) z = false;
 				setTimeout(function() {
-					l('click');
+					removeEvent('click');
 				}, 111);
 			},
 			'dragend': function(e) {
-				l(['dragend', 'mousemove', 'mouseup']);
+				removeEvent(['dragend', 'mousemove', 'mouseup']);
 			},
 			'click': function(e) {
-				l('click');
+				removeEvent('click');
 				if (z) return g(e);
 			}
 		};
@@ -192,4 +206,4 @@ selectEvent = function(e) {
 	document.addEventListener('mousedown', selectEvent, true);
 };
 
-selectLikeOpera();
+setTimeout(selectLikeOpera, 300);

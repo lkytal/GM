@@ -424,7 +424,7 @@ getLastRange = function(selection) {
 };
 
 get_offsets_and_remove = function($test_span) {
-  var curr_elem, span_ht, total_offsetLeft, total_offsetTop;
+  var curr_elem, span_ht, span_wt, total_offsetLeft, total_offsetTop;
   curr_elem = $test_span[0];
   total_offsetTop = 0;
   total_offsetLeft = 0;
@@ -434,8 +434,9 @@ get_offsets_and_remove = function($test_span) {
     curr_elem = curr_elem.offsetParent;
   }
   span_ht = $test_span.height();
+  span_wt = $test_span.width();
   $test_span.remove();
-  return [total_offsetTop, total_offsetLeft, span_ht];
+  return [total_offsetTop, total_offsetLeft, span_ht, span_wt];
 };
 
 get_selection_offsets = function(selection) {
