@@ -4,7 +4,7 @@
 // @author					lkytal
 // @homepage				http://lkytal.github.io/
 // @icon					http://lkytal.qiniudn.com/ic.ico
-// @version					1.0.2
+// @version					1.1.0
 // @description				Select like opera
 // @include					*
 // @grant					unsafeWindow
@@ -16,7 +16,7 @@
 // ==/UserScript==
 
 selectLikeOpera = function() {
-	var f = function(a) {
+	var findHTMLAchor = function(a) {
 		if (a.nodeType === 3) a = a.parentNode;
 		do {
 			if (a.constructor === HTMLAnchorElement) return a;
@@ -24,16 +24,16 @@ selectLikeOpera = function() {
 		return null;
 	};
 	
-	var g = function(e) {
+	var preventEvent = function(e) {
 		e.preventDefault();
 		e.stopPropagation();
 		return false;
 	};
 	
-	var h = (function() {
+	var rangeOperator = (function() {
 		var w = typeof InstallTrigger === 'undefined';
 		return {
-			qq: function(x, y) {
+			createRange: function(x, y) {
 				if (w) {
 					return document.caretRangeFromPoint(x, y)
 				}
@@ -44,15 +44,15 @@ selectLikeOpera = function() {
 					a.setStart(p.offsetNode, p.offset);
 					return a;
 				}
-				return null
+				return null;
 			},
-			qr: ((w ? '-webkit-' : '-moz-') + 'user-select')
+			rangeAttr: ((w ? '-webkit-' : '-moz-') + 'user-select')
 		}
 	})();
 	
 	var j = (function() {
 		var o = [{
-			p: h.qr,
+			p: rangeOperator.rangeAttr,
 			v: 'text'
 		}, {
 			p: 'outline-width',
@@ -79,19 +79,19 @@ selectLikeOpera = function() {
 		}
 	})();
 	
-	var toggleEvent = function(a, b) {
-		if (b === undefined) b = true;
-		if (a.constructor !== Array) a = [a];
+	var toggleEvent = function(events, bAdd) {
+		if (bAdd === undefined) bAdd = true;
+		if (events.constructor !== Array) events = [events];
 
-		for (var i = 0, len = a.length; i < len; i += 1)
+		for (var i = 0, len = events.length; i < len; i += 1)
 		{
-			if (b)
+			if (bAdd)
 			{
-				document.addEventListener(a[i], E[a[i]], true);
+				document.addEventListener(events[i], eventList[events[i]], true);
 			}
 			else
 			{
-				document.removeEventListener(a[i], E[a[i]], true);
+				document.removeEventListener(events[i], eventList[events[i]], true);
 			}
 		}
 	};
@@ -105,23 +105,23 @@ selectLikeOpera = function() {
 		u = z = false;
 	};
 	
-	var B, s = document.getSelection();
+	var B, selected = document.getSelection();
 	
 	selectEvent = function(e) {
 		if (e.which < 2) {
 			A();
 			var x = e.clientX,
 				y = e.clientY;
-			if (s.rangeCount > 0) {
-				var a = s.getRangeAt(0);
+			if (selected.rangeCount > 0) {
+				var a = selected.getRangeAt(0);
 				if (!a.collapsed) {
-					var r = h.qq(x, y);
+					var r = rangeOperator.createRange(x, y);
 					if (r && a.isPointInRange(r.startContainer, r.startOffset)) return;
 				}
 			}
 			j();
 			var t = e.target,
-				n = f(t);
+				n = findHTMLAchor(t);
 			if (!n) n = t.nodeType !== 3 ? t : t.parentNode;
 			if (n.constructor === HTMLCanvasElement || n.textContent === '') return;
 			var r = n.getBoundingClientRect();
@@ -142,7 +142,7 @@ selectLikeOpera = function() {
 	
 	var D = 3,
 		K = 0.8,
-		E = {
+		eventList = {
 			'mousemove': function(e) {
 				if (B) {
 					if (B.c++ < 12) {
@@ -150,7 +150,7 @@ selectLikeOpera = function() {
 						if (Math.round(r.left) !== B.x || Math.round(r.top) !== B.y) {
 							removeEvent(['mousemove', 'mouseup', 'dragend', 'dragstart', 'click']);
 							j();
-							s.removeAllRanges();
+							selected.removeAllRanges();
 							return;
 						}
 					} else {
@@ -160,11 +160,11 @@ selectLikeOpera = function() {
 				var x = e.clientX,
 					y = e.clientY;
 				if (v) {
-					s.removeAllRanges();
+					selected.removeAllRanges();
 					var a = x > m.x ? -2 : 2;
-					var b = h.qq(x + a, y);
+					var b = rangeOperator.createRange(x + a, y);
 					if (b) {
-						s.addRange(b);
+						selected.addRange(b);
 						v = false;
 					}
 				}
@@ -179,13 +179,13 @@ selectLikeOpera = function() {
 					}
 				}
 				if (u) {
-					var b = h.qq(x, y);
-					if (b) s.extend(b.startContainer, b.startOffset);
+					var b = rangeOperator.createRange(x, y);
+					if (b) selected.extend(b.startContainer, b.startOffset);
 				}
 			},
 			'dragstart': function(e) {
 				removeEvent('dragstart');
-				if (u) return g(e);
+				if (u) return preventEvent(e);
 			},
 			'mouseup': function(e) {
 				removeEvent(['mousemove', 'mouseup', 'dragstart', 'dragend']);
@@ -199,7 +199,7 @@ selectLikeOpera = function() {
 			},
 			'click': function(e) {
 				removeEvent('click');
-				if (z) return g(e);
+				if (z) return preventEvent(e);
 			}
 		};
 

@@ -4,7 +4,7 @@
 // @author					lkytal
 // @homepage				http://lkytal.github.io/
 // @icon					http://lkytal.qiniudn.com/ic.ico
-// @version					1.0.2
+// @version					1.1.0
 // @description				Select like opera
 // @include					*
 // @grant					unsafeWindow
