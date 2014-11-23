@@ -34,6 +34,7 @@ GM的"用户脚本设置"下的"Popup Search设置"打开选项选择需要的�
 
 Update Log:
 
+* 2.9.0 : In site search
 * 2.8.5 : Translate sync
 * 2.8.4 : cleanup
 * 2.8.2 : better css style
