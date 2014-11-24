@@ -7,7 +7,7 @@
 // @include					*
 // @exclude					*/test/index.html*
 // @require					http://code.jquery.com/jquery-2.1.1.min.js
-// @version					2.9.0
+// @version					2.9.1
 // @icon					http://lkytal.qiniudn.com/ic.ico
 // @grant					GM_xmlhttpRequest
 // @grant					GM_addStyle
@@ -25,21 +25,10 @@
 // ==/UserScript==
 
 "use strict";
-var GetOpt, InTextBox, Init, Load, OpenSet, SaveOpt, SetOpt, SettingWin, ShowBar, TimeOutHide, addCSS, ajaxTranslation, count, fixPos, getLastRange, get_offsets_and_remove, get_selection_offsets, log, popData, praseTranslation;
+var GetOpt, InTextBox, Init, Load, OpenSet, SaveOpt, SetOpt, SettingWin, ShowBar, TimeOutHide, addCSS, ajaxTranslation, fixPos, getLastRange, get_offsets_and_remove, get_selection_offsets, popData, praseTranslation,
+  __hasProp = {}.hasOwnProperty;
 
 popData = {};
-
-count = 0;
-
-log = function(msg) {
-  var text;
-  count += 1;
-  text = "hit at : " + count;
-  if (msg != null) {
-    text = "hit " + count + " : " + msg;
-  }
-  return console.log(text);
-};
 
 fixPos = function(sel, e) {
   var fix, m_left, offsetLeft, offsetTop, offsets;
@@ -87,7 +76,7 @@ TimeOutHide = function() {
 };
 
 Init = function() {
-  var $DivBox;
+  var $DivBox, UIList, id, opt;
   $('#ShowUpBox').remove();
   $('body').append("<span id=\"ShowUpBox\">\n	<span id=\"showupbody\">\n		<span id=\"popupwapper\" />\n		<span id=\"Gspan\" />\n	</span>\n</span>");
   $DivBox = $('#ShowUpBox');
@@ -131,7 +120,7 @@ Init = function() {
     }
     return popData.mouseIn = 0;
   });
-  $('#popupwapper').append("<a id='gtrans' href='javascript:void(0)'><img title='translate' src='" + popData.tico + "' /></a>").append("<a id='openurl' href=''><img title='Open Url' id='iconie' src='" + popData.ieIcon + "'/></a>").append("<a id='sSite' href=''><img title='In Site Search' src='" + popData.inSite + "' /></a>").append("<a id='sbaidu' href=''><img title='Baidu' src='" + popData.baiduico + "' /></a>").append("<a id='sbing' href=''><img title='Bing' src='" + popData.bingico + "' /></a>").append("<a id='sgoogle' href=''><img title='Google' id='gicon' src='" + popData.gicon + "' /></a>");
+  $('#popupwapper').append("<a id='gtrans' href=''><img title='translate' src='" + popData.tico + "' /></a>").append("<a id='openurl' href=''><img title='Open Url' id='iconie' src='" + popData.ieIcon + "'/></a>").append("<a id='sSite' href=''><img title='In Site Search' src='" + popData.inSite + "' /></a>").append("<a id='sbaidu' href=''><img title='Baidu' src='" + popData.baiduico + "' /></a>").append("<a id='sbing' href=''><img title='Bing' src='" + popData.bingico + "' /></a>").append("<a id='sgoogle' href=''><img title='Google' id='gicon' src='" + popData.gicon + "' /></a>");
   $('#sgoogle, #sbing, #sbaidu, #openurl').on("click", function(event) {
     return $('#ShowUpBox').hide();
   });
@@ -153,20 +142,19 @@ Init = function() {
     })();
     return event.preventDefault();
   });
-  if (!GetOpt('Open_st')) {
-    $('#openurl').hide();
-  }
-  if (!GetOpt('Site_st')) {
-    $('#sSite').hide();
-  }
-  if (!GetOpt('Baidu_st')) {
-    $('#sbaidu').hide();
-  }
-  if (!GetOpt('Bing_st')) {
-    $('#sbing').hide();
-  }
-  if (!GetOpt('Google_st')) {
-    $('#sgoogle').hide();
+  UIList = {
+    '#openurl': 'Open_st',
+    '#sSite': 'Site_st',
+    '#sbaidu': 'Baidu_st',
+    '#sbing': 'Bing_st',
+    '#sgoogle': 'Google_st'
+  };
+  for (id in UIList) {
+    if (!__hasProp.call(UIList, id)) continue;
+    opt = UIList[id];
+    if (!GetOpt(opt)) {
+      $(id).hide();
+    }
   }
   if (GetOpt('Tab_st')) {
     $DivBox.find('a').attr('target', '_blank');
