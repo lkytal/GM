@@ -19,12 +19,12 @@
 "use strict";
 var excludedTags, filter, linkMixInit, linkPack, linkify, observePage, observer, setHttp, setLink, url_regexp, xpath;
 
-url_regexp = /((https?:\/\/|www\.)[\x21-\x7e]+\w|(\w[\w._-]+\.(com|cn|org|net|info|tv|cc))(\/[\x21-\x7e]*\w)?)/gi;
+url_regexp = /((https?:\/\/|www\.)[\x21-\x7e]+\w|(\w[\w._-]+\.(com|cn|org|net|info|tv|cc))(\/[\x21-\x7e]*\w)?|ed2k:\/\/[\x21-\x7e]+\|\/|thunder:\/\/[\x21-\x7e]+=)/gi;
 
 setHttp = function(event) {
   var url;
   url = event.target.getAttribute("href");
-  if (url.indexOf("http") !== 0) {
+  if (url.indexOf("http") !== 0 && url.indexOf("ed2k://") !== 0 && url.indexOf("thunder://") !== 0) {
     return event.target.setAttribute("href", "http://" + url);
   }
 };

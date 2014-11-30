@@ -7,7 +7,7 @@
 // @include					*
 // @exclude					*/test/index.html*
 // @require					http://code.jquery.com/jquery-2.1.1.min.js
-// @version					2.9.1
+// @version					2.9.2
 // @icon					http://lkytal.qiniudn.com/ic.ico
 // @grant					GM_xmlhttpRequest
 // @grant					GM_addStyle
@@ -28,7 +28,9 @@
 var GetOpt, InTextBox, Init, Load, OpenSet, SaveOpt, SetOpt, SettingWin, ShowBar, TimeOutHide, addCSS, ajaxTranslation, fixPos, getLastRange, get_offsets_and_remove, get_selection_offsets, popData, praseTranslation,
   __hasProp = {}.hasOwnProperty;
 
-popData = {};
+popData = {
+  ajax: []
+};
 
 fixPos = function(sel, e) {
   var fix, m_left, offsetLeft, offsetTop, offsets;
@@ -124,24 +126,6 @@ Init = function() {
   $('#sgoogle, #sbing, #sbaidu, #openurl').on("click", function(event) {
     return $('#ShowUpBox').hide();
   });
-  $('#gtrans').on("click", function(event) {
-    var addr, addrList;
-    popData.bTrans = 1;
-    $("#Gspan").empty().append("<div style='padding:10px;'><img src=" + popData.pending + " /></div>").show();
-    $('#popupwapper').hide();
-    fixPos(document.defaultView.getSelection());
-    addrList = ["translate.google.cn", "translate.google.com.hk", "translate.google.com", "173.194.120.88", "61.19.1.118", "64.15.115.187", "91.213.30.185", "178.60.128.53"];
-    popData.ajax = (function() {
-      var _i, _len, _results;
-      _results = [];
-      for (_i = 0, _len = addrList.length; _i < _len; _i++) {
-        addr = addrList[_i];
-        _results.push(ajaxTranslation(addr));
-      }
-      return _results;
-    })();
-    return event.preventDefault();
-  });
   UIList = {
     '#openurl': 'Open_st',
     '#sSite': 'Site_st',
@@ -161,6 +145,24 @@ Init = function() {
   } else {
     $DivBox.find('a').attr('target', '_self');
   }
+  $('#gtrans').on("click", function(event) {
+    var addr, addrList;
+    popData.bTrans = 1;
+    $("#Gspan").empty().append("<div style='padding:10px;'><img src=" + popData.pending + " /></div>").show();
+    $('#popupwapper').hide();
+    fixPos(document.defaultView.getSelection());
+    addrList = ["translate.google.com", "74.125.22.189", "173.194.120.88", "74.125.205.95", "61.19.1.118", "64.15.115.187", "91.213.30.185", "178.60.128.53"];
+    popData.ajax = (function() {
+      var _i, _len, _results;
+      _results = [];
+      for (_i = 0, _len = addrList.length; _i < _len; _i++) {
+        addr = addrList[_i];
+        _results.push(ajaxTranslation(addr));
+      }
+      return _results;
+    })();
+    return event.preventDefault();
+  });
   if (GetOpt('Dis_st')) {
     popData.tip = popData.tipup;
     $DivBox.append('<span id="popuptip" class="tipup"></span>');
