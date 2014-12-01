@@ -7,7 +7,7 @@
 // @include					*
 // @exclude					*/test/index.html*
 // @require					http://code.jquery.com/jquery-2.1.1.min.js
-// @version					2.9.2
+// @version					2.9.3
 // @icon					http://lkytal.qiniudn.com/ic.ico
 // @grant					GM_xmlhttpRequest
 // @grant					GM_addStyle
@@ -25,11 +25,22 @@
 // ==/UserScript==
 
 "use strict";
-var GetOpt, InTextBox, Init, Load, OpenSet, SaveOpt, SetOpt, SettingWin, ShowBar, TimeOutHide, addCSS, ajaxTranslation, fixPos, getLastRange, get_offsets_and_remove, get_selection_offsets, popData, praseTranslation,
+var GetOpt, InTextBox, Init, Load, OpenSet, SaveOpt, SetOpt, SettingWin, ShowBar, TimeOutHide, addCSS, ajaxTranslation, fixPos, getLastRange, get_offsets_and_remove, get_selection_offsets, log, popData, praseTranslation,
   __hasProp = {}.hasOwnProperty;
 
 popData = {
+  count: 0,
   ajax: []
+};
+
+log = function(msg) {
+  var text;
+  popData.count += 1;
+  text = "hit at : " + popData.count;
+  if (msg != null) {
+    text = "hit " + popData.count + " : " + msg;
+  }
+  return console.log(text);
 };
 
 fixPos = function(sel, e) {
@@ -185,27 +196,22 @@ praseTranslation = function(responseDetails) {
   if (!popData.bTrans) {
     return;
   }
-  _ref = popData.ajax;
-  for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-    req = _ref[_i];
-    req.abort();
-  }
   Rtxt = JSON.parse(responseDetails.responseText);
   Rst = '<div id="tranRst" style="padding:10px;font-size:13px;overflow:auto;">';
-  _ref1 = Rtxt.sentences;
-  for (_j = 0, _len1 = _ref1.length; _j < _len1; _j++) {
-    line = _ref1[_j];
+  _ref = Rtxt.sentences;
+  for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+    line = _ref[_i];
     Rst += line.trans + '<br>';
   }
   Rst += '<br><ul style="font-size:13px;list-style-position:inside;">';
   if (Rtxt.dict != null) {
-    _ref2 = Rtxt.dict;
-    for (_k = 0, _len2 = _ref2.length; _k < _len2; _k++) {
-      usage = _ref2[_k];
+    _ref1 = Rtxt.dict;
+    for (_j = 0, _len1 = _ref1.length; _j < _len1; _j++) {
+      usage = _ref1[_j];
       Rst += "<li>" + usage.pos + " : ";
-      _ref3 = usage.entry;
-      for (_l = 0, _len3 = _ref3.length; _l < _len3; _l++) {
-        means = _ref3[_l];
+      _ref2 = usage.entry;
+      for (_k = 0, _len2 = _ref2.length; _k < _len2; _k++) {
+        means = _ref2[_k];
         if (means.score > 0.005 || means.score > usage.entry[0].score / 4) {
           Rst += means.word + ', ';
         }
@@ -214,7 +220,12 @@ praseTranslation = function(responseDetails) {
     }
   }
   $('#Gspan').empty().append(Rst + '</ul></div>').show();
-  return fixPos(document.defaultView.getSelection());
+  fixPos(document.defaultView.getSelection());
+  _ref3 = popData.ajax;
+  for (_l = 0, _len3 = _ref3.length; _l < _len3; _l++) {
+    req = _ref3[_l];
+    req.abort();
+  }
 };
 
 ajaxTranslation = function(addr, callback) {
