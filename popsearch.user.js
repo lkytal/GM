@@ -7,7 +7,7 @@
 // @include					*
 // @exclude					*/test/index.html*
 // @require					http://code.jquery.com/jquery-2.1.1.min.js
-// @version					2.9.3
+// @version					2.9.4
 // @icon					http://lkytal.qiniudn.com/ic.ico
 // @grant					GM_xmlhttpRequest
 // @grant					GM_addStyle
@@ -29,17 +29,13 @@ var GetOpt, InTextBox, Init, Load, OpenSet, SaveOpt, SetOpt, SettingWin, ShowBar
   __hasProp = {}.hasOwnProperty;
 
 popData = {
-  count: 0,
-  ajax: []
+  count: 0
 };
 
 log = function(msg) {
   var text;
   popData.count += 1;
-  text = "hit at : " + popData.count;
-  if (msg != null) {
-    text = "hit " + popData.count + " : " + msg;
-  }
+  text = "hit " + popData.count + " : " + msg;
   return console.log(text);
 };
 
