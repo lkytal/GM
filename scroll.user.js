@@ -6,10 +6,11 @@
 // @include					*
 // @exclude					*pan.baidu.com/*
 // @exclude					*c5.yunpan.360.cn/*
-// @version					1.3.8
+// @version					1.4.0
 // @icon					http://lkytal.qiniudn.com/ic.ico
 // @grant					GM_getValue
 // @grant					GM_setValue
+// @grant					GM_addStyle
 // @homepageURL				https://git.oschina.net/coldfire/GM
 // @updateURL				https://git.oschina.net/coldfire/GM/raw/master/meta/scroll.meta.js
 // @downloadURL				https://git.oschina.net/coldfire/GM/raw/master/scroll.user.js
@@ -18,7 +19,10 @@
 function scrollPlus()
 {
     //###Customization: |可自定义的东西：
-
+	
+	//go directly to top/down page | 回到顶部按钮
+	var goTopButtom = 1;
+	
     //Show the scrolling indicator box or not, "1" to show. | 1－显示提示条，其他－不显示。
     var scrollShowIndicator = 1;
 
@@ -131,6 +135,41 @@ function scrollPlus()
             return true;
         }
     }
+	
+	function addToTop()
+	{
+		var a = document.createElement('a');
+		a.id = 'scrollUpIco';
+		a.textContent = 'Top';
+		a.addEventListener('click', function(){ window.scrollTo(0, document.body.scrollLeft); }, false);
+		document.body.appendChild(a);
+		
+		GM_addStyle("\
+			#scrollUpIco {\
+				position: fixed;\
+				z-index: 2147483647;\
+				width: 50px;\
+				height: 50px;\
+				border-radius: 25px;\
+				bottom: 20px;\
+				right: 25px;\
+				line-height: 50px;\
+				text-align: center;\
+				font-weight: bold;\
+				background-color: rgba(0, 0, 0, 0.3);\
+				color: #fff;\
+				text-decoration: none;\
+			}\
+			#scrollUpIco:hover {\
+				background-color: rgba(0, 0, 0, 0.75);\
+				color: #fff !important;\
+			}"
+		);
+	}
+	
+	if (goTopButtom) addToTop();
 }
 
-scrollPlus();
+if (!(window !== window.top || window.document.title === "")) {
+	setTimeout(scrollPlus, 100);
+}
