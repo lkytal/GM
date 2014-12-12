@@ -360,12 +360,13 @@ SettingWin = function() {
       return Init();
     });
   });
-  return $("#popup_close").click(function() {
+  $("#popup_close").click(function() {
     return $("#popup_setting_win").fadeOut(300, function() {
       $("#popup_setting_win").remove();
       return SettingWin();
     });
   });
+  return $('#popup_setting_win').hide();
 };
 
 Load = function() {
