@@ -7,7 +7,7 @@
 // @include					*
 // @exclude					*/test/index.html*
 // @require					http://code.jquery.com/jquery-2.1.1.min.js
-// @version					2.9.5
+// @version					2.9.6
 // @icon					http://lkytal.qiniudn.com/ic.ico
 // @grant					GM_xmlhttpRequest
 // @grant					GM_addStyle
@@ -335,7 +335,7 @@ SettingWin = function() {
   if ($('#popup_setting_win').length !== 0) {
     $('#popup_setting_win').remove();
   }
-  $("body").append("<span id=\"popup_setting_win\" style=\"display:none\">\n	<div id=\"popup_title\">PopUp Search设置</div>\n	<div id=\"pop_st_wapper\">\n		<div id=\"option_box\">\n			<div id=\"rol1\">\n				<span id=\"Google_st\">Google搜索</span>\n				<span id=\"Bing_st\">Bing搜索</span>\n				<span id=\"Baidu_st\">Baidu搜索</span>\n			</div>\n			<div id=\"rol2\">\n                        <span id=\"Site_st\">站内搜索按钮</span>\n				<span id=\"Fade_st\">超时自动隐藏</span>\n				<span id=\"Dis_st\">显示于文字上方</span>\n			</div>\n			<div id=\"rol3\">\n				<span id=\"Open_st\">打开选中网址按钮</span>\n				<span id=\"Tab_st\">新标签页打开</span>\n				<span id=\"Copy_st\">选中自动复制</span>\n			</div>\n			<div id=\"rol4\">\n				<span id=\"Round_st\">使用直角风格</span>\n				<span id=\"Ctrl_st\">仅按下Ctrl时显示</span>\n			</div>\n		</div>\n		<br>\n		<div id = \"btnarea\">\n			<div id=\"popup_tip\">可用GreaseMonkey\"用户脚本命令\"菜单下的\"Popup Search设置\"打开此选项</div>\n			<div id=\"popup_close\" class=\"setting_btn\">Close</div>\n			<div id=\"popup_save\" class=\"setting_btn\">Save</div>\n		</div>\n	</div>\n</span>");
+  $("body").append("<div id=\"popup_setting_win\" style=\"display:none\">\n	<div id=\"popup_title\">PopUp Search设置</div>\n	<div id=\"pop_st_wapper\">\n		<div id=\"option_box\">\n			<div id=\"rol1\">\n				<span id=\"Google_st\">Google搜索</span>\n				<span id=\"Bing_st\">Bing搜索</span>\n				<span id=\"Baidu_st\">Baidu搜索</span>\n			</div>\n			<div id=\"rol2\">\n                        <span id=\"Site_st\">站内搜索按钮</span>\n				<span id=\"Fade_st\">超时自动隐藏</span>\n				<span id=\"Dis_st\">显示于文字上方</span>\n			</div>\n			<div id=\"rol3\">\n				<span id=\"Open_st\">打开选中网址按钮</span>\n				<span id=\"Tab_st\">新标签页打开</span>\n				<span id=\"Copy_st\">选中自动复制</span>\n			</div>\n			<div id=\"rol4\">\n				<span id=\"Round_st\">使用直角风格</span>\n				<span id=\"Ctrl_st\">仅按下Ctrl时显示</span>\n			</div>\n		</div>\n		<br>\n		<div id = \"btnarea\">\n			<div id=\"popup_tip\">可用GreaseMonkey\"用户脚本命令\"菜单下的\"Popup Search设置\"打开此选项</div>\n			<div id=\"popup_close\" class=\"setting_btn\">Close</div>\n			<div id=\"popup_save\" class=\"setting_btn\">Save</div>\n		</div>\n	</div>\n</div>");
   $("#rol1 > span, #rol2 > span, #rol3 > span, #rol4 > span").addClass("setting_sp_btn");
   _ref = $("#popup_setting_win .setting_sp_btn");
   for (_i = 0, _len = _ref.length; _i < _len; _i++) {

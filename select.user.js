@@ -4,8 +4,8 @@
 // @author					lkytal
 // @homepage				http://lkytal.github.io/
 // @icon					http://lkytal.qiniudn.com/ic.ico
-// @version					1.1.0
-// @description				Select like opera
+// @version					1.1.1
+// @description				Select texts insider links, for firefox only
 // @include					*
 // @grant					unsafeWindow
 // @grant					GM_getValue
