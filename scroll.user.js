@@ -19,10 +19,10 @@
 function scrollPlus()
 {
     //###Customization: |可自定义的东西：
-	
+
 	//go directly to top/down page | 回到顶部按钮
 	var goTopButtom = 1;
-	
+
     //Show the scrolling indicator box or not, "1" to show. | 1－显示提示条，其他－不显示。
     var scrollShowIndicator = 1;
 
@@ -135,7 +135,7 @@ function scrollPlus()
             return true;
         }
     }
-	
+
 	function addToTop()
 	{
 		var a = document.createElement('a');
@@ -143,7 +143,7 @@ function scrollPlus()
 		a.textContent = 'Top';
 		a.addEventListener('click', function(){ window.scrollTo(0, document.body.scrollLeft); }, false);
 		document.body.appendChild(a);
-		
+
 		GM_addStyle("\
 			#scrollUpIco {\
 				position: fixed;\
@@ -166,7 +166,7 @@ function scrollPlus()
 			}"
 		);
 	}
-	
+
 	if (goTopButtom) addToTop();
 }
 
