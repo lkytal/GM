@@ -5,9 +5,9 @@
 // @description					贴吧小尾巴, 坟贴提醒, 去除跳转等功能
 // @include						http://tieba.baidu.com/*
 // @include						https://tieba.baidu.com/*
-// @version						6.0.2
+// @version						6.0.4
 // @author						lkytal
-// @require						http://code.jquery.com/jquery-2.1.1.min.js
+// @require						http://libs.baidu.com/jquery/2.1.1/jquery.min.js
 // @icon						http://lkytal.qiniudn.com/ic.ico
 // @grant						unsafeWindow
 // @grant						GM_addStyle
@@ -38,7 +38,7 @@ log = function(msg) {
 };
 
 open_setting_window = function() {
-  var e, x;
+  var e, x, _ref, _ref1;
   $('body').append("<div id=\"setting_shadow\" style=\"opacity:0\">\n	<div id=\"setting_window\" style=\"top:-100%;\">\n		<div id=\"setting_reset\" class=\"setting_btn_inside\">重置</div>\n		<div id=\"setting_save\" class=\"setting_btn_inside\">保存</div>\n		<div id=\"setting_close\" class=\"setting_title setting_btn_inside\">设置</div>\n		<p class=\"setting_hiding_sp\"></p>\n		<div id=\"setting_out_div\">\n			<div id=\"fentie_open\" class=\"setting_sp_btn\">坟贴检测</div>\n			<div class=\"setting_sp\">\n				<p class=\"setting_hide\"></p><span>超过</span>\n				<input class=\"setting_input\" type=\"number\" id=\"fentie_date\"></input><span>天的帖子视为坟贴</span>\n				<div id=\"fentie_forbidden\" class=\"setting_sp_btn\">坟贴禁回</div>\n			</div>\n			<p class=\"setting_hide sp\"></p>\n			<div id=\"tail_open\" class=\"setting_sp_btn\">小尾巴</div>\n			<div id=\"tail_select\">\n				<div id=\"tail_select_text\" contenteditable=\"true\"></div>\n				<div id=\"tail_option_box\"></div>\n				<div id=\"tail_type\">\n					<div id=\"tail_type_text\"></div>\n					<div id=\"tail_type_box\">\n						<div class=\"tail_type_option\">html</div>\n						<div class=\"tail_type_option\">javascript</div>\n					</div>\n				</div>\n				<div id=\"tail_save\" class=\"setting_btn_inside\">保存当前尾巴</div>\n				<div id=\"tail_new\" class=\"setting_btn_inside\">新建尾巴</div>\n				<div id=\"tail_delete\" class=\"setting_btn_inside\">删除尾巴</div>\n			</div>\n			<div class=\"setting_sp\">\n				<textarea class=\"setting_textarea\" id=\"tail_data\"></textarea><span>预览</span>\n				<div class=\"setting_textarea\" id=\"tail_data_show\"></div>\n				<p class=\"hiding_margin\" style=\"width:1px;height:20px;\"></p>\n			</div>\n		</div>\n	</div>\n</div>");
   $("#fentie_date")[0].value = tiebaData.fentie_date;
   if (!tiebaData.fentie_open) {
@@ -52,7 +52,9 @@ open_setting_window = function() {
     $("#tail_open").attr("class", "setting_sp_btn close");
     $("#tail_select,#tail_select + div").css("display", "none");
   }
-  for (x in tiebaData.tail_data) {
+  _ref = tiebaData.tail_data;
+  for (x in _ref) {
+    if (!__hasProp.call(_ref, x)) continue;
     $("#tail_select_text")[0].innerHTML = x;
     $("#tail_select_text").attr("new", "0");
     $("#tail_select_text").attr("oname", x);
@@ -60,7 +62,9 @@ open_setting_window = function() {
     $("#tail_type_text")[0].innerHTML = tiebaData.tail_data[x].split("!分隔!")[1];
     break;
   }
-  for (x in tiebaData.tail_data) {
+  _ref1 = tiebaData.tail_data;
+  for (x in _ref1) {
+    if (!__hasProp.call(_ref1, x)) continue;
     $("#tail_option_box").append("<div class=\"tail_option\">" + x + "</div>");
   }
   $(".tail_option").click(function() {
@@ -225,16 +229,18 @@ open_setting_window = function() {
     $("#tail_select_text").attr("new", "1");
     $("#tail_select_text").attr("oname", "");
     $("#tail_select_text")[0].textContent = "新尾巴" + Math.random().toString().substr(3, 3);
-    $("#tail_data")[0].value = "<br>小尾巴脚本Tieba Enhance:<br>https://userscripts.org/scripts/show/180666";
+    $("#tail_data")[0].value = "<br>小尾巴脚本Tieba Enhance:<br>https://git.oschina.net/coldfire/GM";
     $("#tail_type_text")[0].textContent = "html";
   });
   $("#tail_delete").click(function() {
-    var oname;
+    var oname, _ref2, _ref3;
     oname = $("#tail_select_text")[0].getAttribute("oname");
     if ($("#tail_select_text")[0].getAttribute("new") !== 1) {
       delete tiebaData.tail_data[oname];
     }
-    for (x in tiebaData.tail_data) {
+    _ref2 = tiebaData.tail_data;
+    for (x in _ref2) {
+      if (!__hasProp.call(_ref2, x)) continue;
       $("#tail_select_text")[0].innerHTML = x;
       $("#tail_select_text").attr("new", "0");
       $("#tail_select_text").attr("oname", x);
@@ -244,7 +250,9 @@ open_setting_window = function() {
     }
     GM_setValue("tail_data", JSON.stringify(tiebaData.tail_data));
     $("#tail_option_box").empty();
-    for (x in tiebaData.tail_data) {
+    _ref3 = tiebaData.tail_data;
+    for (x in _ref3) {
+      if (!__hasProp.call(_ref3, x)) continue;
       tiebaData.tail_data[x] = tiebaData.tail_data[x].replace(/!逗号!/g, ",").replace(/!引号!/g, "\"");
       $("#tail_option_box").append("<div class=\"tail_option\">" + x + "</div>");
     }
@@ -269,7 +277,7 @@ open_setting_window = function() {
     });
   });
   $("#tail_save").click(function() {
-    var name, oname;
+    var name, oname, _ref2, _ref3;
     name = $("#tail_select_text")[0].innerHTML;
     oname = $("#tail_select_text")[0].getAttribute("oname");
     if ($("#tail_select_text")[0].getAttribute("new") === 1) {
@@ -287,12 +295,16 @@ open_setting_window = function() {
         tiebaData.tail_data[name] = $("#tail_data")[0].value + "!分隔!" + $("#tail_type_text")[0].textContent;
       }
     }
-    for (x in tiebaData.tail_data) {
+    _ref2 = tiebaData.tail_data;
+    for (x in _ref2) {
+      if (!__hasProp.call(_ref2, x)) continue;
       tiebaData.tail_data[x] = tiebaData.tail_data[x].replace(/,/g, "!逗号!").replace(/"/g, "!引号!");
     }
     GM_setValue("tail_data", JSON.stringify(tiebaData.tail_data));
     $("#tail_option_box").empty();
-    for (x in tiebaData.tail_data) {
+    _ref3 = tiebaData.tail_data;
+    for (x in _ref3) {
+      if (!__hasProp.call(_ref3, x)) continue;
       tiebaData.tail_data[x] = tiebaData.tail_data[x].replace(/!逗号!/g, ",").replace(/!引号!/g, "\"");
       $("#tail_option_box").append("<div class=\"tail_option\">" + x + "</div>");
     }
@@ -364,7 +376,7 @@ TailInit = function() {
     if (!tiebaData.tail_open) {
       return;
     }
-    $("a.j_submit.poster_submit").before("<span id=\"tail_use\">\n	<span id=\"tail_use_text\" class=\"ui_btn ui_btn_m\"></span>\n	<div id=\"tail_use_box_out\">\n		<div id=\"tail_use_box\" style=\"display:none;\"></div>\n	</div>\n</span>");
+    $("a.j_submit.poster_submit").before("<span id=\"tail_use\">\n	<span class=\"ui_btn ui_btn_m\">\n		<span id=\"tail_use_text\"></span>\n	</span>\n		<div id=\"tail_use_box_out\">\n			<div id=\"tail_use_box\" style=\"display:none;\"></div>\n		</div>\n</span>");
     $("#tail_use_text").click(function() {
       return $("#tail_use_box").slideToggle(400);
     });
@@ -460,7 +472,7 @@ clearLink = function(event) {
 };
 
 Init = function() {
-  var x;
+  var x, _ref;
   tiebaData.fentie_open = GM_getValue("fentie_open", 1);
   tiebaData.fentie_date = GM_getValue("fentie_date", 30);
   tiebaData.fentie_forbidden = GM_getValue("fentie_forbidden", 1);
@@ -479,7 +491,9 @@ Init = function() {
     GM_setValue("fentie_forbidden", tiebaData.fentie_forbidden);
     GM_setValue("tail_open", tiebaData.tail_open);
     GM_setValue("tail_data", JSON.stringify(tiebaData.tail_data));
-    for (x in tiebaData.tail_data) {
+    _ref = tiebaData.tail_data;
+    for (x in _ref) {
+      if (!__hasProp.call(_ref, x)) continue;
       tiebaData.tail_data[x] = tiebaData.tail_data[x].replace(/!逗号!/g, ",").replace(/!引号!/g, "\"");
     }
   }
