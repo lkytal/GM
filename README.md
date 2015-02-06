@@ -1,5 +1,7 @@
 #GM script for Firefox
 
+[![Join the chat at https://gitter.im/lkytal/GM](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/lkytal/GM?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 原创 & 修改的GM脚本
 
 个人主页: http://lkytal.github.io/
