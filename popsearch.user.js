@@ -7,7 +7,7 @@
 // @include					*
 // @exclude					*/test/index.html*
 // @require					http://libs.baidu.com/jquery/2.1.1/jquery.min.js
-// @version					3.0.0
+// @version					3.0.1
 // @icon					http://lkytal.qiniudn.com/ic.ico
 // @grant					GM_xmlhttpRequest
 // @grant					GM_addStyle
@@ -121,8 +121,9 @@ Init = function() {
     return popData.mouseIn = 0;
   });
   $('#popupwapper').append("<a id='gtrans' href=''><img title='translate' src='" + popData.tico + "' /></a>").append("<a id='openurl' href=''><img title='Open Url' id='iconie' src='" + popData.ieIcon + "'/></a>").append("<a id='sSite' href=''><img title='In Site Search' src='" + popData.inSite + "' /></a>").append("<a id='sbaidu' href=''><img title='Baidu' src='" + popData.baiduico + "' /></a>").append("<a id='sbing' href=''><img title='Bing' src='" + popData.bingico + "' /></a>").append("<a id='sgoogle' href=''><img title='Google' id='gicon' src='" + popData.gicon + "' /></a>");
-  $('#sgoogle, #sbing, #sbaidu, #openurl').on("mouseup", function(event) {
-    return $('#ShowUpBox').hide();
+  $('#sgoogle, #sbing, #sbaidu, #openurl').on("click", function(e) {
+    $('#ShowUpBox').hide();
+    return e.stopPropagation();
   });
   UIList = {
     '#openurl': 'Open_st',
