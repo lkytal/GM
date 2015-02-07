@@ -2,10 +2,11 @@
 // @name						Tieba Enhance
 // @namespace					lkytal
 // @author						lkytal
+// @homepage					http://lkytal.github.io/
 // @description					贴吧小尾巴, 坟贴提醒, 去除跳转等功能
 // @include						http://tieba.baidu.com/*
 // @include						https://tieba.baidu.com/*
-// @version						6.0.4
+// @version						6.0.5
 // @author						lkytal
 // @require						http://libs.baidu.com/jquery/2.1.1/jquery.min.js
 // @icon						http://lkytal.qiniudn.com/ic.ico
@@ -346,23 +347,21 @@ open_setting_window = function() {
 };
 
 CheckPost = function() {
-  var date_str, date_time, days, prefix, years;
+  var date_str, date_time, days, years;
   if ($("#j_core_title_wrap").length && tiebaData.fentie_open) {
     date_str = $("#j_p_postlist ul.p_tail > li:nth-child(2) > span")[0].textContent;
     if (date_str === "1970-01-01 07:00") {
-      setTimeout(CheckPost, 500);
-      return;
+      return setTimeout(CheckPost, 500);
     }
     date_str = date_str.replace(" ", "-").replace(":", "-").split("-");
     date_time = new Date(date_str[0], date_str[1] - 1, date_str[2], date_str[3], date_str[4]);
     days = parseInt((new Date() - date_time) / 86400000);
     if (days >= tiebaData.fentie_date) {
-      prefix = days;
       if (days >= 365) {
         years = parseInt(days / 365);
-        prefix = "" + years + "年" + (days - years * 365);
+        days = ("" + years + "年") + (days - years * 365);
       }
-      $("#tb_nav").after("<div id='NotifyTide'><p>这是一个" + prefix + "天的坟贴哦~</p></div>");
+      $("#tb_nav").after("<div id='NotifyTide'><p>这是一个" + days + "天的坟贴哦~</p></div>");
       if (tiebaData.fentie_forbidden) {
         return tiebaData.StopPost = 1;
       }
@@ -376,7 +375,7 @@ TailInit = function() {
     if (!tiebaData.tail_open) {
       return;
     }
-    $("a.j_submit.poster_submit").before("<span id=\"tail_use\">\n	<span class=\"ui_btn ui_btn_m\">\n		<span id=\"tail_use_text\"></span>\n	</span>\n		<div id=\"tail_use_box_out\">\n			<div id=\"tail_use_box\" style=\"display:none;\"></div>\n		</div>\n</span>");
+    $("a.j_submit.poster_submit").before("<span id=\"tail_use\">\n	<span class=\"ui_btn ui_btn_m\">\n		<span id=\"tail_use_text\"></span>\n	</span>\n	<div id=\"tail_use_box_out\">\n		<div id=\"tail_use_box\" style=\"display:none;\"></div>\n	</div>\n</span>");
     $("#tail_use_text").click(function() {
       return $("#tail_use_box").slideToggle(400);
     });
