@@ -8,7 +8,7 @@
 // @exclude						*pan.baidu.com/*
 // @exclude						*renren.com/*
 // @exclude						*exhentai.org/*
-// @version						2.6.1
+// @version						2.6.2
 // @icon						http://lkytal.qiniudn.com/ic.ico
 // @grant						unsafeWindow
 // @homepageURL					https://git.oschina.net/coldfire/GM

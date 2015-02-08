@@ -8,7 +8,7 @@
 // @exclude						*pan.baidu.com/*
 // @exclude						*renren.com/*
 // @exclude						*exhentai.org/*
-// @version						2.6.1
+// @version						2.6.2
 // @icon						http://lkytal.qiniudn.com/ic.ico
 // @grant						unsafeWindow
 // @homepageURL					https://git.oschina.net/coldfire/GM
@@ -65,7 +65,7 @@ linkPack = function(result, start) {
     }
     setTimeout(function() {
       return linkPack(result, start + 10000);
-    }, 20);
+    }, 10);
   } else {
     for (i = _j = start, _ref1 = result.snapshotLength; start <= _ref1 ? _j <= _ref1 : _j >= _ref1; i = start <= _ref1 ? ++_j : --_j) {
       setLink(result.snapshotItem(i));

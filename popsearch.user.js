@@ -7,7 +7,7 @@
 // @include					*
 // @exclude					*/test/index.html*
 // @require					http://libs.baidu.com/jquery/2.1.1/jquery.min.js
-// @version					3.0.1
+// @version					3.0.2
 // @icon					http://lkytal.qiniudn.com/ic.ico
 // @grant					GM_xmlhttpRequest
 // @grant					GM_addStyle
@@ -150,7 +150,7 @@ Init = function() {
     $("#Gspan").empty().append("<div style='padding:10px;'><img src=" + popData.pending + " /></div>").show();
     $('#popupwapper').hide();
     fixPos(document.defaultView.getSelection());
-    addrList = ["translate.google.com", "64.233.189.166"];
+    addrList = ["translate.google.com", "64.233.189.166", "74.125.139.31", "173.194.122.249", "173.194.124.85", "208.117.229.212", "173.194.76.117"];
     popData.ajax = (function() {
       var _i, _len, _results;
       _results = [];
