@@ -8,7 +8,7 @@
 // @exclude						*pan.baidu.com/*
 // @exclude						*renren.com/*
 // @exclude						*exhentai.org/*
-// @version						2.6.2
+// @version						2.6.3
 // @icon						http://lkytal.qiniudn.com/ic.ico
 // @grant						unsafeWindow
 // @homepageURL					https://git.oschina.net/coldfire/GM
@@ -19,7 +19,7 @@
 "use strict";
 var excludedTags, filter, linkMixInit, linkPack, linkify, observePage, observer, setHttp, setLink, url_regexp, xpath;
 
-url_regexp = /((https?:\/\/|www\.)[\x21-\x7e]+\w|(\w[\w._-]+\.(com|cn|org|net|info|tv|cc))(\/[\x21-\x7e]*\w)?|ed2k:\/\/[\x21-\x7e]+\|\/|thunder:\/\/[\x21-\x7e]+=)/gi;
+url_regexp = /((https?:\/\/|www\.)[\x21-\x7e]+[\w\/]|(\w[\w._-]+\.(com|cn|org|net|info|tv|cc))(\/[\x21-\x7e]*[\w\/])?|ed2k:\/\/[\x21-\x7e]+\|\/|thunder:\/\/[\x21-\x7e]+=)/gi;
 
 setHttp = function(event) {
   var url;
@@ -65,7 +65,7 @@ linkPack = function(result, start) {
     }
     setTimeout(function() {
       return linkPack(result, start + 10000);
-    }, 10);
+    }, 15);
   } else {
     for (i = _j = start, _ref1 = result.snapshotLength; start <= _ref1 ? _j <= _ref1 : _j >= _ref1; i = start <= _ref1 ? ++_j : --_j) {
       setLink(result.snapshotItem(i));

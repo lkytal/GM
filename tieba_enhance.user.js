@@ -359,7 +359,7 @@ CheckPost = function() {
     if (days >= tiebaData.fentie_date) {
       if (days >= 365) {
         years = parseInt(days / 365);
-        days = ("" + years + "年") + (days - years * 365);
+        days = (years + "年") + (days - years * 365);
       }
       $("#tb_nav").after("<div id='NotifyTide'><p>这是一个" + days + "天的坟贴哦~</p></div>");
       if (tiebaData.fentie_forbidden) {
