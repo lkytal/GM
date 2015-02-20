@@ -15,7 +15,7 @@
 * [Tieba enhance](https://git.oschina.net/coldfire/GM/raw/master/tieba_enhance.user.js)
 * [Scroll with mouse plus](https://git.oschina.net/coldfire/GM/raw/master/scroll.user.js)
 * [Select like Opera](https://git.oschina.net/coldfire/GM/raw/master/select.user.js)
-* [Search Image with google & baidu](https://git.oschina.net/coldfire/GM/raw/master/img.user.js)
+* [Search Image with Google & Baidu](https://git.oschina.net/coldfire/GM/raw/master/img.user.js)
 * [Discuz新标签打开](https://git.oschina.net/coldfire/GM/raw/master/discuz_in_tab.user.js)
 
 ## 部分文件说明
@@ -34,6 +34,9 @@ GM的"用户脚本设置"下的"Popup Search设置"打开选项选择需要的�
 
 Update Log:
 
+* 3.0.3 : css fix
+* 3.0.2 : new setting box
+* 3.0.0 : UI redesigned
 * 2.9.7 : Google Page
 * 2.9.5 : Setting window
 * 2.9.1 : In site search fix
@@ -94,6 +97,7 @@ __修改小尾巴之后记得点击"保存当前尾巴"按钮!__
 
 Update Log:
 
+* 6.0.1 : Update for date checking
 * 6.0.0 : Remove recent ico
 * 5.9.7 : Fix eval
 * 5.9.5 : Fix tail trigger

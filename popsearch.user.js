@@ -7,7 +7,7 @@
 // @include					*
 // @exclude					*/test/index.html*
 // @require					http://libs.baidu.com/jquery/2.1.1/jquery.min.js
-// @version					3.0.3
+// @version					3.0.4
 // @icon					http://lkytal.qiniudn.com/ic.ico
 // @grant					GM_xmlhttpRequest
 // @grant					GM_addStyle
@@ -106,7 +106,7 @@ Init = function() {
   document.getElementById("ShowUpBox").oncontextmenu = function(event) {
     return false;
   };
-  $DivBox.on("click mousedown dblclick", function(event) {
+  $DivBox.on("click mousedown dblclick mouseup", function(event) {
     return event.stopPropagation();
   });
   $DivBox.hover(function() {
@@ -121,7 +121,7 @@ Init = function() {
     return popData.mouseIn = 0;
   });
   $('#popupwapper').append("<a id='gtrans' href=''><img title='translate' src='" + popData.tico + "' /></a>").append("<a id='openurl' href=''><img title='Open Url' id='iconie' src='" + popData.ieIcon + "'/></a>").append("<a id='sSite' href=''><img title='In Site Search' src='" + popData.inSite + "' /></a>").append("<a id='sbaidu' href=''><img title='Baidu' src='" + popData.baiduico + "' /></a>").append("<a id='sbing' href=''><img title='Bing' src='" + popData.bingico + "' /></a>").append("<a id='sgoogle' href=''><img title='Google' id='gicon' src='" + popData.gicon + "' /></a>");
-  $('#sgoogle, #sbing, #sbaidu, #openurl').on("mouseup", function(e) {
+  $('#sgoogle, #sbing, #sbaidu, #openurl').on("click", function(e) {
     $('#ShowUpBox').hide();
     return e.stopPropagation();
   });
