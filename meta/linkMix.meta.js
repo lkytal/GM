@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name						Text To link
-// @description					把文字链接转换为可点击链接, Make text links clickable
+// @description					Turn plain text URLs into clickable links, linkify with high speed & accuracy 把文字链接转换为可点击链接
 // @author						lkytal
 // @namespace					Lkytal
 // @homepage					http://lkytal.github.io/
@@ -8,7 +8,10 @@
 // @exclude						*pan.baidu.com/*
 // @exclude						*renren.com/*
 // @exclude						*exhentai.org/*
-// @version						2.6.3
+// @eexclude					*music.google.com/*
+// @eexclude					*mail.google.com/*
+// @eexclude					*docs.google.com/
+// @version						2.6.4
 // @icon						http://lkytal.qiniudn.com/ic.ico
 // @grant						unsafeWindow
 // @homepageURL					https://git.oschina.net/coldfire/GM

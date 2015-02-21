@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name						Text To link
-// @description					把文字链接转换为可点击链接, Make text links clickable
+// @description					Turn plain text URLs into clickable links, linkify with high speed & accuracy 把文字链接转换为可点击链接
 // @author						lkytal
 // @namespace					Lkytal
 // @homepage					http://lkytal.github.io/
@@ -8,7 +8,10 @@
 // @exclude						*pan.baidu.com/*
 // @exclude						*renren.com/*
 // @exclude						*exhentai.org/*
-// @version						2.6.3
+// @eexclude					*music.google.com/*
+// @eexclude					*mail.google.com/*
+// @eexclude					*docs.google.com/
+// @version						2.6.4
 // @icon						http://lkytal.qiniudn.com/ic.ico
 // @grant						unsafeWindow
 // @homepageURL					https://git.oschina.net/coldfire/GM
@@ -42,7 +45,7 @@ setLink = function(candidate) {
   if ((candidate == null) || candidate.nodeName === "#cdata-section") {
     return;
   }
-  text = candidate.textContent.replace(url_regexp, '<a href="$1" target="_blank" onmouseover="setHttp(event);">$1</a>');
+  text = candidate.textContent.replace(url_regexp, '<a href="$1" target="_blank" class="texttolink" onmouseover="setHttp(event);">$1</a>');
   if (candidate.textContent.length === text.length) {
     return;
   }
@@ -51,7 +54,7 @@ setLink = function(candidate) {
   return candidate.parentNode.replaceChild(span, candidate);
 };
 
-excludedTags = "a,svg,canvas,applet,input,button,area,pre,embed,frame,frameset,head,iframe,img,map,meta,noscript,object,option,param,script,select,style,textarea,code".split(",");
+excludedTags = "a,svg,canvas,applet,input,button,area,pre,embed,frame,frameset,head,iframe,img,option,map,meta,noscript,object,script,style,textarea,code".split(",");
 
 xpath = "//text()[not(ancestor::" + (excludedTags.join(') and not(ancestor::')) + ")]";
 
