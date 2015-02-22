@@ -10,8 +10,9 @@
 // @exclude						*exhentai.org/*
 // @eexclude					*music.google.com/*
 // @eexclude					*mail.google.com/*
-// @eexclude					*docs.google.com/
-// @version						2.6.4
+// @eexclude					*docs.google.com/*
+// @eexclude					*www.google.com/*
+// @version						2.6.5
 // @icon						http://lkytal.qiniudn.com/ic.ico
 // @grant						unsafeWindow
 // @homepageURL					https://git.oschina.net/coldfire/GM
