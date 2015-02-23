@@ -24,7 +24,7 @@
 
 "use strict";
 var CheckPost, Init, TailInit, clearLink, log, open_setting_window, tiebaData,
-  __hasProp = {}.hasOwnProperty;
+  hasProp = {}.hasOwnProperty;
 
 tiebaData = {
   StopPost: 0,
@@ -39,7 +39,7 @@ log = function(msg) {
 };
 
 open_setting_window = function() {
-  var e, x, _ref, _ref1;
+  var e, ref, ref1, x;
   $('body').append("<div id=\"setting_shadow\" style=\"opacity:0\">\n	<div id=\"setting_window\" style=\"top:-100%;\">\n		<div id=\"setting_reset\" class=\"setting_btn_inside\">重置</div>\n		<div id=\"setting_save\" class=\"setting_btn_inside\">保存</div>\n		<div id=\"setting_close\" class=\"setting_title setting_btn_inside\">设置</div>\n		<p class=\"setting_hiding_sp\"></p>\n		<div id=\"setting_out_div\">\n			<div id=\"fentie_open\" class=\"setting_sp_btn\">坟贴检测</div>\n			<div class=\"setting_sp\">\n				<p class=\"setting_hide\"></p><span>超过</span>\n				<input class=\"setting_input\" type=\"number\" id=\"fentie_date\"></input><span>天的帖子视为坟贴</span>\n				<div id=\"fentie_forbidden\" class=\"setting_sp_btn\">坟贴禁回</div>\n			</div>\n			<p class=\"setting_hide sp\"></p>\n			<div id=\"tail_open\" class=\"setting_sp_btn\">小尾巴</div>\n			<div id=\"tail_select\">\n				<div id=\"tail_select_text\" contenteditable=\"true\"></div>\n				<div id=\"tail_option_box\"></div>\n				<div id=\"tail_type\">\n					<div id=\"tail_type_text\"></div>\n					<div id=\"tail_type_box\">\n						<div class=\"tail_type_option\">html</div>\n						<div class=\"tail_type_option\">javascript</div>\n					</div>\n				</div>\n				<div id=\"tail_save\" class=\"setting_btn_inside\">保存当前尾巴</div>\n				<div id=\"tail_new\" class=\"setting_btn_inside\">新建尾巴</div>\n				<div id=\"tail_delete\" class=\"setting_btn_inside\">删除尾巴</div>\n			</div>\n			<div class=\"setting_sp\">\n				<textarea class=\"setting_textarea\" id=\"tail_data\"></textarea><span>预览</span>\n				<div class=\"setting_textarea\" id=\"tail_data_show\"></div>\n				<p class=\"hiding_margin\" style=\"width:1px;height:20px;\"></p>\n			</div>\n		</div>\n	</div>\n</div>");
   $("#fentie_date")[0].value = tiebaData.fentie_date;
   if (!tiebaData.fentie_open) {
@@ -53,9 +53,9 @@ open_setting_window = function() {
     $("#tail_open").attr("class", "setting_sp_btn close");
     $("#tail_select,#tail_select + div").css("display", "none");
   }
-  _ref = tiebaData.tail_data;
-  for (x in _ref) {
-    if (!__hasProp.call(_ref, x)) continue;
+  ref = tiebaData.tail_data;
+  for (x in ref) {
+    if (!hasProp.call(ref, x)) continue;
     $("#tail_select_text")[0].innerHTML = x;
     $("#tail_select_text").attr("new", "0");
     $("#tail_select_text").attr("oname", x);
@@ -63,9 +63,9 @@ open_setting_window = function() {
     $("#tail_type_text")[0].innerHTML = tiebaData.tail_data[x].split("!分隔!")[1];
     break;
   }
-  _ref1 = tiebaData.tail_data;
-  for (x in _ref1) {
-    if (!__hasProp.call(_ref1, x)) continue;
+  ref1 = tiebaData.tail_data;
+  for (x in ref1) {
+    if (!hasProp.call(ref1, x)) continue;
     $("#tail_option_box").append("<div class=\"tail_option\">" + x + "</div>");
   }
   $(".tail_option").click(function() {
@@ -234,14 +234,14 @@ open_setting_window = function() {
     $("#tail_type_text")[0].textContent = "html";
   });
   $("#tail_delete").click(function() {
-    var oname, _ref2, _ref3;
+    var oname, ref2, ref3;
     oname = $("#tail_select_text")[0].getAttribute("oname");
     if ($("#tail_select_text")[0].getAttribute("new") !== 1) {
       delete tiebaData.tail_data[oname];
     }
-    _ref2 = tiebaData.tail_data;
-    for (x in _ref2) {
-      if (!__hasProp.call(_ref2, x)) continue;
+    ref2 = tiebaData.tail_data;
+    for (x in ref2) {
+      if (!hasProp.call(ref2, x)) continue;
       $("#tail_select_text")[0].innerHTML = x;
       $("#tail_select_text").attr("new", "0");
       $("#tail_select_text").attr("oname", x);
@@ -251,9 +251,9 @@ open_setting_window = function() {
     }
     GM_setValue("tail_data", JSON.stringify(tiebaData.tail_data));
     $("#tail_option_box").empty();
-    _ref3 = tiebaData.tail_data;
-    for (x in _ref3) {
-      if (!__hasProp.call(_ref3, x)) continue;
+    ref3 = tiebaData.tail_data;
+    for (x in ref3) {
+      if (!hasProp.call(ref3, x)) continue;
       tiebaData.tail_data[x] = tiebaData.tail_data[x].replace(/!逗号!/g, ",").replace(/!引号!/g, "\"");
       $("#tail_option_box").append("<div class=\"tail_option\">" + x + "</div>");
     }
@@ -278,7 +278,7 @@ open_setting_window = function() {
     });
   });
   $("#tail_save").click(function() {
-    var name, oname, _ref2, _ref3;
+    var name, oname, ref2, ref3;
     name = $("#tail_select_text")[0].innerHTML;
     oname = $("#tail_select_text")[0].getAttribute("oname");
     if ($("#tail_select_text")[0].getAttribute("new") === 1) {
@@ -296,16 +296,16 @@ open_setting_window = function() {
         tiebaData.tail_data[name] = $("#tail_data")[0].value + "!分隔!" + $("#tail_type_text")[0].textContent;
       }
     }
-    _ref2 = tiebaData.tail_data;
-    for (x in _ref2) {
-      if (!__hasProp.call(_ref2, x)) continue;
+    ref2 = tiebaData.tail_data;
+    for (x in ref2) {
+      if (!hasProp.call(ref2, x)) continue;
       tiebaData.tail_data[x] = tiebaData.tail_data[x].replace(/,/g, "!逗号!").replace(/"/g, "!引号!");
     }
     GM_setValue("tail_data", JSON.stringify(tiebaData.tail_data));
     $("#tail_option_box").empty();
-    _ref3 = tiebaData.tail_data;
-    for (x in _ref3) {
-      if (!__hasProp.call(_ref3, x)) continue;
+    ref3 = tiebaData.tail_data;
+    for (x in ref3) {
+      if (!hasProp.call(ref3, x)) continue;
       tiebaData.tail_data[x] = tiebaData.tail_data[x].replace(/!逗号!/g, ",").replace(/!引号!/g, "\"");
       $("#tail_option_box").append("<div class=\"tail_option\">" + x + "</div>");
     }
@@ -370,7 +370,7 @@ CheckPost = function() {
 };
 
 TailInit = function() {
-  var AddTail, SendBt, i, x, _ref, _ref1;
+  var AddTail, SendBt, i, ref, ref1, x;
   if (document.querySelector(".ui_btn.ui_btn_m.j_submit.poster_submit")) {
     if (!tiebaData.tail_open) {
       return;
@@ -387,9 +387,9 @@ TailInit = function() {
     if (tiebaData.tail_cur === "不使用小尾巴" || tiebaData.tail_cur === "随机小尾巴") {
       $("#tail_use_text")[0].innerHTML = tiebaData.tail_cur;
     } else if (typeof tiebaData.tail_data[tiebaData.tail_cur] === "undefined") {
-      _ref = tiebaData.tail_data;
-      for (i in _ref) {
-        if (!__hasProp.call(_ref, i)) continue;
+      ref = tiebaData.tail_data;
+      for (i in ref) {
+        if (!hasProp.call(ref, i)) continue;
         if (!(i != null)) {
           continue;
         }
@@ -403,9 +403,9 @@ TailInit = function() {
     }
     $("#tail_use_box").append("<div class=\"tail_use_option\">不使用小尾巴</div>");
     $("#tail_use_box").append("<div class=\"tail_use_option\">随机小尾巴</div>");
-    _ref1 = tiebaData.tail_data;
-    for (x in _ref1) {
-      if (!__hasProp.call(_ref1, x)) continue;
+    ref1 = tiebaData.tail_data;
+    for (x in ref1) {
+      if (!hasProp.call(ref1, x)) continue;
       $("#tail_use_box").append("<div class='tail_use_option'>" + x + "</div>");
     }
     $(".tail_use_option").click(function() {
@@ -425,14 +425,14 @@ TailInit = function() {
       }
       if (tiebaData.tail_cur === "随机小尾巴") {
         tailList = (function() {
-          var _ref2, _results;
-          _ref2 = tiebaData.tail_data;
-          _results = [];
-          for (key in _ref2) {
-            value = _ref2[key];
-            _results.push(value);
+          var ref2, results;
+          ref2 = tiebaData.tail_data;
+          results = [];
+          for (key in ref2) {
+            value = ref2[key];
+            results.push(value);
           }
-          return _results;
+          return results;
         })();
         tiebaData.tail_cur = tailList[parseInt(Math.random() * tailList.length)];
       }
@@ -471,7 +471,7 @@ clearLink = function(event) {
 };
 
 Init = function() {
-  var x, _ref;
+  var ref, x;
   tiebaData.fentie_open = GM_getValue("fentie_open", 1);
   tiebaData.fentie_date = GM_getValue("fentie_date", 30);
   tiebaData.fentie_forbidden = GM_getValue("fentie_forbidden", 1);
@@ -490,9 +490,9 @@ Init = function() {
     GM_setValue("fentie_forbidden", tiebaData.fentie_forbidden);
     GM_setValue("tail_open", tiebaData.tail_open);
     GM_setValue("tail_data", JSON.stringify(tiebaData.tail_data));
-    _ref = tiebaData.tail_data;
-    for (x in _ref) {
-      if (!__hasProp.call(_ref, x)) continue;
+    ref = tiebaData.tail_data;
+    for (x in ref) {
+      if (!hasProp.call(ref, x)) continue;
       tiebaData.tail_data[x] = tiebaData.tail_data[x].replace(/!逗号!/g, ",").replace(/!引号!/g, "\"");
     }
   }

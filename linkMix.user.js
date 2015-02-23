@@ -43,7 +43,7 @@ if (typeof exportFunction !== "undefined" && exportFunction !== null) {
 
 setLink = function(candidate) {
   var span, text;
-  if ((candidate == null) || candidate.nodeName === "#cdata-section") {
+  if ((candidate == null) || candidate.parentNode.className.indexOf("texttolink") !== -1 || candidate.nodeName === "#cdata-section") {
     return;
   }
   text = candidate.textContent.replace(url_regexp, '<a href="$1" target="_blank" class="texttolink" onmouseover="setHttp(event);">$1</a>');
@@ -62,16 +62,16 @@ xpath = "//text()[not(ancestor::" + (excludedTags.join(') and not(ancestor::')) 
 filter = new RegExp("^(" + (excludedTags.join('|')) + ")$", "i");
 
 linkPack = function(result, start) {
-  var i, _i, _j, _ref, _ref1;
+  var i, j, k, ref, ref1, ref2, ref3;
   if (start + 10000 < result.snapshotLength) {
-    for (i = _i = start, _ref = start + 10000; start <= _ref ? _i <= _ref : _i >= _ref; i = start <= _ref ? ++_i : --_i) {
+    for (i = j = ref = start, ref1 = start + 10000; ref <= ref1 ? j <= ref1 : j >= ref1; i = ref <= ref1 ? ++j : --j) {
       setLink(result.snapshotItem(i));
     }
     setTimeout(function() {
       return linkPack(result, start + 10000);
     }, 15);
   } else {
-    for (i = _j = start, _ref1 = result.snapshotLength; start <= _ref1 ? _j <= _ref1 : _j >= _ref1; i = start <= _ref1 ? ++_j : --_j) {
+    for (i = k = ref2 = start, ref3 = result.snapshotLength; ref2 <= ref3 ? k <= ref3 : k >= ref3; i = ref2 <= ref3 ? ++k : --k) {
       setLink(result.snapshotItem(i));
     }
   }
@@ -98,13 +98,13 @@ observePage = function(root) {
 };
 
 observer = new window.MutationObserver(function(mutations) {
-  var Node, mutation, _i, _j, _len, _len1, _ref;
-  for (_i = 0, _len = mutations.length; _i < _len; _i++) {
-    mutation = mutations[_i];
+  var Node, j, k, len, len1, mutation, ref;
+  for (j = 0, len = mutations.length; j < len; j++) {
+    mutation = mutations[j];
     if (mutation.type === "childList") {
-      _ref = mutation.addedNodes;
-      for (_j = 0, _len1 = _ref.length; _j < _len1; _j++) {
-        Node = _ref[_j];
+      ref = mutation.addedNodes;
+      for (k = 0, len1 = ref.length; k < len1; k++) {
+        Node = ref[k];
         observePage(Node);
       }
     }
