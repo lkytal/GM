@@ -1,5 +1,7 @@
 #GM script for Firefox
 
+[![Join the chat at https://gitter.im/lkytal/GM](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/lkytal/GM?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 原创 & 修改的GM脚本
 
 个人主页: http://lkytal.github.io/
@@ -34,6 +36,7 @@ GM的"用户脚本设置"下的"Popup Search设置"打开选项选择需要的�
 
 Update Log:
 
+* 3.0.5 : taobao fix
 * 3.0.4 : mouseup event
 * 3.0.3 : css fix
 * 3.0.2 : new setting box
@@ -137,6 +140,10 @@ __修改小尾巴之后记得点击"保存当前尾巴"按钮!__
 
 Update Log:
 
+* 6.1.0 : Fixed all known issues
+* 6.0.5 : Soft checking
+* 6.0.3 : Code merge
+* 6.0.2 : Cleanup
 * 6.0.1 : Update for date checking
 * 6.0.0 : Remove recent ico
 * 5.9.7 : Fix eval

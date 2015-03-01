@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name						Text To link
-// @description					Turn plain text URLs into clickable links, linkify with high speed & accuracy 把文字链接转换为可点击链接
+// @description					Turn plain text URLs into clickable links, 把文字链接转换为可点击链接
 // @author						lkytal
 // @namespace					Lkytal
 // @homepage					http://lkytal.github.io/
