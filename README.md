@@ -140,6 +140,7 @@ __修改小尾巴之后记得点击"保存当前尾巴"按钮!__
 
 Update Log:
 
+* 6.1.1 : Random Tail
 * 6.1.0 : Fixed all known issues
 * 6.0.5 : Soft checking
 * 6.0.3 : Code merge

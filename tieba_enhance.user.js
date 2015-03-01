@@ -6,7 +6,7 @@
 // @description					贴吧小尾巴, 坟贴提醒, 去除跳转等功能
 // @include						http://tieba.baidu.com/*
 // @include						https://tieba.baidu.com/*
-// @version						6.1.0
+// @version						6.1.1
 // @author						lkytal
 // @require						http://libs.baidu.com/jquery/2.1.1/jquery.min.js
 // @icon						http://lkytal.qiniudn.com/ic.ico
@@ -120,13 +120,6 @@ open_setting_window = function() {
         key = ref2[j];
         GM_deleteValue(key);
       }
-      $("#setting_window")[0].style.top = "-600px";
-      setTimeout((function() {
-        $("#setting_shadow").css("opacity", "0");
-      }), 200);
-      setTimeout((function() {
-        $("#setting_shadow").remove();
-      }), 700);
       window.location.reload();
     }
   });
@@ -330,7 +323,7 @@ TailInit = function() {
       GM_setValue("tail_cur", tiebaData.tail_cur);
     });
     AddTail = function(e) {
-      var key, tailContent, tailList, value;
+      var key, tailContent, tailList;
       if (tiebaData.StopPost === 1) {
         if (!confirm("这可能是一个坟贴, 确认要回复么?")) {
           $("#ueditor_replace").empty();
@@ -345,8 +338,8 @@ TailInit = function() {
           ref2 = tiebaData.tail_data;
           results = [];
           for (key in ref2) {
-            value = ref2[key];
-            results.push(value);
+            if (!hasProp.call(ref2, key)) continue;
+            results.push(key);
           }
           return results;
         })();
@@ -355,12 +348,10 @@ TailInit = function() {
       tailContent = void 0;
       if (tiebaData.tail_data[tiebaData.tail_cur].split("!分隔!")[1] === "html") {
         tailContent = tiebaData.tail_data[tiebaData.tail_cur].split("!分隔!")[0];
-      } else {
-        if (tiebaData.tail_data[tiebaData.tail_cur].split("!分隔!")[1] === "javascript") {
-          tailContent = eval(tiebaData.tail_data[tiebaData.tail_cur].split("!分隔!")[0]);
-        }
+      } else if (tiebaData.tail_data[tiebaData.tail_cur].split("!分隔!")[1] === "javascript") {
+        tailContent = eval(tiebaData.tail_data[tiebaData.tail_cur].split("!分隔!")[0]);
       }
-      return $("#ueditor_replace").append("<br>" + tailContent);
+      $("#ueditor_replace").append("<br>" + tailContent);
     };
     SendBt = document.querySelector("a.j_submit.poster_submit[title=\"Ctrl+Enter快捷发表\"]");
     SendBt.addEventListener("click", AddTail, true);
