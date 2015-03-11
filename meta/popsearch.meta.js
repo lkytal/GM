@@ -6,8 +6,9 @@
 // @description				Popup Search Box and translate Button (etc) for selected Text
 // @include					*
 // @exclude					*/test/index.html*
+// @exclude					http://acid3.acidtests.org/*
 // @require					http://libs.baidu.com/jquery/2.1.1/jquery.min.js
-// @version					3.0.5
+// @version					3.0.6
 // @icon					http://lkytal.qiniudn.com/ic.ico
 // @grant					GM_xmlhttpRequest
 // @grant					GM_addStyle
