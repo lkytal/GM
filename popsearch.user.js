@@ -7,8 +7,9 @@
 // @include					*
 // @exclude					*/test/index.html*
 // @exclude					http://acid3.acidtests.org/*
+// @exclude					http://www.acfun.tv/*
 // @require					http://libs.baidu.com/jquery/2.1.1/jquery.min.js
-// @version					3.0.6
+// @version					3.1.0
 // @icon					http://lkytal.qiniudn.com/ic.ico
 // @grant					GM_xmlhttpRequest
 // @grant					GM_addStyle
@@ -320,7 +321,7 @@ SettingWin = function() {
   if ($('#popup_setting_bg').length !== 0) {
     $('#popup_setting_bg').remove();
   }
-  $("body").append("<div id=\"popup_setting_bg\">\n	<div id=\"popup_setting_win\">\n		<div id=\"popup_title\">PopUp Search 设置</div>\n		<div id=\"pop_st_wapper\">\n			<div id=\"option_box\">\n				<div id=\"rol1\">\n					<span id=\"Google_st\">Google搜索</span>\n					<span id=\"Bing_st\">Bing搜索</span>\n					<span id=\"Baidu_st\">Baidu搜索</span>\n				</div>\n				<div id=\"rol2\">\n	                        <span id=\"Site_st\">站内搜索按钮</span>\n					<span id=\"Fade_st\">超时自动隐藏</span>\n					<span id=\"Dis_st\">显示于文字上方</span>\n				</div>\n				<div id=\"rol3\">\n					<span id=\"Tab_st\">新标签页打开</span>\n					<span id=\"Copy_st\">自动复制选中文字</span>\n					<span id=\"Open_st\">打开选中文本按钮</span>\n				</div>\n				<div id=\"rol4\">\n					<span id=\"Ctrl_st\">仅按下Ctrl时显示</span>\n				</div>\n			</div>\n			<br>\n			<div id = \"btnarea\">\n				<div id=\"popup_tip\">可用GreaseMonkey\"用户脚本命令\"菜单下的\"Popup Search设置\"打开此选项</div>\n				<div id=\"popup_close\" class=\"setting_btn\">Close</div>\n				<div id=\"popup_save\" class=\"setting_btn\">Save</div>\n			</div>\n		</div>\n	</div>\n</div>");
+  $("body").append("<div id=\"popup_setting_bg\">\n	<div id=\"popup_setting_win\">\n		<div id=\"popup_title\">PopUp Search 设置</div>\n		<div id=\"pop_st_wapper\">\n			<div id=\"option_box\">\n				<div id=\"rol1\">\n					<span id=\"Google_st\">Google搜索</span>\n					<span id=\"Bing_st\">Bing搜索</span>\n					<span id=\"Baidu_st\">Baidu搜索</span>\n				</div>\n				<div id=\"rol2\">\n	                        <span id=\"Site_st\">站内搜索按钮</span>\n					<span id=\"Fade_st\">超时自动隐藏</span>\n					<span id=\"Dis_st\">显示于文字上方</span>\n				</div>\n				<div id=\"rol3\">\n					<span id=\"Tab_st\">新标签页打开</span>\n					<span id=\"Copy_st\">自动复制选中文字</span>\n					<span id=\"Iframe_st\">在Iframe中显示</span>\n				</div>\n				<div id=\"rol4\">\n					<span id=\"Open_st\">打开选中文本按钮</span>\n					<span id=\"Ctrl_st\">仅按下Ctrl时显示</span>\n				</div>\n			</div>\n			<br>\n			<div id = \"btnarea\">\n				<div id=\"popup_tip\">可用GreaseMonkey\"用户脚本命令\"菜单下的\"Popup Search设置\"打开此选项</div>\n				<div id=\"popup_close\" class=\"setting_btn\">Close</div>\n				<div id=\"popup_save\" class=\"setting_btn\">Save</div>\n			</div>\n		</div>\n	</div>\n</div>");
   $("#rol1 > span, #rol2 > span, #rol3 > span, #rol4 > span").addClass("setting_sp_btn");
   ref = $("#popup_setting_win .setting_sp_btn");
   for (i = 0, len = ref.length; i < len; i++) {
@@ -359,6 +360,11 @@ SettingWin = function() {
 
 Load = function() {
   var UpdateAlert, popupmenu;
+  if (window !== window.top || window.document.title === "") {
+    if (!GM_getValue("Iframe_st", 0)) {
+      return;
+    }
+  }
   addCSS();
   popData.mouseIn = 0;
   popData.bTrans = 0;
@@ -376,6 +382,7 @@ Load = function() {
     GM_setValue("Tab_st", GM_getValue("Tab_st", 1));
     GM_setValue("Copy_st", GM_getValue("Copy_st", 0));
     GM_setValue("Site_st", GM_getValue("Site_st", 1));
+    GM_setValue("Iframe_st", GM_getValue("Iframe_st", 0));
     OpenSet();
   } else {
     SettingWin();
@@ -392,9 +399,7 @@ Load = function() {
   }
 };
 
-if (!(window !== window.top || window.document.title === "")) {
-  setTimeout(Load, 70);
-}
+setTimeout(Load, 70);
 
 addCSS = function() {
   popData.tipdown = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAkAAAAJCAYAAADgkQYQAAAAXElEQVQYlYXMsQ5AQBREUSoVjQ+f+S0lSi2livJlr4ZEZDcmud3JVJIW2yPQVqXZPmwjaQXqEuJJ0vCLbrgDfRZFxBsH0GTRCybbcxF9HhPQZdEHbkUUEUg6JU0Xm2KvCU6v27kAAAAASUVORK5CYII=";

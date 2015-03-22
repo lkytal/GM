@@ -36,6 +36,7 @@ GM的"用户脚本设置"下的"Popup Search设置"打开选项选择需要的�
 
 Update Log:
 
+* 3.1.0 : iframe support
 * 3.0.5 : taobao fix
 * 3.0.4 : mouseup event
 * 3.0.3 : css fix
