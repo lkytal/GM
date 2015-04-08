@@ -9,7 +9,7 @@
 // @exclude					http://acid3.acidtests.org/*
 // @exclude					http://www.acfun.tv/*
 // @require					http://libs.baidu.com/jquery/2.1.1/jquery.min.js
-// @version					3.1.1
+// @version					3.1.2
 // @icon					http://lkytal.qiniudn.com/ic.ico
 // @grant					GM_xmlhttpRequest
 // @grant					GM_addStyle
@@ -152,7 +152,7 @@ Init = function() {
     $("#Gspan").empty().append("<div style='padding:10px;'><img src='" + popData.pending + "' /></div>").show();
     $('#popupwapper').hide();
     fixPos(document.defaultView.getSelection());
-    addrList = ["translate.google.com", "173.194.122.249", "202.152.192.181", "173.194.203.100"];
+    addrList = ["translate.google.cn", "173.194.122.249", "202.152.192.181"];
     popData.ajax = (function() {
       var i, len, results;
       results = [];
