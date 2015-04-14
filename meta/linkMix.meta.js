@@ -11,9 +11,9 @@
 // @eexclude					*music.google.com/*
 // @eexclude					*mail.google.com/*
 // @eexclude					*docs.google.com/*
-// @eexclude					*www.google.com/*
+// @eexclude					*www.google.*
 // @exclude						*acid3.acidtests.org/*
-// @version						2.6.7
+// @version						2.6.8
 // @icon						http://lkytal.qiniudn.com/ic.ico
 // @grant						unsafeWindow
 // @homepageURL					https://git.oschina.net/coldfire/GM

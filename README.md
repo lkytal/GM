@@ -36,6 +36,7 @@ GM的"用户脚本设置"下的"Popup Search设置"打开选项选择需要的�
 
 Update Log:
 
+* 3.1.2 : fix translation
 * 3.1.0 : iframe support
 * 3.0.5 : taobao fix
 * 3.0.4 : mouseup event
@@ -85,6 +86,8 @@ Advances:
 
 Notice: Will NOT handle email address and ftp links in order to speed up execution.
 
+* 2.6.8 : exclude *www.google.*
+* 2.6.7 : Fix for zhihu
 * 2.6.5 : Meta update
 * 2.6.4 : Ext tag
 * 2.6.3 : '/' as end char
