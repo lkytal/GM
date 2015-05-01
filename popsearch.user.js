@@ -127,9 +127,10 @@ Init = function() {
     e.stopPropagation();
     e.preventDefault();
     $('#ShowUpBox').hide();
-    if (typeof GM_download !== "undefined" && GM_download !== null) {
+    if (navigator.userAgent.indexOf("Chrome") > -1) {
+      log("chrome");
       return GM_openInTab($(this).attr('href'), {
-        active: GetOpt("Focus_st")
+        active: GetOpt("Focus_st") === 1
       });
     } else {
       return GM_openInTab($(this).attr('href'), !GetOpt("Focus_st"));
