@@ -9,7 +9,7 @@
 // @exclude					http://acid3.acidtests.org/*
 // @exclude					http://www.acfun.tv/*
 // @require					http://libs.baidu.com/jquery/2.1.1/jquery.min.js
-// @version					3.1.3
+// @version					3.1.4
 // @icon					http://lkytal.qiniudn.com/ic.ico
 // @grant					GM_xmlhttpRequest
 // @grant					GM_addStyle
@@ -126,8 +126,14 @@ Init = function() {
   $('#sgoogle, #sbing, #sbaidu, #openurl').on("click", function(e) {
     e.stopPropagation();
     e.preventDefault();
-    GM_openInTab($(this).attr('href'), !GetOpt("Focus_st"));
-    return $('#ShowUpBox').hide();
+    $('#ShowUpBox').hide();
+    if (typeof GM_download !== "undefined" && GM_download !== null) {
+      return GM_openInTab($(this).attr('href'), {
+        active: GetOpt("Focus_st")
+      });
+    } else {
+      return GM_openInTab($(this).attr('href'), !GetOpt("Focus_st"));
+    }
   });
   UIList = {
     '#openurl': 'Open_st',

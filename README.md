@@ -36,6 +36,8 @@ GM的"用户脚本设置"下的"Popup Search设置"打开选项选择需要的�
 
 Update Log:
 
+* 3.1.4 : fix Background mode for chrome
+* 3.1.3 : Background mode
 * 3.1.2 : fix translation
 * 3.1.0 : iframe support
 * 3.0.5 : taobao fix
