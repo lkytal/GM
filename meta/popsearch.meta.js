@@ -9,7 +9,7 @@
 // @exclude					http://acid3.acidtests.org/*
 // @exclude					http://www.acfun.tv/*
 // @require					http://libs.baidu.com/jquery/2.1.1/jquery.min.js
-// @version					3.1.4
+// @version					3.1.5
 // @icon					http://lkytal.qiniudn.com/ic.ico
 // @grant					GM_xmlhttpRequest
 // @grant					GM_addStyle
@@ -17,6 +17,7 @@
 // @grant					GM_openInTab
 // @grant					GM_setClipboard
 // @grant					GM_getClipboard
+// @grant					GM_download
 // @grant					GM_getValue
 // @grant					GM_setValue
 // @grant					GM_registerMenuCommand

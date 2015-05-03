@@ -6,10 +6,11 @@
 // @description					贴吧小尾巴, 坟贴提醒, 去除跳转等功能
 // @include						http://tieba.baidu.com/*
 // @include						https://tieba.baidu.com/*
-// @version						6.1.1
+// @version						6.1.2
 // @author						lkytal
 // @require						http://libs.baidu.com/jquery/2.1.1/jquery.min.js
 // @icon						http://lkytal.qiniudn.com/ic.ico
+// @noframes
 // @grant						unsafeWindow
 // @grant						GM_addStyle
 // @grant						GM_xmlhttpRequest
@@ -25,6 +26,8 @@
 "use strict";
 var CheckPost, Init, TailInit, clearLink, log, open_setting_window, tiebaData,
   hasProp = {}.hasOwnProperty;
+
+this.$ = this.jQuery = jQuery.noConflict(true);
 
 tiebaData = {
   StopPost: 0,
@@ -412,7 +415,7 @@ Init = function() {
   TailInit();
 };
 
-if (window === window.top && window.document.title !== "") {
+if (window.self === window.top) {
   setTimeout(Init, 150);
 }
 

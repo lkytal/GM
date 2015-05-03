@@ -8,12 +8,12 @@
 // @exclude						*pan.baidu.com/*
 // @exclude						*renren.com/*
 // @exclude						*exhentai.org/*
-// @eexclude					*music.google.com/*
-// @eexclude					*mail.google.com/*
-// @eexclude					*docs.google.com/*
-// @eexclude					*www.google.*
+// @exclude						*music.google.com/*
+// @exclude						*mail.google.com/*
+// @exclude						*docs.google.com/*
+// @exclude						*www.google.*
 // @exclude						*acid3.acidtests.org/*
-// @version						2.6.8
+// @version						2.6.9
 // @icon						http://lkytal.qiniudn.com/ic.ico
 // @grant						unsafeWindow
 // @homepageURL					https://git.oschina.net/coldfire/GM

@@ -9,7 +9,7 @@
 // @exclude					http://acid3.acidtests.org/*
 // @exclude					http://www.acfun.tv/*
 // @require					http://libs.baidu.com/jquery/2.1.1/jquery.min.js
-// @version					3.1.4
+// @version					3.1.5
 // @icon					http://lkytal.qiniudn.com/ic.ico
 // @grant					GM_xmlhttpRequest
 // @grant					GM_addStyle
@@ -17,6 +17,7 @@
 // @grant					GM_openInTab
 // @grant					GM_setClipboard
 // @grant					GM_getClipboard
+// @grant					GM_download
 // @grant					GM_getValue
 // @grant					GM_setValue
 // @grant					GM_registerMenuCommand
@@ -29,6 +30,8 @@
 "use strict";
 var GetOpt, InTextBox, Init, Load, OpenSet, SaveOpt, SetOpt, SettingWin, ShowBar, TimeOutHide, addCSS, ajaxTranslation, fixPos, getLastRange, get_offsets_and_remove, get_selection_offsets, log, popData, praseTranslation,
   hasProp = {}.hasOwnProperty;
+
+this.$ = this.jQuery = jQuery.noConflict(true);
 
 popData = {
   count: 0
@@ -105,9 +108,9 @@ Init = function() {
       return GM_openInTab(document.defaultView.getSelection().toString());
     }
   });
-  document.getElementById("ShowUpBox").oncontextmenu = function(event) {
+  $DivBox.on("contextmenu", function(event) {
     return false;
-  };
+  });
   $DivBox.on("click mousedown dblclick mouseup", function(event) {
     return event.stopPropagation();
   });
@@ -127,7 +130,7 @@ Init = function() {
     e.stopPropagation();
     e.preventDefault();
     $('#ShowUpBox').hide();
-    if (navigator.userAgent.indexOf("Chrome") > -1) {
+    if ((typeof GM_download !== "undefined" && GM_download !== null) || navigator.userAgent.indexOf("Chrome") > -1) {
       log("chrome");
       return GM_openInTab($(this).attr('href'), {
         active: GetOpt("Focus_st") === 1
@@ -161,7 +164,7 @@ Init = function() {
     $("#Gspan").empty().append("<div style='padding:10px;'><img src='" + popData.pending + "' /></div>").show();
     $('#popupwapper').hide();
     fixPos(document.defaultView.getSelection());
-    addrList = ["translate.google.cn", "173.194.122.249", "202.152.192.181"];
+    addrList = ["translate.google.cn", "110.164.4.94", "110.164.4.109"];
     popData.ajax = (function() {
       var i, len, results;
       results = [];
@@ -369,7 +372,7 @@ SettingWin = function() {
 
 Load = function() {
   var UpdateAlert, popupmenu;
-  if (window !== window.top || window.document.title === "") {
+  if (window.self !== window.top || window.frameElement) {
     if (!GM_getValue("Iframe_st", 0)) {
       return;
     }
