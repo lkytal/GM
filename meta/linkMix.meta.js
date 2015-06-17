@@ -13,7 +13,8 @@
 // @exclude						*docs.google.com/*
 // @exclude						*www.google.*
 // @exclude						*acid3.acidtests.org/*
-// @version						2.6.9
+// @exclude						*.163.com/*
+// @version						2.7.0
 // @icon						http://lkytal.qiniudn.com/ic.ico
 // @grant						unsafeWindow
 // @homepageURL					https://git.oschina.net/coldfire/GM
