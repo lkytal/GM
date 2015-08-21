@@ -9,7 +9,7 @@
 // @exclude					http://acid3.acidtests.org/*
 // @exclude					http://www.acfun.tv/*
 // @require					http://libs.baidu.com/jquery/2.1.3/jquery.min.js
-// @version					3.1.7
+// @version					3.1.8
 // @icon					http://lkytal.qiniudn.com/ic.ico
 // @grant					GM_xmlhttpRequest
 // @grant					GM_addStyle
@@ -131,7 +131,6 @@ Init = function() {
     e.preventDefault();
     $('#ShowUpBox').hide();
     if ((typeof GM_download !== "undefined" && GM_download !== null) || navigator.userAgent.indexOf("Chrome") > -1) {
-      log("chrome");
       return GM_openInTab($(this).attr('href'), {
         active: GetOpt("Focus_st") === 1
       });
@@ -164,7 +163,7 @@ Init = function() {
     $("#Gspan").empty().append("<div style='padding:10px;'><img src='" + popData.pending + "' /></div>").show();
     $('#popupwapper').hide();
     fixPos(document.defaultView.getSelection());
-    addrList = ["translate.google.cn", "64.233.162.84", "64.233.162.83"];
+    addrList = ["translate.google.com", "64.233.162.84", "64.233.162.83"];
     popData.ajax = (function() {
       var i, len, results;
       results = [];
