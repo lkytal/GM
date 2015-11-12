@@ -9,7 +9,7 @@
 // @exclude					http://acid3.acidtests.org/*
 // @exclude					http://www.acfun.tv/*
 // @require					http://libs.baidu.com/jquery/2.1.3/jquery.min.js
-// @version					3.1.9
+// @version					3.2.0
 // @icon					http://lkytal.qiniudn.com/ic.ico
 // @grant					GM_xmlhttpRequest
 // @grant					GM_addStyle
@@ -28,13 +28,16 @@
 // ==/UserScript==
 
 "use strict";
-var GetOpt, InTextBox, Init, Load, OpenSet, SaveOpt, SetOpt, SettingWin, ShowBar, TimeOutHide, addCSS, ajaxTranslation, fixPos, getLastRange, get_offsets_and_remove, get_selection_offsets, log, popData, praseTranslation,
+var GetOpt, InTextBox, Init, Load, OpenSet, SaveOpt, SetOpt, SettingWin, ShowBar, TimeOutHide, addCSS, fixPos, getLastRange, get_offsets_and_remove, get_selection_offsets, log, popData, praseTranslation,
   hasProp = {}.hasOwnProperty;
 
 this.$ = this.jQuery = jQuery.noConflict(true);
 
 popData = {
-  count: 0
+  count: 0,
+  mouseIn: 0,
+  bTrans: 0,
+  text: ""
 };
 
 log = function(msg) {
@@ -158,25 +161,22 @@ Init = function() {
     $DivBox.find('a').attr('target', '_self');
   }
   $('#gtrans').on("click", function(event) {
-    var addr, addrList;
+    var callback;
     popData.bTrans = 1;
     $("#Gspan").empty().append("<div style='padding:10px;'><img src='" + popData.pending + "' /></div>").show();
     $('#popupwapper').hide();
     fixPos(document.defaultView.getSelection());
-    if (navigator.language === "zh-CN") {
-      addrList = ["translate.google.cn", "103.7.200.79"];
-    } else {
-      addrList = ["translate.google.com"];
-    }
-    popData.ajax = (function() {
-      var i, len, results;
-      results = [];
-      for (i = 0, len = addrList.length; i < len; i++) {
-        addr = addrList[i];
-        results.push(ajaxTranslation(addr));
-      }
-      return results;
-    })();
+    callback = function(err) {
+      return console.log(err);
+    };
+    GM_xmlhttpRequest({
+      method: 'GET',
+      timeout: 4000,
+      url: "http://fanyi.youdao.com/openapi.do?keyfrom=tinxing&key=1312427901&type=data&doctype=json&version=1.1&q=" + popData.text,
+      onload: praseTranslation,
+      onerror: callback,
+      ontimeout: callback
+    });
     return event.preventDefault();
   });
   if (GetOpt('Dis_st')) {
@@ -189,60 +189,19 @@ Init = function() {
 };
 
 praseTranslation = function(responseDetails) {
-  var Rst, Rtxt, i, j, k, l, len, len1, len2, len3, line, means, ref, ref1, ref2, ref3, req, usage;
+  var Result, Rst, Rtxt, i, len, lines;
   if (!popData.bTrans) {
     return;
   }
-  Rtxt = JSON.parse(responseDetails.responseText);
-  Rst = '<div id="tranRst" style="padding:10px;font-size:13px;overflow:auto;">';
-  ref = Rtxt.sentences;
-  for (i = 0, len = ref.length; i < len; i++) {
-    line = ref[i];
-    Rst += line.trans + '<br>';
+  Rtxt = JSON.parse(responseDetails.responseText).basic.explains;
+  Rst = "";
+  for (i = 0, len = Rtxt.length; i < len; i++) {
+    lines = Rtxt[i];
+    Rst += "<li>" + lines + "</li>";
   }
-  Rst += '<br><ul style="font-size:13px;list-style-position:inside;">';
-  if (Rtxt.dict != null) {
-    ref1 = Rtxt.dict;
-    for (j = 0, len1 = ref1.length; j < len1; j++) {
-      usage = ref1[j];
-      Rst += "<li>" + usage.pos + " : ";
-      ref2 = usage.entry;
-      for (k = 0, len2 = ref2.length; k < len2; k++) {
-        means = ref2[k];
-        if (means.score > 0.005 || means.score > usage.entry[0].score / 4) {
-          Rst += means.word + ', ';
-        }
-      }
-      Rst += '</li>';
-    }
-  }
-  $('#Gspan').empty().append(Rst + '</ul></div>').show();
+  Result = "<div id=\"tranRst\" style=\"padding:3px;font-size:13px;overflow:auto;\">\n	<ul style=\"font-size:13px;list-style-position:outside;padding:15px;line-height:200%\">\n		" + Rst + "\n	</ul>\n</div>";
+  $('#Gspan').empty().append(Result).show();
   fixPos(document.defaultView.getSelection());
-  ref3 = popData.ajax;
-  for (l = 0, len3 = ref3.length; l < len3; l++) {
-    req = ref3[l];
-    req.abort();
-  }
-};
-
-ajaxTranslation = function(addr, callback) {
-  if (callback == null) {
-    callback = function(err) {
-      return log("Err: " + addr);
-    };
-  }
-  return GM_xmlhttpRequest({
-    method: 'POST',
-    timeout: 4000,
-    url: "http://" + addr + "/translate_a/t",
-    data: "client=p&text=" + popData.text + "&langpair=auto|auto",
-    headers: {
-      'Content-Type': 'application/x-www-form-urlencoded'
-    },
-    onload: praseTranslation,
-    onerror: callback,
-    ontimeout: callback
-  });
 };
 
 $(document).on("mouseup", function(event) {
@@ -269,7 +228,7 @@ InTextBox = function(selection) {
 };
 
 ShowBar = function(event) {
-  var UrlText, sel, seltxt;
+  var sel, seltxt;
   event = event != null ? event : popData.lxe;
   sel = document.defaultView.getSelection();
   seltxt = sel.toString();
@@ -284,13 +243,13 @@ ShowBar = function(event) {
   fixPos(sel, event);
   $('#sbaidu').attr('href', "https://www.baidu.com/s?wd=" + popData.text);
   $('#sbing').attr('href', "https://bing.com/search?q=" + popData.text + "&form=MOZSBR");
-  $('#sgoogle').attr('href', "https://www.google.com/search?newwindow=1&q=" + popData.text);
-  $('#sSite').attr('href', "https://www.google.com/search?newwindow=1&q=" + popData.text + "%20site:" + document.domain);
-  UrlText = seltxt;
-  if (UrlText.indexOf('http') === -1) {
-    UrlText = 'http://' + UrlText;
+  $('#sgoogle').attr('href', "https://www.google.com/search?newwindow=1&safe=off&q=" + popData.text);
+  $('#sSite').attr('href', "https://www.google.com/search?newwindow=1&safe=off&q=" + popData.text + "%20site:" + document.domain);
+  if (seltxt.indexOf('http://') === -1) {
+    $('#openurl').attr('href', "http://" + seltxt);
+  } else {
+    $('#openurl').attr('href', seltxt);
   }
-  $('#openurl').attr('href', UrlText);
   $('#ShowUpBox').css('opacity', 0.9).fadeIn(150);
   popData.mouseIn = 0;
   popData.bTrans = 0;
@@ -381,9 +340,6 @@ Load = function() {
     }
   }
   addCSS();
-  popData.mouseIn = 0;
-  popData.bTrans = 0;
-  popData.text = "";
   UpdateAlert = GM_getValue("UpdateAlert", 0);
   if (UpdateAlert < 6) {
     GM_setValue("UpdateAlert", 6);
