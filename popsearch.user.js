@@ -9,7 +9,7 @@
 // @exclude					http://acid3.acidtests.org/*
 // @exclude					http://www.acfun.tv/*
 // @require					http://libs.baidu.com/jquery/2.1.3/jquery.min.js
-// @version					3.2.1
+// @version					3.2.2
 // @icon					http://lkytal.qiniudn.com/ic.ico
 // @grant					GM_xmlhttpRequest
 // @grant					GM_addStyle
@@ -189,22 +189,25 @@ Init = function() {
 };
 
 praseTranslation = function(responseDetails) {
-  var Result, Rst, Rtxt, i, len, lines, ref;
+  var Result, Rline, Rst, Rtxt, i, j, len, len1, lines, ref, ref1;
   if (!popData.bTrans) {
     return;
   }
   Rtxt = JSON.parse(responseDetails.responseText);
-  if (Rtxt.basic != null) {
-    Rst = "";
-    ref = Rtxt.basic.explains;
-    for (i = 0, len = ref.length; i < len; i++) {
-      lines = ref[i];
-      Rst += lines + "<br />";
-    }
-  } else {
-    Rst = Rtxt.translation;
+  ref = Rtxt.translation;
+  for (i = 0, len = ref.length; i < len; i++) {
+    lines = ref[i];
+    Rline = lines + "<br>";
   }
-  Result = "<div id=\"tranRst\" style=\"font-size:14px;overflow:auto;\">\n	<p style=\"padding:5px 15px;line-height:200%\">\n		" + Rst + "\n	</p>\n</div>";
+  Rst = "";
+  if (Rtxt.basic != null) {
+    ref1 = Rtxt.basic.explains;
+    for (j = 0, len1 = ref1.length; j < len1; j++) {
+      lines = ref1[j];
+      Rst = lines + "<br>";
+    }
+  }
+  Result = "<div id=\"tranRst\" style=\"font-size:13px;overflow:auto;padding:5px 15px;\">\n	<div style=\"line-height:160%;font-size:14px;padding:5px 0px;\">" + Rline + "</div>\n	<p style=\"line-height:180%;font-size:13px;\">\n		" + Rst + "\n	</p>\n</div>";
   $('#Gspan').empty().append(Result).show();
   fixPos(document.defaultView.getSelection());
 };
