@@ -9,7 +9,7 @@
 // @exclude					http://acid3.acidtests.org/*
 // @exclude					http://www.acfun.tv/*
 // @require					http://libs.baidu.com/jquery/2.1.3/jquery.min.js
-// @version					3.2.0
+// @version					3.2.1
 // @icon					http://lkytal.qiniudn.com/ic.ico
 // @grant					GM_xmlhttpRequest
 // @grant					GM_addStyle
@@ -189,17 +189,22 @@ Init = function() {
 };
 
 praseTranslation = function(responseDetails) {
-  var Result, Rst, Rtxt, i, len, lines;
+  var Result, Rst, Rtxt, i, len, lines, ref;
   if (!popData.bTrans) {
     return;
   }
-  Rtxt = JSON.parse(responseDetails.responseText).basic.explains;
-  Rst = "";
-  for (i = 0, len = Rtxt.length; i < len; i++) {
-    lines = Rtxt[i];
-    Rst += "<li>" + lines + "</li>";
+  Rtxt = JSON.parse(responseDetails.responseText);
+  if (Rtxt.basic != null) {
+    Rst = "";
+    ref = Rtxt.basic.explains;
+    for (i = 0, len = ref.length; i < len; i++) {
+      lines = ref[i];
+      Rst += lines + "<br />";
+    }
+  } else {
+    Rst = Rtxt.translation;
   }
-  Result = "<div id=\"tranRst\" style=\"padding:3px;font-size:13px;overflow:auto;\">\n	<ul style=\"font-size:13px;list-style-position:outside;padding:15px;line-height:200%\">\n		" + Rst + "\n	</ul>\n</div>";
+  Result = "<div id=\"tranRst\" style=\"font-size:14px;overflow:auto;\">\n	<p style=\"padding:5px 15px;line-height:200%\">\n		" + Rst + "\n	</p>\n</div>";
   $('#Gspan').empty().append(Result).show();
   fixPos(document.defaultView.getSelection());
 };
