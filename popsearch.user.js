@@ -9,7 +9,7 @@
 // @exclude					http://acid3.acidtests.org/*
 // @exclude					http://www.acfun.tv/*
 // @require					http://libs.baidu.com/jquery/2.1.3/jquery.min.js
-// @version					3.2.2
+// @version					3.2.3
 // @icon					http://lkytal.qiniudn.com/ic.ico
 // @grant					GM_xmlhttpRequest
 // @grant					GM_addStyle
@@ -48,16 +48,18 @@ log = function(msg) {
 };
 
 fixPos = function(sel, e) {
-  var fix, m_left, offsetLeft, offsetTop, offsets;
+  var eventLeft, eventTop, fix, m_left, offsetLeft, offsetTop, offsets;
   offsets = get_selection_offsets(sel);
   offsetTop = offsets[0];
   offsetLeft = offsets[1];
+  eventTop = e.pageY + document.body.scrollTop;
+  eventLeft = e.pageX + document.body.scrollLeft;
   if (e != null) {
-    if (Math.abs(offsetLeft - e.pageX) > 120) {
-      offsetLeft = e.pageX;
+    if (Math.abs(offsetLeft - eventLeft) > 120) {
+      offsetLeft = eventLeft + 10;
     }
-    if (Math.abs(offsetTop - e.pageY) > 120) {
-      offsetLeft = e.pageY - 8;
+    if (Math.abs(offsetTop - eventTop) > 120) {
+      offsetTop = eventTop - 8;
     }
   } else {
     $('#showupbody').css('margin-left', '60px');
@@ -194,10 +196,11 @@ praseTranslation = function(responseDetails) {
     return;
   }
   Rtxt = JSON.parse(responseDetails.responseText);
+  Rline = "";
   ref = Rtxt.translation;
   for (i = 0, len = ref.length; i < len; i++) {
     lines = ref[i];
-    Rline = lines + "<br>";
+    Rline += lines + "<br>";
   }
   Rst = "";
   if (Rtxt.basic != null) {
