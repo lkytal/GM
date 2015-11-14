@@ -9,7 +9,7 @@
 // @exclude					http://acid3.acidtests.org/*
 // @exclude					http://www.acfun.tv/*
 // @require					http://libs.baidu.com/jquery/2.1.3/jquery.min.js
-// @version					3.2.3
+// @version					3.2.4
 // @icon					http://lkytal.qiniudn.com/ic.ico
 // @grant					GM_xmlhttpRequest
 // @grant					GM_addStyle
@@ -52,14 +52,14 @@ fixPos = function(sel, e) {
   offsets = get_selection_offsets(sel);
   offsetTop = offsets[0];
   offsetLeft = offsets[1];
-  eventTop = e.pageY + document.body.scrollTop;
-  eventLeft = e.pageX + document.body.scrollLeft;
   if (e != null) {
-    if (Math.abs(offsetLeft - eventLeft) > 120) {
-      offsetLeft = eventLeft + 10;
-    }
+    eventTop = e.pageY + document.body.scrollTop;
+    eventLeft = e.pageX + document.body.scrollLeft;
     if (Math.abs(offsetTop - eventTop) > 120) {
       offsetTop = eventTop - 8;
+    }
+    if (Math.abs(offsetLeft - eventLeft) > 120) {
+      offsetLeft = eventLeft + 10;
     }
   } else {
     $('#showupbody').css('margin-left', '60px');
