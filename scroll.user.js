@@ -6,7 +6,7 @@
 // @include					*
 // @exclude					*pan.baidu.com/*
 // @exclude					*c5.yunpan.360.cn/*
-// @version					1.4.0
+// @version					1.4.1
 // @icon					http://lkytal.qiniudn.com/ic.ico
 // @grant					GM_getValue
 // @grant					GM_setValue
@@ -159,6 +159,9 @@ function scrollPlus()
 				background-color: rgba(0, 0, 0, 0.3);\
 				color: #fff;\
 				text-decoration: none;\
+				-moz-user-select:none;\
+				-webkit-user-select:none;\
+				cursor:default;\
 			}\
 			#scrollUpIco:hover {\
 				background-color: rgba(0, 0, 0, 0.75);\

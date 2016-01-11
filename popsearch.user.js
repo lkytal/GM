@@ -9,7 +9,7 @@
 // @exclude					http://acid3.acidtests.org/*
 // @exclude					http://www.acfun.tv/*
 // @require					http://libs.baidu.com/jquery/2.1.3/jquery.min.js
-// @version					3.2.4
+// @version					3.2.5
 // @icon					http://lkytal.qiniudn.com/ic.ico
 // @grant					GM_xmlhttpRequest
 // @grant					GM_addStyle
@@ -28,7 +28,7 @@
 // ==/UserScript==
 
 "use strict";
-var GetOpt, InTextBox, Init, Load, OpenSet, SaveOpt, SetOpt, SettingWin, ShowBar, TimeOutHide, addCSS, fixPos, getLastRange, get_offsets_and_remove, get_selection_offsets, log, popData, praseTranslation,
+var GetOpt, InTextBox, Init, Load, OpenSet, SaveOpt, SetOpt, SettingWin, ShowBar, TimeOutHide, addCSS, fixPos, getLastRange, get_offsets_and_remove, get_selection_offsets, log, popData, praseTranslation, praseTranslationMore,
   hasProp = {}.hasOwnProperty;
 
 this.$ = this.jQuery = jQuery.noConflict(true);
@@ -169,16 +169,28 @@ Init = function() {
     $('#popupwapper').hide();
     fixPos(document.defaultView.getSelection());
     callback = function(err) {
-      return console.log(err);
+      console.log(err);
+      return $('#Gspan').empty().append("Error:\n" + err).show();
     };
-    GM_xmlhttpRequest({
-      method: 'GET',
-      timeout: 4000,
-      url: "http://fanyi.youdao.com/openapi.do?keyfrom=tinxing&key=1312427901&type=data&doctype=json&version=1.1&q=" + popData.text,
-      onload: praseTranslation,
-      onerror: callback,
-      ontimeout: callback
-    });
+    if (popData.text.length < 380) {
+      GM_xmlhttpRequest({
+        method: 'GET',
+        timeout: 3000,
+        url: "http://fanyi.youdao.com/openapi.do?keyfrom=tinxing&key=1312427901&type=data&doctype=json&version=1.1&q=" + popData.text,
+        onload: praseTranslation,
+        onerror: callback,
+        ontimeout: callback
+      });
+    } else {
+      GM_xmlhttpRequest({
+        method: 'GET',
+        timeout: 3000,
+        url: "http://fanyi.baidu.com/transapi?from=auto&to=auto&query=" + popData.text,
+        onload: praseTranslationMore,
+        onerror: callback,
+        ontimeout: callback
+      });
+    }
     return event.preventDefault();
   });
   if (GetOpt('Dis_st')) {
@@ -211,6 +223,23 @@ praseTranslation = function(responseDetails) {
     }
   }
   Result = "<div id=\"tranRst\" style=\"font-size:13px;overflow:auto;padding:5px 15px;\">\n	<div style=\"line-height:160%;font-size:14px;padding:5px 0px;\">" + Rline + "</div>\n	<p style=\"line-height:180%;font-size:13px;\">\n		" + Rst + "\n	</p>\n</div>";
+  $('#Gspan').empty().append(Result).show();
+  fixPos(document.defaultView.getSelection());
+};
+
+praseTranslationMore = function(responseDetails) {
+  var Result, Rline, Rtxt, i, len, lines, ref;
+  if (!popData.bTrans) {
+    return;
+  }
+  Rtxt = JSON.parse(responseDetails.responseText);
+  Rline = "";
+  ref = Rtxt.data;
+  for (i = 0, len = ref.length; i < len; i++) {
+    lines = ref[i];
+    Rline += lines.dst + "<br>";
+  }
+  Result = "<div id=\"tranRst\" style=\"font-size:13px;overflow:auto;padding:5px 15px;\">\n	<p style=\"line-height:180%;font-size:13px;\">\n		" + Rline + "\n	</p>\n</div>";
   $('#Gspan').empty().append(Result).show();
   fixPos(document.defaultView.getSelection());
 };

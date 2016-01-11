@@ -36,6 +36,13 @@ GM的"用户脚本设置"下的"Popup Search设置"打开选项选择需要的�
 
 Update Log:
 
+* 3.2.5 : Translation fixup for large texts
+* 3.2.4 : Multiline fixup
+* 3.2.3 : fix popup position
+* 3.2.2 : Multiline fixup
+* 3.2.1 : fix translation
+* 3.2.0 : transform to Youdao
+* 3.1.7 : Ip fix
 * 3.1.6 : Ip Updated
 * 3.1.5 : no jquery conflicts
 * 3.1.4 : fix Background mode for chrome
