@@ -3,20 +3,19 @@
 // @author					lkytal
 // @namespace				Lkytal
 // @homepage				http://lkytal.github.io/
-// @description				Popup Search Box and translate Button (etc) for selected Text
+// @description				Popup search box and translate button (etc) for selected texts
 // @include					*
 // @exclude					*/test/index.html*
 // @exclude					http://acid3.acidtests.org/*
 // @exclude					http://www.acfun.tv/*
-// @require					http://libs.baidu.com/jquery/2.1.3/jquery.min.js
-// @version					3.2.5
+// @require					http://libs.baidu.com/jquery/2.1.4/jquery.min.js
+// @version					3.2.6
 // @icon					http://lkytal.qiniudn.com/ic.ico
 // @grant					GM_xmlhttpRequest
 // @grant					GM_addStyle
 // @grant					unsafeWindow
 // @grant					GM_openInTab
 // @grant					GM_setClipboard
-// @grant					GM_getClipboard
 // @grant					GM_download
 // @grant					GM_getValue
 // @grant					GM_setValue
@@ -28,7 +27,7 @@
 // ==/UserScript==
 
 "use strict";
-var GetOpt, InTextBox, Init, Load, OpenSet, SaveOpt, SetOpt, SettingWin, ShowBar, TimeOutHide, addCSS, fixPos, getLastRange, get_offsets_and_remove, get_selection_offsets, log, popData, praseTranslation, praseTranslationMore,
+var CopyText, GetOpt, InTextBox, Init, Load, OpenSet, SaveOpt, SetOpt, SettingWin, ShowBar, TimeOutHide, addCSS, fixPos, getLastRange, get_offsets_and_remove, get_selection_offsets, log, popData, praseTranslation, praseTranslationMore,
   hasProp = {}.hasOwnProperty;
 
 this.$ = this.jQuery = jQuery.noConflict(true);
@@ -104,7 +103,7 @@ Init = function() {
     event.stopPropagation();
     if (event.which === 3) {
       event.preventDefault();
-      GM_setClipboard(document.defaultView.getSelection().toString());
+      CopyText();
       $('#ShowUpBox').remove();
       Init();
       return false;
@@ -244,17 +243,6 @@ praseTranslationMore = function(responseDetails) {
   fixPos(document.defaultView.getSelection());
 };
 
-$(document).on("mouseup", function(event) {
-  if (event.which !== 1) {
-    return;
-  }
-  if (GetOpt('Ctrl_st') && !event.ctrlKey) {
-    return;
-  }
-  popData.lxe = event;
-  return setTimeout(ShowBar, 10);
-});
-
 InTextBox = function(selection) {
   var area, i, len, ref;
   ref = $('textarea, input[type=text], *[contenteditable="true"]', document);
@@ -267,6 +255,35 @@ InTextBox = function(selection) {
   return false;
 };
 
+CopyText = function(seltxt) {
+  var e;
+  if (seltxt == null) {
+    seltxt = document.defaultView.getSelection().toString();
+  }
+  log(seltxt);
+  try {
+    return GM_setClipboard(seltxt, "text");
+  } catch (_error) {
+    e = _error;
+    if (GetOpt("Copy_st")) {
+      Alert("ERROR: Auto copying not supported and will be disabled now");
+      SetOpt("Copy_st", 0);
+    }
+    return log("Copy Error: " + seltxt);
+  }
+};
+
+$(document).on("mouseup", function(event) {
+  if (event.which !== 1) {
+    return;
+  }
+  if (GetOpt('Ctrl_st') && !event.ctrlKey) {
+    return;
+  }
+  popData.lxe = event;
+  return setTimeout(ShowBar, 10);
+});
+
 ShowBar = function(event) {
   var sel, seltxt;
   event = event != null ? event : popData.lxe;
@@ -276,7 +293,7 @@ ShowBar = function(event) {
     return;
   }
   if (GetOpt("Copy_st")) {
-    GM_setClipboard(seltxt);
+    CopyText(seltxt);
   }
   popData.text = encodeURIComponent(seltxt);
   $('#Gspan').empty().hide();

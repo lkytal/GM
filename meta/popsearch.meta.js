@@ -3,20 +3,19 @@
 // @author					lkytal
 // @namespace				Lkytal
 // @homepage				http://lkytal.github.io/
-// @description				Popup Search Box and translate Button (etc) for selected Text
+// @description				Popup search box and translate button (etc) for selected texts
 // @include					*
 // @exclude					*/test/index.html*
 // @exclude					http://acid3.acidtests.org/*
 // @exclude					http://www.acfun.tv/*
-// @require					http://libs.baidu.com/jquery/2.1.3/jquery.min.js
-// @version					3.2.5
+// @require					http://libs.baidu.com/jquery/2.1.4/jquery.min.js
+// @version					3.2.6
 // @icon					http://lkytal.qiniudn.com/ic.ico
 // @grant					GM_xmlhttpRequest
 // @grant					GM_addStyle
 // @grant					unsafeWindow
 // @grant					GM_openInTab
 // @grant					GM_setClipboard
-// @grant					GM_getClipboard
 // @grant					GM_download
 // @grant					GM_getValue
 // @grant					GM_setValue
