@@ -266,7 +266,7 @@ CopyText = function(seltxt) {
   } catch (_error) {
     e = _error;
     if (GetOpt("Copy_st")) {
-      Alert("ERROR: Auto copying not supported and will be disabled now");
+      alert("ERROR: Auto copying not supported and will be disabled now");
       SetOpt("Copy_st", 0);
     }
     return log("Copy Error: " + seltxt);

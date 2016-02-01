@@ -4,9 +4,11 @@
 // @author					lkytal
 // @homepage				http://lkytal.github.io/
 // @icon					http://lkytal.qiniudn.com/ic.ico
-// @version					1.1.1
+// @version					1.1.2
 // @description				Select texts insider links, for firefox only
 // @include					*
+// @exclude					http://www.baidu.com/*
+// @exclude					https://www.baidu.com/*
 // @grant					unsafeWindow
 // @grant					GM_getValue
 // @grant					GM_setValue
