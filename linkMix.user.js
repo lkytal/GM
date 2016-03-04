@@ -14,7 +14,7 @@
 // @exclude						*www.google.*
 // @exclude						*acid3.acidtests.org/*
 // @exclude						*.163.com/*
-// @version						2.7.0
+// @version						2.7.2
 // @icon						http://lkytal.qiniudn.com/ic.ico
 // @grant						unsafeWindow
 // @homepageURL					https://git.oschina.net/coldfire/GM
@@ -28,8 +28,8 @@ var clearLink, excludedTags, filter, linkMixInit, linkPack, linkify, observePage
 url_regexp = /((https?:\/\/|www\.)[\x21-\x7e]+[\w\/]|(\w[\w._-]+\.(com|cn|org|net|info|tv|cc))(\/[\x21-\x7e]*[\w\/])?|ed2k:\/\/[\x21-\x7e]+\|\/|thunder:\/\/[\x21-\x7e]+=)/gi;
 
 clearLink = function(event) {
-  var link, url;
-  link = event.originalTarget;
+  var link, ref, url;
+  link = (ref = event.originalTarget) != null ? ref : event.target;
   if (!((link != null) && link.localName === "a" && link.className.indexOf("texttolink") !== -1)) {
     return;
   }
