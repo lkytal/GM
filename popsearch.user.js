@@ -8,8 +8,8 @@
 // @exclude					*/test/index.html*
 // @exclude					http://acid3.acidtests.org/*
 // @exclude					http://www.acfun.tv/*
-// @require					http://libs.baidu.com/jquery/2.1.4/jquery.min.js
-// @version					3.2.6
+// @require					http://cdn.bootcss.com/jquery/3.1.0/jquery.min.js
+// @version					3.2.7
 // @icon					http://lkytal.qiniudn.com/ic.ico
 // @grant					GM_xmlhttpRequest
 // @grant					GM_addStyle
@@ -118,30 +118,35 @@ Init = function() {
   $DivBox.on("click mousedown dblclick mouseup", function(event) {
     return event.stopPropagation();
   });
-  $DivBox.hover(function() {
-    $(this).fadeTo(150, 1);
-    return popData.mouseIn = 1;
-  }, function() {
-    if (!popData.bTrans) {
-      $(this).fadeTo(300, 0.7);
-      clearTimeout(popData.timer);
-      popData.timer = setTimeout(TimeOutHide, 5500);
-    }
-    return popData.mouseIn = 0;
-  });
-  $('#popupwapper').append("<a id='gtrans' href=''><img title='translate' src='" + popData.tico + "' /></a>\n<a id='openurl' href=''><img title='Open Url' id='iconie' src='" + popData.ieIcon + "'/></a>\n<a id='sSite' href=''><img title='In Site Search' src='" + popData.inSite + "' /></a>\n<a id='sbaidu' href=''><img title='Baidu' src='" + popData.baiduico + "' /></a>\n<a id='sbing' href=''><img title='Bing' src='" + popData.bingico + "' /></a>\n<a id='sgoogle' href=''><img title='Google' id='gicon' src='" + popData.gicon + "' /></a>");
-  $('#sgoogle, #sbing, #sbaidu, #openurl').on("click", function(e) {
-    e.stopPropagation();
-    e.preventDefault();
-    $('#ShowUpBox').hide();
-    if ((typeof GM_download !== "undefined" && GM_download !== null) || navigator.userAgent.indexOf("Chrome") > -1) {
-      return GM_openInTab($(this).attr('href'), {
-        active: GetOpt("Focus_st") === 1
-      });
-    } else {
-      return GM_openInTab($(this).attr('href'), !GetOpt("Focus_st"));
-    }
-  });
+  $DivBox.hover((function(_this) {
+    return function() {
+      $(_this).fadeTo(150, 1);
+      return popData.mouseIn = 1;
+    };
+  })(this), (function(_this) {
+    return function() {
+      if (!popData.bTrans) {
+        $(_this).fadeTo(300, 0.7);
+        clearTimeout(popData.timer);
+        popData.timer = setTimeout(TimeOutHide, 5500);
+      }
+      return popData.mouseIn = 0;
+    };
+  })(this));
+  $('#popupwapper').append("<a id='gtrans' href=''><img title='translate' src='" + popData.tico + "' /></a> <a id='openurl' href=''><img title='Open Url' id='iconie' src='" + popData.ieIcon + "'/></a> <a id='sSite' href=''><img title='In Site Search' src='" + popData.inSite + "' /></a> <a id='sbaidu' href=''><img title='Baidu' src='" + popData.baiduico + "' /></a> <a id='sbing' href=''><img title='Bing' src='" + popData.bingico + "' /></a> <a id='sgoogle' href=''><img title='Google' id='gicon' src='" + popData.gicon + "' /></a>");
+  $('#sgoogle, #sbing, #sbaidu, #openurl').on("click", (function(_this) {
+    return function(e) {
+      $('#ShowUpBox').hide();
+      if ((typeof GM_download !== "undefined" && GM_download !== null) || navigator.userAgent.indexOf("Chrome") > -1) {
+        e.preventDefault();
+        return GM_openInTab($(_this).attr('href'), {
+          active: GetOpt("Focus_st") === 1
+        });
+      } else {
+        return GM_openInTab($(_this).attr('href'), !GetOpt("Focus_st"));
+      }
+    };
+  })(this));
   UIList = {
     '#openurl': 'Open_st',
     '#sSite': 'Site_st',
@@ -256,15 +261,15 @@ InTextBox = function(selection) {
 };
 
 CopyText = function(seltxt) {
-  var e;
+  var e, error;
   if (seltxt == null) {
     seltxt = document.defaultView.getSelection().toString();
   }
   log(seltxt);
   try {
     return GM_setClipboard(seltxt, "text");
-  } catch (_error) {
-    e = _error;
+  } catch (error) {
+    e = error;
     if (GetOpt("Copy_st")) {
       alert("ERROR: Auto copying not supported and will be disabled now");
       SetOpt("Copy_st", 0);
@@ -326,14 +331,16 @@ SetOpt = function(id) {
     dom.addClass('close');
   }
   dom.data('val', val);
-  return dom.click(function() {
-    $(this).toggleClass('close');
-    if ($(this).data('val') === 1) {
-      return $(this).data('val', 0);
-    } else {
-      return $(this).data('val', 1);
-    }
-  });
+  return dom.click((function(_this) {
+    return function() {
+      $(_this).toggleClass('close');
+      if ($(_this).data('val') === 1) {
+        return $(_this).data('val', 0);
+      } else {
+        return $(_this).data('val', 1);
+      }
+    };
+  })(this));
 };
 
 SaveOpt = function(id) {

@@ -8,8 +8,8 @@
 // @exclude					*/test/index.html*
 // @exclude					http://acid3.acidtests.org/*
 // @exclude					http://www.acfun.tv/*
-// @require					http://libs.baidu.com/jquery/2.1.4/jquery.min.js
-// @version					3.2.6
+// @require					http://cdn.bootcss.com/jquery/3.1.0/jquery.min.js
+// @version					3.2.7
 // @icon					http://lkytal.qiniudn.com/ic.ico
 // @grant					GM_xmlhttpRequest
 // @grant					GM_addStyle
