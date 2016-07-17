@@ -9,7 +9,7 @@
 // @exclude					http://acid3.acidtests.org/*
 // @exclude					http://www.acfun.tv/*
 // @require					http://cdn.bootcss.com/jquery/3.1.0/jquery.min.js
-// @version					3.2.7
+// @version					3.2.8
 // @icon					http://lkytal.qiniudn.com/ic.ico
 // @grant					GM_xmlhttpRequest
 // @grant					GM_addStyle
@@ -96,7 +96,7 @@ TimeOutHide = function() {
 Init = function() {
   var $DivBox, UIList, id, opt;
   $('#ShowUpBox').remove();
-  $('body').append("<span id=\"ShowUpBox\">\n	<span id=\"showupbody\">\n		<span id=\"popupwapper\" />\n		<span id=\"Gspan\" />\n	</span>\n</span>");
+  $('body').append("<span id=\"ShowUpBox\"> <span id=\"showupbody\"> <span id=\"popupwapper\" /> <span id=\"Gspan\" /> </span> </span>");
   $DivBox = $('#ShowUpBox');
   $DivBox.hide();
   $DivBox.on("mouseup", function(event) {
@@ -118,27 +118,23 @@ Init = function() {
   $DivBox.on("click mousedown dblclick mouseup", function(event) {
     return event.stopPropagation();
   });
-  $DivBox.hover((function(_this) {
-    return function() {
-      $(_this).fadeTo(150, 1);
-      return popData.mouseIn = 1;
-    };
-  })(this), (function(_this) {
-    return function() {
-      if (!popData.bTrans) {
-        $(_this).fadeTo(300, 0.7);
-        clearTimeout(popData.timer);
-        popData.timer = setTimeout(TimeOutHide, 5500);
-      }
-      return popData.mouseIn = 0;
-    };
-  })(this));
+  $DivBox.hover(function() {
+    $(this).fadeTo(150, 1);
+    return popData.mouseIn = 1;
+  }, function() {
+    if (!popData.bTrans) {
+      $(this).fadeTo(300, 0.7);
+      clearTimeout(popData.timer);
+      popData.timer = setTimeout(TimeOutHide, 5500);
+    }
+    return popData.mouseIn = 0;
+  });
   $('#popupwapper').append("<a id='gtrans' href=''><img title='translate' src='" + popData.tico + "' /></a> <a id='openurl' href=''><img title='Open Url' id='iconie' src='" + popData.ieIcon + "'/></a> <a id='sSite' href=''><img title='In Site Search' src='" + popData.inSite + "' /></a> <a id='sbaidu' href=''><img title='Baidu' src='" + popData.baiduico + "' /></a> <a id='sbing' href=''><img title='Bing' src='" + popData.bingico + "' /></a> <a id='sgoogle' href=''><img title='Google' id='gicon' src='" + popData.gicon + "' /></a>");
   $('#sgoogle, #sbing, #sbaidu, #openurl').on("click", (function(_this) {
     return function(e) {
+      e.preventDefault();
       $('#ShowUpBox').hide();
       if ((typeof GM_download !== "undefined" && GM_download !== null) || navigator.userAgent.indexOf("Chrome") > -1) {
-        e.preventDefault();
         return GM_openInTab($(_this).attr('href'), {
           active: GetOpt("Focus_st") === 1
         });
@@ -226,7 +222,7 @@ praseTranslation = function(responseDetails) {
       Rst = lines + "<br>";
     }
   }
-  Result = "<div id=\"tranRst\" style=\"font-size:13px;overflow:auto;padding:5px 15px;\">\n	<div style=\"line-height:160%;font-size:14px;padding:5px 0px;\">" + Rline + "</div>\n	<p style=\"line-height:180%;font-size:13px;\">\n		" + Rst + "\n	</p>\n</div>";
+  Result = "<div id=\"tranRst\" style=\"font-size:13px;overflow:auto;padding:5px 15px;\"> <div style=\"line-height:160%;font-size:14px;padding:5px 0px;\">" + Rline + "</div> <p style=\"line-height:180%;font-size:13px;\"> " + Rst + " </p> </div>";
   $('#Gspan').empty().append(Result).show();
   fixPos(document.defaultView.getSelection());
 };
@@ -243,7 +239,7 @@ praseTranslationMore = function(responseDetails) {
     lines = ref[i];
     Rline += lines.dst + "<br>";
   }
-  Result = "<div id=\"tranRst\" style=\"font-size:13px;overflow:auto;padding:5px 15px;\">\n	<p style=\"line-height:180%;font-size:13px;\">\n		" + Rline + "\n	</p>\n</div>";
+  Result = "<div id=\"tranRst\" style=\"font-size:13px;overflow:auto;padding:5px 15px;\"> <p style=\"line-height:180%;font-size:13px;\"> " + Rline + " </p> </div>";
   $('#Gspan').empty().append(Result).show();
   fixPos(document.defaultView.getSelection());
 };
@@ -302,7 +298,6 @@ ShowBar = function(event) {
   }
   popData.text = encodeURIComponent(seltxt);
   $('#Gspan').empty().hide();
-  fixPos(sel, event);
   $('#sbaidu').attr('href', "https://www.baidu.com/s?wd=" + popData.text);
   $('#sbing').attr('href', "https://bing.com/search?q=" + popData.text + "&form=MOZSBR");
   $('#sgoogle').attr('href', "https://www.google.com/search?newwindow=1&safe=off&q=" + popData.text);
@@ -312,6 +307,7 @@ ShowBar = function(event) {
   } else {
     $('#openurl').attr('href', seltxt);
   }
+  fixPos(sel, event);
   $('#ShowUpBox').css('opacity', 0.9).fadeIn(150);
   popData.mouseIn = 0;
   popData.bTrans = 0;
@@ -331,16 +327,14 @@ SetOpt = function(id) {
     dom.addClass('close');
   }
   dom.data('val', val);
-  return dom.click((function(_this) {
-    return function() {
-      $(_this).toggleClass('close');
-      if ($(_this).data('val') === 1) {
-        return $(_this).data('val', 0);
-      } else {
-        return $(_this).data('val', 1);
-      }
-    };
-  })(this));
+  return dom.click(function() {
+    $(this).toggleClass('close');
+    if ($(this).data('val') === 1) {
+      return $(this).data('val', 0);
+    } else {
+      return $(this).data('val', 1);
+    }
+  });
 };
 
 SaveOpt = function(id) {
@@ -359,7 +353,7 @@ SettingWin = function() {
   if ($('#popup_setting_bg').length !== 0) {
     $('#popup_setting_bg').remove();
   }
-  $("body").append("<div id=\"popup_setting_bg\">\n	<div id=\"popup_setting_win\">\n		<div id=\"popup_title\">PopUp Search 设置</div>\n		<div id=\"pop_st_wapper\">\n			<div id=\"option_box\">\n				<div id=\"rol1\">\n					<span id=\"Google_st\">Google搜索</span>\n					<span id=\"Bing_st\">Bing搜索</span>\n					<span id=\"Baidu_st\">Baidu搜索</span>\n				</div>\n				<div id=\"rol2\">\n	                        <span id=\"Site_st\">站内搜索按钮</span>\n					<span id=\"Fade_st\">超时自动隐藏</span>\n					<span id=\"Dis_st\">显示于文字上方</span>\n				</div>\n				<div id=\"rol3\">\n					<span id=\"Tab_st\">新标签页打开</span>\n					<span id=\"Focus_st\">前台标签页打开</span>\n					<span id=\"Iframe_st\">在Iframe中显示</span>\n				</div>\n				<div id=\"rol4\">\n					<span id=\"Copy_st\">自动复制选中文字</span>\n					<span id=\"Open_st\">打开选中文本按钮</span>\n					<span id=\"Ctrl_st\">仅按下Ctrl时显示</span>\n				</div>\n			</div>\n			<br>\n			<div id = \"btnarea\">\n				<div id=\"popup_tip\">可在GreaseMonkey\"用户脚本命令\"菜单下的\"Popup Search设置\"打开此选项</div>\n				<div id=\"popup_close\" class=\"setting_btn\">Close</div>\n				<div id=\"popup_save\" class=\"setting_btn\">Save</div>\n			</div>\n		</div>\n	</div>\n</div>");
+  $("body").append('<div id="popup_setting_bg"> <div id="popup_setting_win"> <div id="popup_title">PopUp Search 设置</div> <div id="pop_st_wapper"> <div id="option_box"> <div id="rol1"> <span id="Google_st">Google搜索</span> <span id="Bing_st">Bing搜索</span> <span id="Baidu_st">Baidu搜索</span> </div> <div id="rol2"> <span id="Site_st">站内搜索按钮</span> <span id="Fade_st">超时自动隐藏</span> <span id="Dis_st">显示于文字上方</span> </div> <div id="rol3"> <span id="Tab_st">新标签页打开</span> <span id="Focus_st">前台标签页打开</span> <span id="Iframe_st">在Iframe中显示</span> </div> <div id="rol4"> <span id="Copy_st">自动复制选中文字</span> <span id="Open_st">打开选中文本按钮</span> <span id="Ctrl_st">仅按下Ctrl时显示</span> </div> </div> <br> <div id = "btnarea"> <div id="popup_tip">可在GreaseMonkey"用户脚本命令"菜单下的"Popup Search设置"打开此选项</div> <div id="popup_close" class="setting_btn">Close</div> <div id="popup_save" class="setting_btn">Save</div> </div> </div> </div> </div>');
   $("#rol1 > span, #rol2 > span, #rol3 > span, #rol4 > span").addClass("setting_sp_btn");
   ref = $("#popup_setting_win .setting_sp_btn");
   for (i = 0, len = ref.length; i < len; i++) {
