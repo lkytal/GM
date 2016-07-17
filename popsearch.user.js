@@ -9,7 +9,7 @@
 // @exclude					http://acid3.acidtests.org/*
 // @exclude					http://www.acfun.tv/*
 // @require					http://cdn.bootcss.com/jquery/3.1.0/jquery.min.js
-// @version					3.2.8
+// @version					3.2.9
 // @icon					http://lkytal.qiniudn.com/ic.ico
 // @grant					GM_xmlhttpRequest
 // @grant					GM_addStyle
@@ -42,7 +42,7 @@ popData = {
 log = function(msg) {
   var text;
   popData.count += 1;
-  text = "hit " + popData.count + " : " + msg;
+  text = "MsgId " + popData.count + " : " + msg;
   return console.log(text);
 };
 
@@ -130,19 +130,17 @@ Init = function() {
     return popData.mouseIn = 0;
   });
   $('#popupwapper').append("<a id='gtrans' href=''><img title='translate' src='" + popData.tico + "' /></a> <a id='openurl' href=''><img title='Open Url' id='iconie' src='" + popData.ieIcon + "'/></a> <a id='sSite' href=''><img title='In Site Search' src='" + popData.inSite + "' /></a> <a id='sbaidu' href=''><img title='Baidu' src='" + popData.baiduico + "' /></a> <a id='sbing' href=''><img title='Bing' src='" + popData.bingico + "' /></a> <a id='sgoogle' href=''><img title='Google' id='gicon' src='" + popData.gicon + "' /></a>");
-  $('#sgoogle, #sbing, #sbaidu, #openurl').on("click", (function(_this) {
-    return function(e) {
-      e.preventDefault();
-      $('#ShowUpBox').hide();
-      if ((typeof GM_download !== "undefined" && GM_download !== null) || navigator.userAgent.indexOf("Chrome") > -1) {
-        return GM_openInTab($(_this).attr('href'), {
-          active: GetOpt("Focus_st") === 1
-        });
-      } else {
-        return GM_openInTab($(_this).attr('href'), !GetOpt("Focus_st"));
-      }
-    };
-  })(this));
+  $('#sgoogle, #sbing, #sbaidu, #openurl').on("click", function(e) {
+    e.preventDefault();
+    $('#ShowUpBox').hide();
+    if ((typeof GM_download !== "undefined" && GM_download !== null) || navigator.userAgent.indexOf("Chrome") > -1) {
+      return GM_openInTab($(this).attr('href'), {
+        active: GetOpt("Focus_st") === 1
+      });
+    } else {
+      return GM_openInTab($(this).attr('href'), !GetOpt("Focus_st"));
+    }
+  });
   UIList = {
     '#openurl': 'Open_st',
     '#sSite': 'Site_st',

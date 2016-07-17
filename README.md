@@ -36,6 +36,8 @@ GM的"用户脚本设置"下的"Popup Search设置"打开选项选择需要的�
 
 Update Log:
 
+* 3.2.8 : Fix multi tabs
+* 3.2.7 : Update to jQuery 3.1.0
 * 3.2.6 : Auto copying in chrome
 * 3.2.5 : Translation fixup for large texts
 * 3.2.4 : Multiline fixup
