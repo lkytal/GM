@@ -73,7 +73,7 @@ open_setting_window = function() {
     $("#tail_option_box").append("<div class=\"tail_option\">" + x + "</div>");
   }
   UpdateText = function() {
-    var e, error;
+    var e;
     if ($("#tail_type_text")[0].innerHTML === "javascript") {
       try {
         $("#tail_data_show")[0].innerHTML = eval($("#tail_data")[0].value);
