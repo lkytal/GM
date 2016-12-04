@@ -8,8 +8,8 @@
 // @exclude					*/test/index.html*
 // @exclude					http://acid3.acidtests.org/*
 // @exclude					http://www.acfun.tv/*
-// @require					http://cdn.bootcss.com/jquery/3.1.0/jquery.min.js
-// @version					3.3.1
+// @require					http://cdn.bootcss.com/jquery/3.1.1/jquery.min.js
+// @version					3.3.3
 // @icon					http://lkytal.qiniudn.com/ic.ico
 // @grant					GM_xmlhttpRequest
 // @grant					GM_addStyle
@@ -27,7 +27,7 @@
 // ==/UserScript==
 
 "use strict";
-var CopyText, GetOpt, InTextBox, Init, Load, OpenSet, SaveOpt, SetOpt, SettingWin, ShowBar, TimeOutHide, addCSS, fixPos, getLastRange, get_offsets_and_remove, get_selection_offsets, isChrome, log, popData, praseTranslation, praseTranslationMore,
+var CopyText, GetOpt, InTextBox, Init, Load, OpenSet, SaveOpt, SetOpt, SettingWin, ShowBar, TimeOutHide, addCSS, fixPos, getLastRange, get_selection_offsets, isChrome, log, popData, praseTranslation, praseTranslationMore,
   hasProp = {}.hasOwnProperty;
 
 this.$ = this.jQuery = jQuery.noConflict(true);
@@ -58,19 +58,14 @@ fixPos = function(sel, e) {
   offsetTop = offsets[0];
   offsetLeft = offsets[1];
   if (e != null) {
-    if (isChrome()) {
-      eventTop = e.pageY;
-      eventLeft = e.pageX;
-    } else {
-      eventTop = e.pageY + document.body.scrollTop;
-      eventLeft = e.pageX + document.body.scrollLeft;
-      log(offsetTop + " : " + offsetLeft + " <==> " + eventTop + " : " + eventLeft);
-      if (Math.abs(offsetTop - eventTop) > 120) {
-        offsetTop = eventTop - 8;
-      }
-      if (Math.abs(offsetLeft - eventLeft) > 120) {
-        offsetLeft = eventLeft + 10;
-      }
+    eventTop = e.pageY;
+    eventLeft = e.pageX;
+    log(offsetTop + " : " + offsetLeft + " <==> " + eventTop + " : " + eventLeft);
+    if (Math.abs(offsetTop - eventTop) > 50) {
+      offsetTop = eventTop - 8;
+    }
+    if (Math.abs(offsetLeft - eventLeft) > 50) {
+      offsetLeft = eventLeft + 10;
     }
   } else {
     $('#showupbody').css('margin-left', '60px');
@@ -464,28 +459,14 @@ getLastRange = function(selection) {
   return selection.getRangeAt(selection.rangeCount - 1);
 };
 
-get_offsets_and_remove = function($test_span) {
-  var curr_elem, span_ht, span_wt, total_offsetLeft, total_offsetTop;
-  curr_elem = $test_span[0];
-  total_offsetTop = 0;
-  total_offsetLeft = 0;
-  while (curr_elem !== null) {
-    total_offsetTop += curr_elem.offsetTop;
-    total_offsetLeft += curr_elem.offsetLeft;
-    curr_elem = curr_elem.offsetParent;
-  }
-  span_ht = $test_span.height();
-  span_wt = $test_span.width();
-  $test_span.remove();
-  return [total_offsetTop, total_offsetLeft, span_ht, span_wt];
-};
-
 get_selection_offsets = function(selection) {
-  var $test_span, lastRange, newRange;
+  var $test_span, Rect, lastRange, newRange;
   $test_span = $('<span style="display:inline;">x</span>');
   lastRange = getLastRange(selection);
   newRange = document.createRange();
   newRange.setStart(lastRange.endContainer, lastRange.endOffset);
   newRange.insertNode($test_span[0]);
-  return get_offsets_and_remove($test_span);
+  Rect = $test_span[0].getBoundingClientRect();
+  $test_span.remove();
+  return [Rect.top + window.scrollY, Rect.left + window.scrollX, 0, 0];
 };
