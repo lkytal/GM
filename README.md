@@ -36,6 +36,9 @@ GM的"用户脚本设置"下的"Popup Search设置"打开选项选择需要的�
 
 Update Log:
 
+* 3.4.0 : Fix Unhidden problem
+* 3.3.3 : Better position locating
+* 3.3.1 : update jquery
 * 3.3.0 : Position problem in chrome
 * 3.2.9 : Update to jquery v3
 * 3.2.8 : Fix multi tabs
