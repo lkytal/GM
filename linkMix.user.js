@@ -3,7 +3,7 @@
 // @description					Turn plain text URLs into clickable links, 把文字链接转换为可点击链接
 // @author						lkytal
 // @namespace					Lkytal
-// @homepage					http://lkytal.github.io/
+// @homepage					https://lkytal.github.io/
 // @include						*
 // @exclude						*pan.baidu.com/*
 // @exclude						*renren.com/*

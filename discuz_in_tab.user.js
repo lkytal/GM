@@ -1,22 +1,24 @@
 // ==UserScript==
 // @name					Open Discuz Link in new tab
-// @description				Discuz论坛链接默认新链接打开,支持autopager和Super_preloader等
+// @description				Discuz论坛链接默认新标签页打开
 // @include					http://*/forum-*-*
 // @include					http://*/forum-*-*.html
 // @include					http://*/showforum-*.html
 // @include					http://*/forum.php?mod=forumdisplay*
 // @include					http://*/forum/viewforum.php?f=*
 // @include					http://*/forum/search.php?*
+// @include					http://*/forumdisplay.php?f=
 // @include					https://*/forum-*-*
 // @include					https://*/forum-*-*.html
 // @include					https://*/showforum-*.html
 // @include					https://*/forum.php?mod=forumdisplay*
 // @include					https://*/forum/viewforum.php?f=*
 // @include					https://*/forum/search.php?*
+// @include					https://*/forumdisplay.php?f=
 // @namespace				Lkytal
 // @author					lkytal
-// @homepage				http://coldfire.qiniudn.com/
-// @version					1.3.2
+// @homepage				https://lkytal.github.io/
+// @version					1.3.3
 // @icon					http://lkytal.qiniudn.com/ic.ico
 // @grant					unsafeWindow
 // @run-at					document-end
@@ -34,16 +36,10 @@ if (x)
 }
 else
 {
-	var AFile = document.querySelectorAll('#threadlist tbody a');
+	var AFile = document.querySelectorAll('#threadlist tbody a, #threadslist tbody a');
 
 	for (var i = AFile.length - 1; i > -1; i--)
 	{
 		AFile[i].setAttribute("target", "_blank");
 	}
-
-	/*document.addEventListener('DOMNodeInserted',function()
-		{
-			LinkNew();
-		}
-	);*/
 }
