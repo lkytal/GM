@@ -5,11 +5,11 @@
 // @homepage				https://lkytal.github.io/
 // @description				Popup search box and translate button (etc) for selected texts
 // @include					*
-// @exclude					*/test/index.html*
+// @exclude					*/test/*.html*
 // @exclude					http://acid3.acidtests.org/*
 // @exclude					http://www.acfun.tv/*
 // @require					https://cdn.bootcss.com/jquery/3.1.1/jquery.min.js
-// @version					3.4.0
+// @version					3.5.0
 // @icon					http://lkytal.qiniudn.com/ic.ico
 // @grant					GM_xmlhttpRequest
 // @grant					GM_addStyle
