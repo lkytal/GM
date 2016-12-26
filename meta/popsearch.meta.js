@@ -9,7 +9,7 @@
 // @exclude					http://acid3.acidtests.org/*
 // @exclude					http://www.acfun.tv/*
 // @require					https://cdn.bootcss.com/jquery/3.1.1/jquery.min.js
-// @version					3.5.0
+// @version					4.0.0
 // @icon					http://lkytal.qiniudn.com/ic.ico
 // @grant					GM_xmlhttpRequest
 // @grant					GM_addStyle
