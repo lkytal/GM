@@ -9,7 +9,7 @@
 // @exclude					http://acid3.acidtests.org/*
 // @exclude					http://www.acfun.tv/*
 // @require					https://cdn.bootcss.com/jquery/3.1.1/jquery.min.js
-// @version					4.0.0
+// @version					4.0.1
 // @icon					http://lkytal.qiniudn.com/ic.ico
 // @grant					GM_xmlhttpRequest
 // @grant					GM_addStyle
@@ -27,7 +27,7 @@
 // ==/UserScript==
 
 "use strict";
-var CopyText, GetOpt, InTextBox, Init, Load, OpenSet, SaveOpt, SetOpt, SettingWin, ShowBar, TimeOutHide, addCSS, fixPos, getLastRange, get_selection_offsets, isChrome, log, popData, praseTranslation, praseTranslationMore,
+var CopyText, GetOpt, InTextBox, Init, Load, OpenSet, SaveOpt, SettingWin, ShowBar, TimeOutHide, addCSS, fixPos, getLastRange, get_selection_offsets, isChrome, log, popData, praseTranslation, praseTranslationMore,
   hasProp = {}.hasOwnProperty;
 
 window.$ = this.$ = this.jQuery = jQuery.noConflict(true);
@@ -49,6 +49,7 @@ popData = {
     jdIcon: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAIAAAAlC+aJAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAAFiUAABYlAUlSJPAAAAQCSURBVGhD7ZhbSBRRGMfPzM5uu+7qesvdzFZLLTVrM7sQGBSUroF2oSIqgpSKHoUuUPZQkaESdJGKMhCkSJJ6UpCKArvZzUsGaaZppZWKreuue5mZ08YexrRxZncNZxbm97LftzPMnP85/3PmnA97DTQgkMHRb8AS8ALGLJQOLZ4gIHiDBXsCyUJCIwkQGkmA0EgChEYSIDSSAKEJeAF+7Ubh8Pfc6K+1niQhtPNVQqzckzDAwarmqHwSZSxgUbOxBUmKpSvVq9dGrlmmCZNj6IpXCL8bhT+/0fUP7ReKBreub4sMa8w9/Pl5HwXRVe8Ri4XomisDGYlNpsK+HrtPKqbFQjpTyPFMOXMLRdK2YfJHj7P1rbOu9Z/mGlS3apO2x8k4LcVYaFoErDi3sP6AivAk46Fto81138pKzBXv/lKCEyVPUwsWEZP7QzQnMjxIlbY54cZTY8dNzSqmMTR5JON9xRfaCzOJZA7gxNyNCx61Re+PQX8AyrVv06d2B68EsUxiN5h8VvSlx7otKpSDNvPeazYXSiZDRAL+QOhjrpYrmFJbQ1FXwwj3IIhMgHscIjbMPTIPJcDiOP/ERaOEFdEJAECu3pMvQzGANZXmUa4xEKEAgOtNqjgUA2fD4BeOHYkoBQBiljYZhQB8d3RxDYEoBWAzlAb0nXJDf+aax6IUAHBZiBqF7mkwwrWUilMAhM4x32NKZkqzIE4BFNk/hEK3gJlKjn2dKAVQZksXhWKgIuZrAkwAtH+0NKEYgNSQOQoUsuGXAEjTTAcBGYb5dBjkBVKtlc5RlICUzPBQrkb6NwIkybwAKGW+nWb5oH/1l1Yx6ya+c0fQxLPGOPwSQA07BlAIQIRS/R99CMnW0r57zPiuiswzcD/dn3dD59fRNhSD2CSV6r+NALS8+LjtIrN5ww+VRkdxraFu/BFAd951MX1kXBfEelb0HWhp6sjJtHagFMTmGQoXE3yd47sAaB0qu8N4lNixlPcdXkA5W66/X5ZhrmcebNTWFEcE8zfPVwGQbDrbU25GmSJblxU+lfZDymp7dbt9V1pLWoGd6XuQrKmvTUj2ypo8VQl73dX+YJMu3aCYgdHW3qHqs915FWMePdVoPJbIWv8YV5XQ52hPmxSMmWkS2syu3m7Hu9eOmuaJGzV9dsT9irgUNXfrvS2rjBQt/nCiEyUTWF6Y+PiodpLPPG9pkQ1cdvDyvOKdWi+WtSmXVYwHDbWHJ2u974QR+0/HtPctKdvtTev/hu9uFn8YFCerk5+VRIXzLHCcYFhsvCxrY9DxM7oHL1Ot3UuuFOjjeWzDil+VOREgmsrclJEECI0kQGgkAUIjCRAaSYDQSAKEZmw3GqBIFhIWAH4DD9ZjsqVbIzoAAAAASUVORK5CYII=",
     eBayIcon: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAIAAAAlC+aJAAAACXBIWXMAAAsTAAALEwEAmpwYAAAD+UlEQVRoge2XX2hbVRzH067isAzUBwfqgzL/zDHoZCqis2wgA4U9iVNB9qJSURHG1idhwhBBVkTUh01EER2CVEHRPVgVhk/Dm6Rt/jRpbZe/Tdo0Jk2afze99+NDb3pzb07S0jU9iPfwewi/3+/8zvdzzsk557pQXP9pk6/AAZCtwAGQrcABkK3AAZCtwAGQrcABkK3AAZCtwAGQrcABkK3AAdj5UZc+R6+YVk/h6W9J66XstaRFXiE+jO/+7gAEBoifNSw0KM7x9OPfT3CAmWdBo7lFh+zJMycsCZUQ7j78D+DZ3R2A6JA5WOoDezT4MIUx9DrtWiWA0mPpUvzTkjB7sstbqAOA/yG0lbbS19v0cbNL6AlLqORG6ZUHkPnMDCWG8e5h9nkBQP4Xs0vuR0to5pkOQ3cfoKSYofHbDGc900Kg4X8QxYX/gOUfUrzaeegd2EL7CQwYtr4TanHBIix+iuJi6Ysml07oyA0A+PYRHSJzieUxypPUIqhp6gvUYlQCFK+y9BXxMwQPE33dAjB5F6n3yI2y9CV/n8Ddx+xzZC5SGKP0FyUPek0AoBUJHLSE8j9vOHdtAsFDFH4HXTCMsGlF83fuB+qLlqia2GydWqy5KMFDWwIID6KV7aXVBPHThI8Reoq5lyn80VFHhJJH4C+PM3+e2NusZhsuve00Zb/dzO5tdfVSnW4ppuE/YElz91GeFA+sJo2bNfuN1Z/Cc4vRvTrX0F8hf0VQRFdbL93NAQQPi2Y0Juicudhm5i4bCbbjMn/F7KsmG0Kr9lN/rWUubfL8aHHNvSSej0rYbqs5MUD6Q6NU6IjFX/jN8HtvNW9lvYrSw/KvlkytzOTdWwW4fkosa/Mt3ThGpx6z+FcL+O7BvYv0SNPUVFF6iL4pRt0KwOxJgaZalIm9nSwxbCav3wNTj9rr6CpaAb1Oxd/wrOK+megblrTlsRsACBwUAGgruG+yZ0bfIvkuyXMkz5H/qWkFLjQAHheU0lUir7HwkemZuHNbAZQeKkHBwHMvWNIm7kCrCNKAhY+NnPAx07lyjdT7xE7j24fiwncv4aOGefq3F8BF+Ch6tWURSsyfZ/ppQoNEXhVDrrV/vmucBy+azvRIJx3bDLC2+s2PsA1b84lUi+DeheJi8RPT2frJ0l2Atb009QjJd8iNUvKizqMV0WvoNbQiaoKVa2QvEz9LcMDyFgJyo6RHml41Or77dh6gDZXt08lQ0PQatb3mgezXG5T17Gb8dtO8e7oH0Mamj5P73rDQk1w/RXkCrYQaJ32h9UN2G61bdXfM5CtwAGQrcABkK3AAZCtwAGQrcABkK3AAZCtwAGQrcABkK3AAZCv4vwP8CyqoTA3RSbNfAAAAAElFTkSuQmCC",
     amazonIcon: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAIAAAAlC+aJAAAACXBIWXMAAC4jAAAuIwF4pT92AAAEmUlEQVRo3u2aaUxcVRTHGWqRYmukaWuj0RibWhu3tNKiJNpiQmKMhrSpMWoNNU2qJLVp1FQpNcYvxhA/aOIShqUDlAKlzAAjLcuwlU3ApiWUYlmn7DsUBhiW4eeXQQK8OwwzwBuSd3M/TOadd+//996955x78twId1vX3U0BUAAUAAVAAVAAFICFPXYHWh/0h9EfQutD3M71ABC9mfwgmrWM97C4mfswppJ/guhHXA8gahOV3zExiD3N3E/Zl0Q85DIAibsZuMNyW0cBGm8XAEh6jrEuHGudhSvyHpxbOYN3caaVnJYVoOK8zbXex8AdzAO2bB40oFbJBBDhwXi3tKyuYtL8rMrU7mS9x2i7kCFpj0wAGQHSgtqyiPRYaKz1gRlp+5xjMgH8872UnBkSdknb95QLtsEZmQB0B2i5ztA9LOY5Nd1lQvt7GmmAihC544DanUtPkOpH7ofEPy00q/ldGqDywjpJ5mr+EACEuiRAzDbS/Mj7mPJzVP9K/SVGjIIldN5lAOJ2UhxMsxZT6zJimUsAXH2JhgQsk44EY5kBIjZSFcbMtOPZhJwAkQ/TkmFH/jyA6T6Tw64HUKsWih7toDKUlP1EbVrCC8kGoPcXqq+PI3qLvW5UNoC2HEEuZEDtLmF/909XAoh9XJicpb6+zFRCFoDsI9JqJoelH3+4G20GV4rEZV9JqxluFPgrDyaGpG+p+lkOgJs/SKsZ75W2z/3I1uleBoCKEKGgK3sXHZ29GG4UhwmLk4cyh27L+0Sopyll3jaI9KQ5ZYlI124Q7pzVAkh63pag1kyuv4POl6LPGKy1K6Fw4lTg6LtzoJhlow03rTlA/vHlSZyZojZS4HxHuPb2mgOoVRh19qqfHiP7KOFu1Mctypo60b46Gx+3U/4tnTcY62JmiplpRttpuEzsdkcBIjai9xfWk6O8MKYurX7oX7T75yrYfbfmLvVXc/kZ66WCT8UZa6ijAOUhAGOd3DglXcdUqygIEu7UBw2UniXSc+Fps6cSoOUaFx+dHWcDlgnhI7j9k6MA6W8yNWYdZbCGrEBBJVBF8gsUBFH+DRUhlJwmK5CEZ4VlwyhPUvah3jDvz6xAioLJCODKXuKfJGEXox32lFDtqP/8PxDQXUpGAOGq1SleqNAdQOtjPS1Nz1acdAed28TxT9F7c9477S4l811nos/CrnmMomD6b1vH1/vz11vW36ZW2xPZWUn3oi5GYneWniVmm+O6L27B8D5NyUyPzatPpr9BzW925tvLma/wJFOmRbnMJC0ZFJ2a8ydLitYfovIC7bkSG9fcR/ZRIj0Y7wUYMRK9eUXjQOJuuoqF7sLUijGdqjBKzpB3nJxjGD6g8CTl56j+hft6hurAIgp11MURu4NwN1L2AUyZ0PmuQiBTu1P0Oea+lUwl2g2k+s6bouAEV19ezUis8ebWj0yOOKXbMkFjIqmvyVfY0njz99cM1S4zL5qmo5CSL2znCGtYWlSruPoKlaG0ZgqX1ng37blUhZF9BM1W1/7UQLOV5BdJ80N/GN1BkvYs6UmUjz0UAAVAAVAAFAAFYL32/wDDp7bQ08tZUQAAAABJRU5ErkJggg==",
+    youkuIcon: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAADwklEQVR4nO2bW0hVQRSGv+QgImE+nEoKQqQkpCBCegifQkIiKoIgfIhIoQi6GBHVW0FPFlISEQjRayFhEl1FJHopIioiiq5EQVfRMK9ZDzO7vc64zzlbBZcd54fhzMxaM7PWf2avNewLzHDMiujLB4qm2pApQi8wlE5YADQD/cCfHC391seCKAKap4GBU1WaA6eDSyAf6EnHTA5iAJgDDOXZjiJmjvNgfC0CyMuimPPwBGgboA1PgLYB2vAEaBugDU+AtgHa8ARoG6ANT4C2AdrwBGgboA1PgLYB2ohDQC8wkkH+KYt8WiMbAfsw986WAF8i5MeBhcB84InoHwV+kOEW9HRDkui7p6VC56gj6wZmC/lZ4AOwg/C5QgJYA3SJcS+AQ8BdZ75hoB5YC7wGTgDrgZuOXoftbwQ+A7XAXjte6rUBG4BraXxLxiGgXuiUOIs0CVkCaAfmEY084JwdV2X7ypy1uoS+XHel0LmMuYMdpdfpzLfI9i+eDAFPHUdabf9vO3GATUC5aK/CELRN9CWAx4S7qthZq92ZL0C5lV8g9ZItBw6IdpszX7Htn5fGtyRkjwHLgGrRPm9/bwGvRP9S4KWtr8Bs7/3AReCw7R8BTmdZLwqjwBmgztbB7IpOUnfDhBAnCzSI+h3gDeLJCrDamafOMWynqN8ndCIu3mGCcTBuHeZyWTDOeSIRh4Aawu09ChwBbgh5A6lOuQ9YCkU9rvPSLjfFVjhzTgpxCMgD9oj2JUJHSjHX63Ihb3PGXxV1GSdcMgZEXe6gBZjMEOAksAX4hYkrUeNHCVOw1EmLdEEwKD8Jg4pEk5DLDLALuIdJjTJVtgKVot1hxw+SGvgaRX0xJvvsdtautPMHqAH6CANmgOo0PsXKArLIiAuGkB4hv07moFRr9WQgTGACbYnj2HPRlmmsmdR/9BSpZ5UiwvQHZvdO6hwgyzPHoYMROg8w21UaWYrZKb8JU+gxxr6EkcCQ9B3zHL/M9m931riOuSySdr33wGbGkl8BXMngz7gJcP+59xl0+4C3wNcMOoPAQ+A2Jqp3R8g/xrArKP2YnfMoy7oTImCY1K22dRyGTdcS6yAU4BImHwdoSKP33yEuATK1VWGOujmBuARsxASZQkzkzRkE7wglMYEjE3oxB4yo88D/iLnAt1inJIucfHfQ3xPUNkAbngBtA7ThCdA2QBueAG0DtOEJ0DZAG54AbQO04QnQNkAbngBtA7ThCbC/vaQ+W8t1DGB8/kfAENCiZs7Uo4WI95dm5Kez/uPpmY6/mlsYlHZ+rzYAAAAASUVORK5CYII=",
     youtubeIcon: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAIAAAAlC+aJAAAACXBIWXMAAAsTAAALEwEAmpwYAAADRUlEQVRoge3Z2U8TQRwHcP62pSAmZqkcQZCbUkAK5SxQ5SqSUvDAByOJCRojRuOjJsYjSkTBqPGIxngF3e0e0261BXqwu+yMD0tijHLs7DYDcX/5PTXpzPfTTWd2d3IYmtrXnUM8gQ0gncAGkE5gA0gnsAGkE9gA0glsAOkENsDod5wOtiifqy7m648IzVVihxv0tgKfB/S1g752MNAB/J1/tP753+3ziF3NQmsd76rg6su4qmK2KJ9xOrICiAz2JOcfKMw3LRGHqoKyVlBRNmKS/PVT8uE9saPJGkBi7lL2Em+HUVVpYsQsAPS1IQiJABBCMJPhXeWmAOvv3pBKr9fanVv4AKGlhuDPr5eWTLIlBZiA+OwM2fR6RYZ8mID00gLp8AghlLh+BROgChzGfOnni0jTLASknz3FAjgdUFUx5hO9jWJPq/J92SqAwjI4AK66BG8+0dvI0BRbfCBx7TJULNj1YCaNAxC9bjOAzXWsrWH9w3vTAhguO2QYEBnymQcwNMU4835ePK+lU2YIXH2ZYYAUGrUGQFMMTfGNRzOvX2IDxK4W44DJAC7A/e8xC3Nj0yFtbRVjTNDTahgQOzVuMUBfG2pLU4uPDQN6PcYBp7MC0C+FFApoibgBAM4VODuRLQBNRU50qxGwLwHhCnrt7m2jWzUW4EzQckB0fHBDimKMifcnPmkhgKstTS08wr45F9tdhgFScMgaQGHuj3MhbXUFbzS9cDYy4POYB/BNlWb2r82CMFxRaBjAuyvNANjDefHZGZjJmE2PEJTXt1kVtgSwJQV4t/Wi1y16G+XPH81H10vlwzgAhqZUIGDMl3oyj/cgsVWlXyxhAvbII+XKzTlMQHz2AunwCCEUDfgxAUJbA+nwCMryNk8zOwAYOlde/kIWkJy/v23Cnd7MRQN+gumhoggtNaYADE0lblwlE1/TYtOhHePt6vW6FBzOvH21EZOgLGc7NpRlVeDTSwtgoGM32QwecDgdbMlBrq6Mb64C3cdAvzdyvCs65peCw9JkQJoa27InRn53aFSaGpOCQ9FhH/B3gn4v8HmEtgbeVREup1mDZxz/4RHTHmsbQLptAOm2AaTbBpBuG0C6bQDp3veAX5Y5FwgEHimSAAAAAElFTkSuQmCC",
     tiebaIcon: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAA7EAAAOxAGVKw4bAAAFwUlEQVR4nO1bW2gcVRj+zsxesrtJNrtNE6pJxFAkGCuoUVuK9iGpeMuToYIvoi8iSPIgGC/gQ1tvKBV80IL4YhGrtA8FtbSlSiv1VsW2NlhaUmNtbNLsJdnO3nd2fZi4c2Z252TOzmxmIftBYGf37D//+c73/3P+/2zI0N5LJaxhCE474DSaBDjtgNNoEuC0A06jSYDTDjiNNU+Ay2kHVsJTdwbw6G2+8vV7pxI4cy1nm/2GJ6DFRdAfdqtv2LxvbfgQSBe0M87K9jLArYBn7m7F7V3ulQcyEEkW8c73S6bGZnUEFIoOE9AfcmFrX4ulm07H8qbH6iecly3dugLcIZCzQYL6VWVBP7JYclgBhaL2+rOzEuYk9rK4BIKJLe2GNlgo6sbanAL4CZB1kjw+ncGFCFvSHhE6AmpXgN3gDoE8x+oZwe5VNIJoYnaWFUBj6CYP5BLw92IBsbQxU1YS+QePhcsEEgACAQghEIny2i0QuETAIxLMSTJ27F9g2uMngOH86IAf2zcqu7acXMLrx+M4OZOttGGBgQ1t9u7duEOA5Tsd2x6R4N9E9eTYSE1IbjpZTyF9dr9qQIA+s/Pgiz+SWMqoBoRl6YuCEgaioISBx0WQzq9MNTcBrOcwHR5SroiMwfPeigIOTCUxa0BsLbC3FqDIWWQkwUaCrQQQQsqvpVwjRboxuAlgTctFWTOSf6PBZgJUBeRXa7djEdwEsL5AK0BfxzcqbM0BblFVQMqOPfMqwFYCvK41kATpTK+HjyIgySDA2MLqgz8HMLwPeNQPFzPGISA0UCeSeyfIWr1gizoz1kaItvHC5jaMDQYMx+oJ/3zHelPV5OP75k2FIT8BBgwIBAhRBERTxttVkZpVQVYKJ7NwsSRIwUwdANQQAkYOdPoFzcSiDAXQJuxucwNKuW3WLLcCjLosvUGtqXlGn5AmQL9hGv8qigWGeozw9kNh3NKh+MDTc+QmwGWgwP6waiqelpFiSFCk4qhaCb1Sk7Ua6G61zNE55g4B0SAEBjrVw5KZxQLTBr1jtLvNDfApoIYcUP39Td2e8uuLkZUIUEm0+aAHALtpo4ctCuj0C+ihcsD5efbprZcKvHoQwBMC3DnAW+WRdX+PV3P9u+74ulQCLkXVswM6QdaDAJ6WEzcBhy6k8PNVtdM7L8l49p7W8vV0LF/REs8XgacPRnhvtSrgJuCnf7Rt7oCHaBTw4xX188EuNwa73PjyfMqCi/WF5Sb7SL9PUwafmMkAANYHBOweCaG7VURPuwvv/5Coqsw6PAS4YLkseWLQX349J8mYup5Hb1DER6Pr0N0qAgDG7gjg5QeDVesIRnG5KrBEwNY+LzauU5//hy8qUk9ki4iktHlgdMCPceqAtFFQMwECAZ67t618LRdLOPSnQsBSpoSJb6I4PavNF09uCmCMUgxQHwXw2Kw5B4wN+jWrf2w6jetJddWzBeClIzHseSSMuzaoSXJiSzumY4Xyo1K/AvvGOms6OPG71VkLHAzUpIC+oIjn79Oe93/ym1QxLlsAJo/EcZn6SYwoEOwc7kDIp9xa72vAI6C1hj960iYrZmWs+aEK/G6CN7eHNP2/g1Mpw+MqKVfC5NE4EllVHSGfgKGbPdzOmoXRdr3qWF7Du0c6NL/bW0jK+PjXG8zvzSZk7PpuEe8+HIaUK+K1Y3GcnlVCQL+1fvFwDJEayuFdwyH0LZfDPCFgmgC3AOwcDmFzr/YXYm+dXGKWvv/j1JUsPj0j4dvLaU2xpF+tv+KFmsphurHiFs1/zzQBr27rwLZbtZPff06q2BmysPeXSqW46xADAiEQBUA2URabjpY3Tixiz6klpJcPPM7N5fBhlQnxwmvUYbEIn0m7phVQKAIHplI4O5fD5ANBvHI0ztV4MEK2UMK1G2pI8JSyNMa/jmo6TWbCEgBI89/m1jiaBDjtgNNoEuC0A06jSYDTDjiNNU/Af92J/p9i7yIiAAAAAElFTkSuQmCC",
     inSiteIcon: 'data:image/png;base64,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',
@@ -154,6 +155,13 @@ popData.engines = [
     defaultState: 1,
     src: popData.icons.youtubeIcon,
     href: 'https://www.youtube.com/results?search_query=${text}'
+  }, {
+    id: "youku_st",
+    title: "Search with Youku",
+    description: "搜索优酷 / Search with Youku",
+    defaultState: 0,
+    src: popData.icons.youkuIcon,
+    href: 'http://www.soku.com/search_video/q_${text}'
   }, {
     id: "amazon_st",
     title: "Search with Amazou",
@@ -463,11 +471,7 @@ CopyText = function(seltxt) {
 };
 
 GetOpt = function(id) {
-  return $("#" + id + " > input").prop("checked") + 0;
-};
-
-SetOpt = function(id) {
-  return $("#" + id + " > input").prop("checked", GM_getValue(id));
+  return GM_getValue(id);
 };
 
 SaveOpt = function(id) {
@@ -482,7 +486,7 @@ OpenSet = function() {
 };
 
 SettingWin = function() {
-  var engine, engineOptionList, generateEngineOption, generateOption, i, item, len, option, optionList, ref;
+  var ReadOpt, engine, engineOptionList, generateEngineOption, generateOption, i, item, len, option, optionList, ref;
   $('#popup_setting_bg').remove();
   generateOption = function(option) {
     return "<span id='" + option.id + "' class='setting_item'> <img src=" + popData.icons.settingIcon + " /> <span class='text'>" + option.text + "</span> <input class='tgl tgl-flat' id='" + option.id + "_checkbox' type='checkbox'> <label class='tgl-btn' for='" + option.id + "_checkbox'></label> </span>";
@@ -510,7 +514,7 @@ SettingWin = function() {
     }
     return results;
   })()).join(' ');
-  $("body").append("<div id='popup_setting_bg'> <div id='popup_setting_win'> <div id='popup_title'>PopUp Search Setup</div> <div id='popup_content'> <div id='tabs_box'> <div id='tab1' class='tab selected'>选项 / General</div> <div id='tab2' class='tab'>搜索引擎 / Engines</div> </div> <div id='page_box'> <div id='option_box'> <div id='tab1Page'> " + optionList + " </div> <div id='tab2Page'> " + engineOptionList + " </div> </div> <div id='btnarea'> <div id='popup_close' class='setting_btn'>Close</div> <div id='popup_save' class='setting_btn'>Save</div> </div> </div> </div> </div> </div>");
+  $("body").append("<div id='popup_setting_bg'> <div id='popup_setting_win'> <div id='popup_title'>PopUp Search Setting</div> <div id='popup_content'> <div id='tabs_box'> <div id='tab1' class='tab selected'>选项 / General</div> <div id='tab2' class='tab'>搜索引擎 / Engines</div> </div> <div id='page_box'> <div id='option_box'> <div id='tab1Page'> " + optionList + " </div> <div id='tab2Page'> " + engineOptionList + " </div> </div> <div id='btnarea'> <div id='popup_close' class='setting_btn'>Close</div> <div id='popup_save' class='setting_btn'>Save</div> </div> </div> </div> </div> </div>");
   $('#popup_setting_bg').hide();
   $("#tabs_box > .tab").on("click", function(e) {
     $("#tabs_box > .tab").removeClass("selected");
@@ -520,11 +524,14 @@ SettingWin = function() {
   });
   $("#option_box > div").hide();
   $("#tabs_box > .tab.selected").click();
+  ReadOpt = function(id) {
+    return $("#" + id + " > input").prop("checked", GM_getValue(id));
+  };
   ref = $("#popup_setting_win .setting_item");
   for (i = 0, len = ref.length; i < len; i++) {
     item = ref[i];
     if (item != null) {
-      SetOpt(item.id);
+      ReadOpt(item.id);
     }
   }
   $("#popup_save").click(function() {
@@ -555,7 +562,7 @@ SettingWin = function() {
 };
 
 Load = function() {
-  var engine, i, j, len, len1, option, popupmenu, ref, ref1;
+  var engine, i, j, len, len1, option, popupmenu, ref, ref1, setDefault;
   if (window.self !== window.top || window.frameElement) {
     if (!GM_getValue("Iframe_st", 0)) {
       return;
@@ -564,19 +571,20 @@ Load = function() {
   addCSS();
   if (GM_getValue("UpdateAlert", 0) < 7) {
     GM_setValue("UpdateAlert", 7);
+    setDefault = function(key, defaultValue) {
+      return GM_setValue(key, GM_getValue(key, defaultValue));
+    };
     ref = popData.optionList;
     for (i = 0, len = ref.length; i < len; i++) {
       option = ref[i];
-      GM_setValue(option.id, GM_getValue(option.id, option.defaultValue));
+      setDefault(option.id, option.defaultValue);
     }
     ref1 = popData.engines;
     for (j = 0, len1 = ref1.length; j < len1; j++) {
       engine = ref1[j];
-      GM_setValue(engine.id, GM_getValue(engine.id, engine.defaultState));
+      setDefault(engine.id, engine.defaultState);
     }
     OpenSet();
-  } else {
-    SettingWin();
   }
   Init();
   GM_registerMenuCommand("Popup Search设置", OpenSet, 'p');

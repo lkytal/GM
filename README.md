@@ -32,10 +32,14 @@ Popup search/translate(etc) button for selected texts
 
 GM的"用户脚本设置"下的"Popup Search设置"打开选项选择需要的项目
 
-![Set](http://lkytal.qiniudn.com/set.png)
+![Set](https://dn-lkytal.qbox.me/pset1.png)
+![Set](https://dn-lkytal.qbox.me/pset2.png)
 
 Update Log:
 
+* 4.0.1 : Better performance
+* 4.0.0 : New setting UI with many new engines
+* 3.5.0 : Setting enhance
 * 3.4.0 : Fix Unhidden problem
 * 3.3.3 : Better position locating
 * 3.3.1 : update jquery
