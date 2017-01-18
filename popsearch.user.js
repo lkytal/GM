@@ -9,7 +9,7 @@
 // @exclude					http://acid3.acidtests.org/*
 // @exclude					http://www.acfun.tv/*
 // @require					https://cdn.bootcss.com/jquery/3.1.1/jquery.min.js
-// @version					4.0.2
+// @version					4.0.3
 // @icon					http://lkytal.qiniudn.com/ic.ico
 // @grant					GM_xmlhttpRequest
 // @grant					GM_addStyle
@@ -27,7 +27,7 @@
 // ==/UserScript==
 
 "use strict";
-var CopyText, GetOpt, InTextBox, Init, Load, OpenSet, SaveOpt, SettingWin, ShowBar, TimeOutHide, addCSS, fixPos, getLastRange, get_selection_offsets, isChrome, log, popData, praseTranslation, praseTranslationMore,
+var CopyText, GetOpt, InTextBox, OpenSet, PopupInit, PopupLoad, SaveEngine, SaveOpt, SettingWin, ShowBar, TimeOutHide, addCSS, fixPos, getLastRange, get_selection_offsets, isChrome, log, popData, praseTranslation, praseTranslationMore,
   hasProp = {}.hasOwnProperty;
 
 window.$ = this.$ = this.jQuery = jQuery.noConflict(true);
@@ -48,6 +48,7 @@ popData = {
     wikiIcon: "data:image/png;base64,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",
     jdIcon: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAIAAAAlC+aJAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAAFiUAABYlAUlSJPAAAAQCSURBVGhD7ZhbSBRRGMfPzM5uu+7qesvdzFZLLTVrM7sQGBSUroF2oSIqgpSKHoUuUPZQkaESdJGKMhCkSJJ6UpCKArvZzUsGaaZppZWKreuue5mZ08YexrRxZncNZxbm97LftzPMnP85/3PmnA97DTQgkMHRb8AS8ALGLJQOLZ4gIHiDBXsCyUJCIwkQGkmA0EgChEYSIDSSAKEJeAF+7Ubh8Pfc6K+1niQhtPNVQqzckzDAwarmqHwSZSxgUbOxBUmKpSvVq9dGrlmmCZNj6IpXCL8bhT+/0fUP7ReKBreub4sMa8w9/Pl5HwXRVe8Ri4XomisDGYlNpsK+HrtPKqbFQjpTyPFMOXMLRdK2YfJHj7P1rbOu9Z/mGlS3apO2x8k4LcVYaFoErDi3sP6AivAk46Fto81138pKzBXv/lKCEyVPUwsWEZP7QzQnMjxIlbY54cZTY8dNzSqmMTR5JON9xRfaCzOJZA7gxNyNCx61Re+PQX8AyrVv06d2B68EsUxiN5h8VvSlx7otKpSDNvPeazYXSiZDRAL+QOhjrpYrmFJbQ1FXwwj3IIhMgHscIjbMPTIPJcDiOP/ERaOEFdEJAECu3pMvQzGANZXmUa4xEKEAgOtNqjgUA2fD4BeOHYkoBQBiljYZhQB8d3RxDYEoBWAzlAb0nXJDf+aax6IUAHBZiBqF7mkwwrWUilMAhM4x32NKZkqzIE4BFNk/hEK3gJlKjn2dKAVQZksXhWKgIuZrAkwAtH+0NKEYgNSQOQoUsuGXAEjTTAcBGYb5dBjkBVKtlc5RlICUzPBQrkb6NwIkybwAKGW+nWb5oH/1l1Yx6ya+c0fQxLPGOPwSQA07BlAIQIRS/R99CMnW0r57zPiuiswzcD/dn3dD59fRNhSD2CSV6r+NALS8+LjtIrN5ww+VRkdxraFu/BFAd951MX1kXBfEelb0HWhp6sjJtHagFMTmGQoXE3yd47sAaB0qu8N4lNixlPcdXkA5W66/X5ZhrmcebNTWFEcE8zfPVwGQbDrbU25GmSJblxU+lfZDymp7dbt9V1pLWoGd6XuQrKmvTUj2ypo8VQl73dX+YJMu3aCYgdHW3qHqs915FWMePdVoPJbIWv8YV5XQ52hPmxSMmWkS2syu3m7Hu9eOmuaJGzV9dsT9irgUNXfrvS2rjBQt/nCiEyUTWF6Y+PiodpLPPG9pkQ1cdvDyvOKdWi+WtSmXVYwHDbWHJ2u974QR+0/HtPctKdvtTev/hu9uFn8YFCerk5+VRIXzLHCcYFhsvCxrY9DxM7oHL1Ot3UuuFOjjeWzDil+VOREgmsrclJEECI0kQGgkAUIjCRAaSYDQSAKEZmw3GqBIFhIWAH4DD9ZjsqVbIzoAAAAASUVORK5CYII=",
     eBayIcon: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAIAAAAlC+aJAAAACXBIWXMAAAsTAAALEwEAmpwYAAAD+UlEQVRoge2XX2hbVRzH067isAzUBwfqgzL/zDHoZCqis2wgA4U9iVNB9qJSURHG1idhwhBBVkTUh01EER2CVEHRPVgVhk/Dm6Rt/jRpbZe/Tdo0Jk2afze99+NDb3pzb07S0jU9iPfwewi/3+/8zvdzzsk557pQXP9pk6/AAZCtwAGQrcABkK3AAZCtwAGQrcABkK3AAZCtwAGQrcABkK3AAdj5UZc+R6+YVk/h6W9J66XstaRFXiE+jO/+7gAEBoifNSw0KM7x9OPfT3CAmWdBo7lFh+zJMycsCZUQ7j78D+DZ3R2A6JA5WOoDezT4MIUx9DrtWiWA0mPpUvzTkjB7sstbqAOA/yG0lbbS19v0cbNL6AlLqORG6ZUHkPnMDCWG8e5h9nkBQP4Xs0vuR0to5pkOQ3cfoKSYofHbDGc900Kg4X8QxYX/gOUfUrzaeegd2EL7CQwYtr4TanHBIix+iuJi6Ysml07oyA0A+PYRHSJzieUxypPUIqhp6gvUYlQCFK+y9BXxMwQPE33dAjB5F6n3yI2y9CV/n8Ddx+xzZC5SGKP0FyUPek0AoBUJHLSE8j9vOHdtAsFDFH4HXTCMsGlF83fuB+qLlqia2GydWqy5KMFDWwIID6KV7aXVBPHThI8Reoq5lyn80VFHhJJH4C+PM3+e2NusZhsuve00Zb/dzO5tdfVSnW4ppuE/YElz91GeFA+sJo2bNfuN1Z/Cc4vRvTrX0F8hf0VQRFdbL93NAQQPi2Y0Juicudhm5i4bCbbjMn/F7KsmG0Kr9lN/rWUubfL8aHHNvSSej0rYbqs5MUD6Q6NU6IjFX/jN8HtvNW9lvYrSw/KvlkytzOTdWwW4fkosa/Mt3ThGpx6z+FcL+O7BvYv0SNPUVFF6iL4pRt0KwOxJgaZalIm9nSwxbCav3wNTj9rr6CpaAb1Oxd/wrOK+megblrTlsRsACBwUAGgruG+yZ0bfIvkuyXMkz5H/qWkFLjQAHheU0lUir7HwkemZuHNbAZQeKkHBwHMvWNIm7kCrCNKAhY+NnPAx07lyjdT7xE7j24fiwncv4aOGefq3F8BF+Ch6tWURSsyfZ/ppQoNEXhVDrrV/vmucBy+azvRIJx3bDLC2+s2PsA1b84lUi+DeheJi8RPT2frJ0l2Atb009QjJd8iNUvKizqMV0WvoNbQiaoKVa2QvEz9LcMDyFgJyo6RHml41Or77dh6gDZXt08lQ0PQatb3mgezXG5T17Gb8dtO8e7oH0Mamj5P73rDQk1w/RXkCrYQaJ32h9UN2G61bdXfM5CtwAGQrcABkK3AAZCtwAGQrcABkK3AAZCtwAGQrcABkK3AAZCv4vwP8CyqoTA3RSbNfAAAAAElFTkSuQmCC",
+    doubanIcon: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAAFiUAABYlAUlSJPAAAAEOSURBVFhH7ZI/C4FRGMXNNqsMNoPB5BuZZVMymERZfA+DkiKRjyBS/iySKIOMyvBwuLfe9zpEb+9Fvad+y7nnee7pdkOhfES+CjVtQk2bUNMmprE6rMUvYbd5X1Ag+IRPC4y2E/Vw3oVd7I4b1LzyUwVm+6WUepWPwIyW5wLNaZtmXoEZraDA/xf4+if0qv8soOnM+2qNyPq4kXgl9RJktDDLdrqgpoNMI6vW3ZWopWkO4MwpzLKcC2o6iJWTat1duVaB5gDOnMIsy7mgpsF4N1UrRbqLAc0AnGlhhmUeoKZBdVhXa0VO55OEi9GHDDycaWHGzFBMw2+Z9wUF3voDvkJNm1DTJtS0CTWtEZELQLQd2odfLaoAAAAASUVORK5CYII=",
     amazonIcon: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAIAAAAlC+aJAAAACXBIWXMAAC4jAAAuIwF4pT92AAAEmUlEQVRo3u2aaUxcVRTHGWqRYmukaWuj0RibWhu3tNKiJNpiQmKMhrSpMWoNNU2qJLVp1FQpNcYvxhA/aOIShqUDlAKlzAAjLcuwlU3ApiWUYlmn7DsUBhiW4eeXQQK8OwwzwBuSd3M/TOadd+//996955x78twId1vX3U0BUAAUAAVAAVAAFICFPXYHWh/0h9EfQutD3M71ABC9mfwgmrWM97C4mfswppJ/guhHXA8gahOV3zExiD3N3E/Zl0Q85DIAibsZuMNyW0cBGm8XAEh6jrEuHGudhSvyHpxbOYN3caaVnJYVoOK8zbXex8AdzAO2bB40oFbJBBDhwXi3tKyuYtL8rMrU7mS9x2i7kCFpj0wAGQHSgtqyiPRYaKz1gRlp+5xjMgH8872UnBkSdknb95QLtsEZmQB0B2i5ztA9LOY5Nd1lQvt7GmmAihC544DanUtPkOpH7ofEPy00q/ldGqDywjpJ5mr+EACEuiRAzDbS/Mj7mPJzVP9K/SVGjIIldN5lAOJ2UhxMsxZT6zJimUsAXH2JhgQsk44EY5kBIjZSFcbMtOPZhJwAkQ/TkmFH/jyA6T6Tw64HUKsWih7toDKUlP1EbVrCC8kGoPcXqq+PI3qLvW5UNoC2HEEuZEDtLmF/909XAoh9XJicpb6+zFRCFoDsI9JqJoelH3+4G20GV4rEZV9JqxluFPgrDyaGpG+p+lkOgJs/SKsZ75W2z/3I1uleBoCKEKGgK3sXHZ29GG4UhwmLk4cyh27L+0Sopyll3jaI9KQ5ZYlI124Q7pzVAkh63pag1kyuv4POl6LPGKy1K6Fw4lTg6LtzoJhlow03rTlA/vHlSZyZojZS4HxHuPb2mgOoVRh19qqfHiP7KOFu1Mctypo60b46Gx+3U/4tnTcY62JmiplpRttpuEzsdkcBIjai9xfWk6O8MKYurX7oX7T75yrYfbfmLvVXc/kZ66WCT8UZa6ijAOUhAGOd3DglXcdUqygIEu7UBw2UniXSc+Fps6cSoOUaFx+dHWcDlgnhI7j9k6MA6W8yNWYdZbCGrEBBJVBF8gsUBFH+DRUhlJwmK5CEZ4VlwyhPUvah3jDvz6xAioLJCODKXuKfJGEXox32lFDtqP/8PxDQXUpGAOGq1SleqNAdQOtjPS1Nz1acdAed28TxT9F7c9477S4l811nos/CrnmMomD6b1vH1/vz11vW36ZW2xPZWUn3oi5GYneWniVmm+O6L27B8D5NyUyPzatPpr9BzW925tvLma/wJFOmRbnMJC0ZFJ2a8ydLitYfovIC7bkSG9fcR/ZRIj0Y7wUYMRK9eUXjQOJuuoqF7sLUijGdqjBKzpB3nJxjGD6g8CTl56j+hft6hurAIgp11MURu4NwN1L2AUyZ0PmuQiBTu1P0Oea+lUwl2g2k+s6bouAEV19ezUis8ebWj0yOOKXbMkFjIqmvyVfY0njz99cM1S4zL5qmo5CSL2znCGtYWlSruPoKlaG0ZgqX1ng37blUhZF9BM1W1/7UQLOV5BdJ80N/GN1BkvYs6UmUjz0UAAVAAVAAFAAFYL32/wDDp7bQ08tZUQAAAABJRU5ErkJggg==",
     youkuIcon: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAADwklEQVR4nO2bW0hVQRSGv+QgImE+nEoKQqQkpCBCegifQkIiKoIgfIhIoQi6GBHVW0FPFlISEQjRayFhEl1FJHopIioiiq5EQVfRMK9ZDzO7vc64zzlbBZcd54fhzMxaM7PWf2avNewLzHDMiujLB4qm2pApQi8wlE5YADQD/cCfHC391seCKAKap4GBU1WaA6eDSyAf6EnHTA5iAJgDDOXZjiJmjvNgfC0CyMuimPPwBGgboA1PgLYB2vAEaBugDU+AtgHa8ARoG6ANT4C2AdrwBGgboA1PgLYB2ohDQC8wkkH+KYt8WiMbAfsw986WAF8i5MeBhcB84InoHwV+kOEW9HRDkui7p6VC56gj6wZmC/lZ4AOwg/C5QgJYA3SJcS+AQ8BdZ75hoB5YC7wGTgDrgZuOXoftbwQ+A7XAXjte6rUBG4BraXxLxiGgXuiUOIs0CVkCaAfmEY084JwdV2X7ypy1uoS+XHel0LmMuYMdpdfpzLfI9i+eDAFPHUdabf9vO3GATUC5aK/CELRN9CWAx4S7qthZq92ZL0C5lV8g9ZItBw6IdpszX7Htn5fGtyRkjwHLgGrRPm9/bwGvRP9S4KWtr8Bs7/3AReCw7R8BTmdZLwqjwBmgztbB7IpOUnfDhBAnCzSI+h3gDeLJCrDamafOMWynqN8ndCIu3mGCcTBuHeZyWTDOeSIRh4Aawu09ChwBbgh5A6lOuQ9YCkU9rvPSLjfFVjhzTgpxCMgD9oj2JUJHSjHX63Ihb3PGXxV1GSdcMgZEXe6gBZjMEOAksAX4hYkrUeNHCVOw1EmLdEEwKD8Jg4pEk5DLDLALuIdJjTJVtgKVot1hxw+SGvgaRX0xJvvsdtautPMHqAH6CANmgOo0PsXKArLIiAuGkB4hv07moFRr9WQgTGACbYnj2HPRlmmsmdR/9BSpZ5UiwvQHZvdO6hwgyzPHoYMROg8w21UaWYrZKb8JU+gxxr6EkcCQ9B3zHL/M9m931riOuSySdr33wGbGkl8BXMngz7gJcP+59xl0+4C3wNcMOoPAQ+A2Jqp3R8g/xrArKP2YnfMoy7oTImCY1K22dRyGTdcS6yAU4BImHwdoSKP33yEuATK1VWGOujmBuARsxASZQkzkzRkE7wglMYEjE3oxB4yo88D/iLnAt1inJIucfHfQ3xPUNkAbngBtA7ThCdA2QBueAG0DtOEJ0DZAG54AbQO04QnQNkAbngBtA7ThCbC/vaQ+W8t1DGB8/kfAENCiZs7Uo4WI95dm5Kez/uPpmY6/mlsYlHZ+rzYAAAAASUVORK5CYII=",
     youtubeIcon: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAIAAAAlC+aJAAAACXBIWXMAAAsTAAALEwEAmpwYAAADRUlEQVRoge3Z2U8TQRwHcP62pSAmZqkcQZCbUkAK5SxQ5SqSUvDAByOJCRojRuOjJsYjSkTBqPGIxngF3e0e0261BXqwu+yMD0tijHLs7DYDcX/5PTXpzPfTTWd2d3IYmtrXnUM8gQ0gncAGkE5gA0gnsAGkE9gA0glsAOkENsDod5wOtiifqy7m648IzVVihxv0tgKfB/S1g752MNAB/J1/tP753+3ziF3NQmsd76rg6su4qmK2KJ9xOrICiAz2JOcfKMw3LRGHqoKyVlBRNmKS/PVT8uE9saPJGkBi7lL2Em+HUVVpYsQsAPS1IQiJABBCMJPhXeWmAOvv3pBKr9fanVv4AKGlhuDPr5eWTLIlBZiA+OwM2fR6RYZ8mID00gLp8AghlLh+BROgChzGfOnni0jTLASknz3FAjgdUFUx5hO9jWJPq/J92SqAwjI4AK66BG8+0dvI0BRbfCBx7TJULNj1YCaNAxC9bjOAzXWsrWH9w3vTAhguO2QYEBnymQcwNMU4835ePK+lU2YIXH2ZYYAUGrUGQFMMTfGNRzOvX2IDxK4W44DJAC7A/e8xC3Nj0yFtbRVjTNDTahgQOzVuMUBfG2pLU4uPDQN6PcYBp7MC0C+FFApoibgBAM4VODuRLQBNRU50qxGwLwHhCnrt7m2jWzUW4EzQckB0fHBDimKMifcnPmkhgKstTS08wr45F9tdhgFScMgaQGHuj3MhbXUFbzS9cDYy4POYB/BNlWb2r82CMFxRaBjAuyvNANjDefHZGZjJmE2PEJTXt1kVtgSwJQV4t/Wi1y16G+XPH81H10vlwzgAhqZUIGDMl3oyj/cgsVWlXyxhAvbII+XKzTlMQHz2AunwCCEUDfgxAUJbA+nwCMryNk8zOwAYOlde/kIWkJy/v23Cnd7MRQN+gumhoggtNaYADE0lblwlE1/TYtOhHePt6vW6FBzOvH21EZOgLGc7NpRlVeDTSwtgoGM32QwecDgdbMlBrq6Mb64C3cdAvzdyvCs65peCw9JkQJoa27InRn53aFSaGpOCQ9FhH/B3gn4v8HmEtgbeVREup1mDZxz/4RHTHmsbQLptAOm2AaTbBpBuG0C6bQDp3veAX5Y5FwgEHimSAAAAAElFTkSuQmCC",
@@ -65,7 +66,7 @@ popData = {
       defaultValue: 1
     }, {
       id: "Dis_st",
-      text: "显示于文字上方 / Display Upon selection",
+      text: "显示于文字上方 / Display above selection",
       defaultValue: 1
     }, {
       id: "Tab_st",
@@ -77,7 +78,7 @@ popData = {
       defaultValue: 1
     }, {
       id: "Iframe_st",
-      text: "在Iframe中显示 / Load in iframes",
+      text: "在Iframe中显示/ Load in iframes",
       defaultValue: 0
     }, {
       id: "Copy_st",
@@ -87,6 +88,21 @@ popData = {
       id: "Ctrl_st",
       text: "仅按下Ctrl时显示 / Only when ctrl pressed",
       defaultValue: 0
+    }, {
+      id: "userEngine_st",
+      text: "自定义引擎 / Enable Customize",
+      hidden: true,
+      defaultValue: 0
+    }
+  ],
+  userEngines: [
+    {
+      id: "UserEngine",
+      title: "Example Engine",
+      description: "自定义引擎实例 / Example of user engine",
+      defaultState: 1,
+      src: "http://lkytal.qiniudn.com/ic.ico",
+      href: 'https://www.google.com/search?newwindow=1&safe=off&q=${text}'
     }
   ]
 };
@@ -95,17 +111,17 @@ popData.engines = [
   {
     id: "Site_st",
     title: "Search Current Website",
-    description: "在当前网站内搜索 / Search Within Current Website",
+    description: "在当前网站内搜索 / Search in current website",
     defaultState: 1,
     src: popData.icons.inSiteIcon,
     href: 'https://www.google.com/search?newwindow=1&safe=off&q=${text}%20site:${domain}'
   }, {
-    id: "Baidu_st",
-    title: "Search with Baidu",
-    description: "百度搜索 / Search with Baidu",
-    defaultState: 1,
-    src: popData.icons.baiduIcon,
-    href: 'https://www.baidu.com/s?wd=${text}&ie=utf-8'
+    id: "Open_st",
+    title: "Open As Url",
+    description: "选中文本视作链接打开 / Open selection as url",
+    defaultState: 0,
+    src: popData.icons.linkIcon,
+    href: '${rawText}'
   }, {
     id: "Bing_st",
     title: "Search with Bing",
@@ -114,12 +130,12 @@ popData.engines = [
     src: popData.icons.bingIcon,
     href: 'https://bing.com/search?q=${text}&form=MOZSBR'
   }, {
-    id: "Open_st",
-    title: "Open As Url",
-    description: "选中文本视作链接打开 / Open Selected Text As Url",
-    defaultState: 0,
-    src: popData.icons.linkIcon,
-    href: '${rawText}'
+    id: "Baidu_st",
+    title: "Search with Baidu",
+    description: "百度搜索 / Search with Baidu",
+    defaultState: 1,
+    src: popData.icons.baiduIcon,
+    href: 'https://www.baidu.com/s?wd=${text}&ie=utf-8'
   }, {
     id: "Google_st",
     title: "Search with Google",
@@ -165,7 +181,7 @@ popData.engines = [
   }, {
     id: "amazon_st",
     title: "Search with Amazou",
-    description: "搜索亚马逊 / Search with Amazon",
+    description: "搜索亚马逊/ Search with Amazon",
     defaultState: 1,
     src: popData.icons.amazonIcon,
     href: 'https://www.amazon.com/s/field-keywords=${text}'
@@ -176,6 +192,13 @@ popData.engines = [
     defaultState: 0,
     src: popData.icons.eBayIcon,
     href: 'http://www.ebay.com/sch/i.html?_nkw=${text}&_sacat=0'
+  }, {
+    id: "douban_st",
+    title: "Search with Douban",
+    description: "搜索豆瓣电影 / Search with Douban Movie",
+    defaultState: 0,
+    src: popData.icons.doubanIcon,
+    href: 'https://movie.douban.com/subject_search?search_text=${text}'
   }, {
     id: "jd_st",
     title: "Search with JD",
@@ -199,7 +222,7 @@ log = function(msg) {
 };
 
 isChrome = function() {
-  if ((typeof GM_download !== "undefined" && GM_download !== null) || navigator.userAgent.indexOf("Chrome") > -1) {
+  if (navigator.userAgent.indexOf("Chrome") > -1) {
     return true;
   }
 };
@@ -240,7 +263,7 @@ fixPos = function(sel, e) {
 
 $(document).mousedown(function(event) {
   if (popData.bTrans === 1) {
-    Init();
+    PopupInit();
   }
   return $('#ShowUpBox').hide();
 });
@@ -251,7 +274,7 @@ TimeOutHide = function() {
   }
 };
 
-Init = function() {
+PopupInit = function() {
   var $DivBox, $icon, EngineList, engine, i, j, len, len1, ref, ref1;
   $('#ShowUpBox').remove();
   EngineList = "<a id='gtrans'><img title='Translate' src='" + popData.icons.translateIcon + "' /></a>";
@@ -321,8 +344,8 @@ Init = function() {
     $("#Gspan").empty().append("<div style='padding:10px;'><img src='" + popData.icons.pending + "' /></div>").show();
     $('#popupwapper').hide();
     fixPos(document.defaultView.getSelection());
-    callback = function(err) {
-      return $('#Gspan').empty().append("Translate Error:\n" + err).show();
+    callback = function(res) {
+      return $('#Gspan').empty().append("Translate Error:<br />" + res.statusText).show();
     };
     if (popData.text.length < 200) {
       return GM_xmlhttpRequest({
@@ -500,7 +523,9 @@ SettingWin = function() {
     results = [];
     for (i = 0, len = ref.length; i < len; i++) {
       option = ref[i];
-      results.push(generateOption(option));
+      if (!option.hidden) {
+        results.push(generateOption(option));
+      }
     }
     return results;
   })()).join(' ');
@@ -517,7 +542,8 @@ SettingWin = function() {
     }
     return results;
   })()).join(' ');
-  $("body").append("<div id='popup_setting_bg'> <div id='popup_setting_win'> <div id='popup_title'>PopUp Search Setting</div> <div id='popup_content'> <div id='tabs_box'> <div id='popup_tab1' class='popup_tab popup_selected'>选项 / General</div> <div id='popup_tab2' class='popup_tab'>搜索引擎 / Engines</div> </div> <div id='page_box'> <div id='option_box'> <div id='popup_tab1Page'> " + optionList + " </div> <div id='popup_tab2Page'> " + engineOptionList + " </div> </div> <div id='btnarea'> <div id='popup_close' class='setting_btn'>Close</div> <div id='popup_save' class='setting_btn'>Save</div> </div> </div> </div> </div> </div>");
+  $("body").append("<div id='popup_setting_bg'> <div id='popup_setting_win'> <div id='popup_title'>PopUp Search Setting</div> <div id='popup_content'> <div id='tabs_box'> <div id='popup_tab1' class='popup_tab popup_selected'>选项 / General</div> <div id='popup_tab2' class='popup_tab'>搜索引擎 / Engines</div> <div id='popup_tab3' class='popup_tab'>自定义 / Customize</div> <div id='popup_tab4' class='popup_tab'>关于 / About</div> </div> <div id='page_box'> <div id='option_box'> <div id='popup_tab1Page'> " + optionList + " </div> <div id='popup_tab2Page'> " + engineOptionList + " </div> <div id='popup_tab3Page'> <div id='editTitle'> <div>Engine Edit</div> <span id='popReset'><u>Reset</u></span> <span id='popHelp'><u>Help</u></span> </div> <textarea id='popup_engines'></textarea> </div> <div id='popup_tab4Page'> <h3>Authured by Lkytal</h3> <p> Source Code at <a href='https://git.oschina.net/coldfire/GM'> https://git.oschina.net/coldfire/GM </a> <br /> You can redistribute it under <a href='https://creativecommons.org/licenses/by-nc/4.0/'> Creative Commons Attribution-NonCommercial Lisence </a> </p> <p class='contact-line'> Github <a class='tab-text' href='https://github.com/lkytal'>https://github.com/lkytal</a> <br> Git OSChina <a class='tab-text' href='https://git.oschina.net/coldfire/GM'> https://git.oschina.net/coldfire/GM </a> <br> Greasy fork <a class='tab-text' href='https://greasyfork.org/en/users/152-lkytal'>https://greasyfork.org/en/users/152-lkytal</a> </p> </div> </div> <div id='btnarea'> <div id='popup_close' class='setting_btn'>Close</div> <div id='popup_save' class='setting_btn'>Save</div> </div> </div> </div> </div> <div id='helpDlg'> </div> </div>");
+  $("#engines").val(GM_getValue("engineString"));
   $('#popup_setting_bg').hide();
   $("#tabs_box > .popup_tab").on("click", function(e) {
     $("#tabs_box > .popup_tab").removeClass("popup_selected");
@@ -530,6 +556,12 @@ SettingWin = function() {
   ReadOpt = function(id) {
     return $("#" + id + " > input").prop("checked", GM_getValue(id));
   };
+  $("#popReset").click(function() {
+    return $("#engines").val(JSON.parse(popData.defaultEngines));
+  });
+  $("#popHelp").click(function() {
+    return $("#helpDlg").show();
+  });
   ref = $("#popup_setting_win .setting_item");
   for (i = 0, len = ref.length; i < len; i++) {
     item = ref[i];
@@ -537,8 +569,11 @@ SettingWin = function() {
       ReadOpt(item.id);
     }
   }
+  if (!GetOpt("userEngine_st")) {
+    $("#popup_tab3").hide();
+  }
   $("#popup_save").click(function() {
-    var j, len1, ref1;
+    var engineString, j, len1, ref1, result;
     ref1 = $("#popup_setting_win .setting_item");
     for (j = 0, len1 = ref1.length; j < len1; j++) {
       item = ref1[j];
@@ -546,17 +581,26 @@ SettingWin = function() {
         SaveOpt(item.id);
       }
     }
+    engineString = $("#engines").val();
+    if (engineString !== "") {
+      try {
+        result = JSON.parse(engineString);
+        popData.engines = result;
+      } catch (error) {
+        alert("搜索列表错误!请检查\nEngine config Error!");
+        log(engineString);
+      }
+    }
+    SaveEngine();
     return $("#popup_setting_bg").fadeOut(300, function() {
       $("#popup_setting_bg").remove();
-      SettingWin();
       $('#ShowUpBox').remove();
-      return Init();
+      return PopupInit();
     });
   });
   $("#popup_close, #popup_setting_bg").click(function() {
     return $("#popup_setting_bg").fadeOut(300, function() {
-      $("#popup_setting_bg").remove();
-      return SettingWin();
+      return $("#popup_setting_bg").remove();
     });
   });
   return $('#popup_setting_win').click(function(e) {
@@ -564,8 +608,12 @@ SettingWin = function() {
   });
 };
 
-Load = function() {
-  var engine, i, j, len, len1, option, popupmenu, ref, ref1, setDefault;
+SaveEngine = function() {
+  return GM_setValue("engineString", JSON.stringify(popData.engines, null, 4));
+};
+
+PopupLoad = function() {
+  var engine, i, j, k, len, len1, len2, newEngine, option, popupmenu, ref, ref1, ref2, setDefault;
   if (window.self !== window.top || window.frameElement) {
     if (!GM_getValue("Iframe_st", 0)) {
       return;
@@ -589,7 +637,20 @@ Load = function() {
     }
     OpenSet();
   }
-  Init();
+  if (GetOpt("userEngine_st")) {
+    try {
+      popData.userEngines = JSON.parse(GM_getValue("engineString", "[]"));
+      ref2 = popData.userEngines;
+      for (k = 0, len2 = ref2.length; k < len2; k++) {
+        newEngine = ref2[k];
+        popData.Engines.push(newEngine);
+      }
+    } catch (error) {
+      alert("User Engine Syntax Error");
+      log(engineString);
+    }
+  }
+  PopupInit();
   GM_registerMenuCommand("Popup Search设置", OpenSet, 'p');
   if (GM_getValue("PopupMenu", 0)) {
     popupmenu = document.body.appendChild(document.createElement("menu"));
@@ -601,10 +662,10 @@ Load = function() {
   }
 };
 
-setTimeout(Load, 100);
+setTimeout(PopupLoad, 100);
 
 addCSS = function() {
-  return GM_addStyle("#ShowUpBox { all: unset; width: auto; height: auto; position: absolute; z-index: 10240; display: inline-block; line-height: 0; vertical-align: baseline; box-sizing: content-box; } #showupbody { min-width: 20px; max-width: 750px; min-height: 20px; max-height: 500px; display: block; border:solid 2px rgb(144,144,144); border-radius:1px; background:rgba(252, 252, 252, 1); } #popupwapper { all: unset; margin: 3px 2px 3.8px 2px; display:block; line-height: 0; font-size:0; } #Gspan { line-height: normal; width: auto; font-size: 16px; overflow: auto; display: none; } #ShowUpBox img { all: unset; margin: 0px 2px; height: 22px; width: 22px; border-radius: 0px; padding: 0px; display: inline-block; transition-duration: 0.1s; -moz-transition-duration: 0.1s; -webkit-transition-duration: 0.1s; } #ShowUpBox img:hover { margin: -1px 1px -1px 1px; height: 24px; width: 24px; } #popuptip { display: inline-block; clear: both; height: 9px; width: 9px; } .tipup { background: url(" + popData.icons.tipup + ") 0px 0px no-repeat transparent; margin-top: -2px; margin-bottom: 0px; } .tipdown { background: url(" + popData.icons.tipdown + ") 0px 0px no-repeat transparent; margin-top: 0px; margin-bottom: -2px; } #ShowUpBox a { text-decoration: none; display: inline-block; } #popup_setting_bg { all: unset; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.2); position: fixed; left: 0px; top: 0px; z-index:102400; font-family: \"Hiragino Sans GB\", \"Microsoft Yahei\", Arial, sans-serif; display: -webkit-flex; display: flex; justify-content: center; align-items: center; } #popup_setting_win { all: unset; width: 760px; height: 90%; box-shadow:0 0 10px #222; box-sizing: content-box !important; background: rgba(255, 255, 255, 0.98); overflow: hidden; display: -webkit-flex; display: -moz-flex; display: flex; flex-direction: column; } #popup_title { font-size:24px; text-align:center; padding: 15px; background: #16A085; color: white; flex-shrink: 0; height: 40px; } #popup_content { flex-grow: 1; flex-shrink: 1; height: calc(100% - 70px); padding: 0px; display: -webkit-flex; display: -moz-flex; display: flex; justify-content: space-between; align-items: stretch; } #tabs_box { display: -webkit-flex; display: -moz-flex; display: flex; flex-direction: column; flex-basis: 25%; background: #EEE; } .popup_tab { width: 100%; background: #EEE; padding: 10px; color: #16A085; text-align: center; font-size: 16px; box-sizing: border-box; } .popup_tab:hover { background: #ccc; } .popup_selected { border-right: none; background: #FFF; } .popup_selected:hover { background: #FFF; } #page_box { padding: 20px 30px; flex-grow: 1; flex-shrink: 1; max-height: 100%; display: -webkit-flex; display: -moz-flex; display: flex; flex-direction: column; } #option_box { display: -webkit-flex; display: -moz-flex; display: flex; flex-direction: column; align-items: stretch; flex-grow: 1; flex-shrink: 1; overflow-y:auto; } #option_box > div { flex-grow: 1; display: -webkit-flex; display: -moz-flex; display: flex; flex-direction: column; align-items: stretch; } #popup_engines { flex-grow: 1; border: solid 2px #ddd; text-overflow:clip; white-space: pre; overflow-x:auto; overflow-y:auto; word-wrap: break-word; resize: none; } #editTitle { padding: 0px 0px 15px 0px; display: -webkit-flex; display: -moz-flex; display: flex; justify-content: space-between; } #editTitle div { flex-grow: 1; } #editTitle span { margin-left: 20px; color : #1ABC9C; cursor: pointer; } #btnarea { display: -webkit-flex; display: -moz-flex; display: flex; justify-content: flex-end; margin-top: 20px; flex-shrink: 0; } .setting_btn { display: inline-block; font-size: 16px; text-align: center; width: 45px; padding: 4px 10px 4px 10px; border-radius: 2px; margin: 0px 0px 0px 20px; background: #1ABC9C; color: #fff; cursor:pointer; user-select: none; -moz-user-select: none; -webkit-user-select: none; } .setting_btn:hover { text-shadow: 0px 0px 2px #FFF; } .setting_item { min-height: 28px; font-size: 14px; margin: 5px 0px 10px 0px; display: -webkit-flex; display: -moz-flex; display: flex; align-items: center; } .setting_item > img { width: 24px; height: auto; margin-right: 7px; } .setting_item .text{ flex-grow: 1; font-size: 16px; } .tgl { display: none; } .tgl, .tgl:after, .tgl:before, .tgl *, .tgl *:after, .tgl *:before, .tgl+.tgl-btn { -webkit-box-sizing: border-box; -moz-box-sizing: border-box; box-sizing: border-box; } .tgl::-moz-selection, .tgl:after::-moz-selection, .tgl:before::-moz-selection, .tgl *::-moz-selection, .tgl *:after::-moz-selection, .tgl *:before::-moz-selection, .tgl+.tgl-btn::-moz-selection { background: none; } .tgl::selection, .tgl:after::selection, .tgl:before::selection, .tgl *::selection, .tgl *:after::selection, .tgl *:before::selection, .tgl+.tgl-btn::selection { background: none; } .tgl+.tgl-btn { outline: 0; display: inline-block; width: 4em; height: 2em; position: relative; cursor: pointer; } .tgl+.tgl-btn:after, .tgl+.tgl-btn:before { position: relative; display: inline-block; content: \"\"; width: 50%; height: 100%; } .tgl+.tgl-btn:after { left: 0; } .tgl+.tgl-btn:before { display: none; } .tgl:checked+.tgl-btn:after { left: 50%; } .tgl-flat+.tgl-btn { padding: 2px; -webkit-transition: all .2s ease; transition: all .2s ease; background: #fff; border: 4px solid #f2f2f2; border-radius: 2em; } .tgl-flat+.tgl-btn:after { -webkit-transition: all .2s ease; transition: all .2s ease; background: #f2f2f2; content: \"\"; border-radius: 1em; } .tgl-flat:checked+.tgl-btn { border: 4px solid #1ABC9C; } .tgl-flat:checked+.tgl-btn:after { left: 50%; background: #1ABC9C; }");
+  return GM_addStyle("#ShowUpBox { all: unset; width: auto; height: auto; position: absolute; z-index: 10240; display: inline-block; line-height: 0; vertical-align: baseline; box-sizing: content-box; } #showupbody { min-width: 20px; max-width: 750px; min-height: 20px; max-height: 500px; display: block; border:solid 2px rgb(144,144,144); border-radius:1px; background:rgba(252, 252, 252, 1); } #popupwapper { all: unset; margin: 3px 2px 3.8px 2px; display:block; line-height: 0; font-size:0; } #Gspan { line-height: normal; width: auto; font-size: 16px; overflow: auto; display: none; } #ShowUpBox img { all: unset; margin: 0px 2px; height: 22px; width: 22px; border-radius: 0px; padding: 0px; display: inline-block; transition-duration: 0.1s; -moz-transition-duration: 0.1s; -webkit-transition-duration: 0.1s; } #ShowUpBox img:hover { margin: -1px 1px -1px 1px; height: 24px; width: 24px; } #popuptip { display: inline-block; clear: both; height: 9px; width: 9px; } .tipup { background: url(" + popData.icons.tipup + ") 0px 0px no-repeat transparent; margin-top: -2px; margin-bottom: 0px; } .tipdown { background: url(" + popData.icons.tipdown + ") 0px 0px no-repeat transparent; margin-top: 0px; margin-bottom: -2px; } #ShowUpBox a { text-decoration: none; display: inline-block; } #popup_setting_bg { all: unset; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.2); position: fixed; left: 0px; top: 0px; z-index:102400; font-family: \"Hiragino Sans GB\", \"Microsoft Yahei\", Arial, sans-serif; display: -webkit-flex; display: flex; justify-content: center; align-items: center; } #popup_setting_win { all: unset; width: 760px; height: 90%; box-shadow:0 0 10px #222; box-sizing: content-box !important; background: rgba(255, 255, 255, 0.98); overflow: hidden; display: -webkit-flex; display: -moz-flex; display: flex; flex-direction: column; } #popup_title { font-size:24px; font-weight: bold; text-align:center; padding: 15px; background: #16A085; color: white; flex-shrink: 0; height: 40px; } #popup_content { flex-grow: 1; flex-shrink: 1; height: calc(100% - 70px); padding: 0px; display: -webkit-flex; display: -moz-flex; display: flex; justify-content: space-between; align-items: stretch; } #tabs_box { display: -webkit-flex; display: -moz-flex; display: flex; flex-direction: column; flex-basis: 25%; flex-shrink: 0; background: #EEE; } .popup_tab { width: 100%; background: #EEE; padding: 15px; font-weight: bold; text-align: center; box-sizing: border-box; } .popup_tab:hover { background: #ccc; } .popup_selected { border-right: none; background: #FFF; } .popup_selected:hover { background: #FFF; } #page_box { padding: 20px 30px; flex-grow: 1; flex-shrink: 1; max-height: 100%; display: -webkit-flex; display: -moz-flex; display: flex; flex-direction: column; } #option_box { display: -webkit-flex; display: -moz-flex; display: flex; flex-direction: column; align-items: stretch; flex-grow: 1; flex-shrink: 1; overflow-y:auto; } #option_box > div { flex-grow: 1; display: -webkit-flex; display: -moz-flex; display: flex; flex-direction: column; align-items: stretch; } #popup_engines { flex-grow: 1; border: solid 2px #ddd; text-overflow:clip; white-space: pre; overflow-x:auto; overflow-y:auto; word-wrap: break-word; resize: none; } #editTitle { padding: 0px 0px 15px 0px; display: -webkit-flex; display: -moz-flex; display: flex; justify-content: space-between; } #editTitle div { flex-grow: 1; } #editTitle span { margin-left: 20px; color : #1ABC9C; cursor: pointer; } #btnarea { display: -webkit-flex; display: -moz-flex; display: flex; justify-content: flex-end; margin-top: 20px; flex-shrink: 0; } .setting_btn { display: inline-block; font-size: 16px; text-align: center; width: 45px; padding: 4px 10px 4px 10px; border-radius: 2px; margin: 0px 0px 0px 20px; background: #1ABC9C; color: #fff; cursor:pointer; user-select: none; -moz-user-select: none; -webkit-user-select: none; } .setting_btn:hover { text-shadow: 0px 0px 2px #FFF; } .setting_item { min-height: 28px; font-size: 14px; margin: 5px 0px 10px 0px; display: -webkit-flex; display: -moz-flex; display: flex; align-items: center; } .setting_item > img { width: 24px; height: auto; margin-right: 7px; } .setting_item .text{ flex-grow: 1; font-size: 16px; } .tgl { display: none; } .tgl, .tgl:after, .tgl:before, .tgl *, .tgl *:after, .tgl *:before, .tgl+.tgl-btn { -webkit-box-sizing: border-box; -moz-box-sizing: border-box; box-sizing: border-box; } .tgl::-moz-selection, .tgl:after::-moz-selection, .tgl:before::-moz-selection, .tgl *::-moz-selection, .tgl *:after::-moz-selection, .tgl *:before::-moz-selection, .tgl+.tgl-btn::-moz-selection { background: none; } .tgl::selection, .tgl:after::selection, .tgl:before::selection, .tgl *::selection, .tgl *:after::selection, .tgl *:before::selection, .tgl+.tgl-btn::selection { background: none; } .tgl+.tgl-btn { outline: 0; display: inline-block; width: 4em; height: 2em; position: relative; cursor: pointer; } .tgl+.tgl-btn:after, .tgl+.tgl-btn:before { position: relative; display: inline-block; content: \"\"; width: 50%; height: 100%; } .tgl+.tgl-btn:after { left: 0; } .tgl+.tgl-btn:before { display: none; } .tgl:checked+.tgl-btn:after { left: 50%; } .tgl-flat+.tgl-btn { padding: 2px; -webkit-transition: all .2s ease; transition: all .2s ease; background: #fff; border: 4px solid #f2f2f2; border-radius: 2em; } .tgl-flat+.tgl-btn:after { -webkit-transition: all .2s ease; transition: all .2s ease; background: #f2f2f2; content: \"\"; border-radius: 1em; } .tgl-flat:checked+.tgl-btn { border: 4px solid #1ABC9C; } .tgl-flat:checked+.tgl-btn:after { left: 50%; background: #1ABC9C; }");
 };
 
 getLastRange = function(selection) {

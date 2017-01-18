@@ -5,7 +5,7 @@
 // @author					lkytal
 // @license					GPL
 // @include					*
-// @version					3.0.4
+// @version					3.0.5
 // @icon					http://lkytal.qiniudn.com/ic.ico
 // @grant					GM_openInTab
 // @homepageURL				https://git.oschina.net/coldfire/GM
@@ -76,7 +76,7 @@ function searchImage(aEvent)
 
 			var form = document.createElement("form");
 			form.setAttribute("method", "POST");
-			form.setAttribute("action", "//www.google.com.hk/searchbyimage/upload");
+			form.setAttribute("action", "//www.google.com/searchbyimage/upload");
 			form.setAttribute("enctype", "multipart/form-data");
 			form.setAttribute("target", "_blank");
 			addParamsToForm(form, "image_content", inlineImage);
@@ -88,7 +88,7 @@ function searchImage(aEvent)
 	}
 	else
 	{
-		GM_openInTab("http://www.google.com.hk/searchbyimage?image_url=" + encodeURIComponent(imageURL));
+		GM_openInTab("http://www.google.com/searchbyimage?image_url=" + encodeURIComponent(imageURL));
 	}
 }
 

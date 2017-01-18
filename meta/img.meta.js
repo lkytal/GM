@@ -5,7 +5,7 @@
 // @author					lkytal
 // @license					GPL
 // @include					*
-// @version					3.0.4
+// @version					3.0.5
 // @icon					http://lkytal.qiniudn.com/ic.ico
 // @grant					GM_openInTab
 // @homepageURL				https://git.oschina.net/coldfire/GM
