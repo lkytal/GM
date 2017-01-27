@@ -10,7 +10,7 @@
 // @exclude					http://www.acfun.tv/*
 // @exclude					http://www.sf-express.com/*
 // @require					https://cdn.bootcss.com/jquery/3.1.1/jquery.min.js
-// @version					4.0.4
+// @version					4.0.5
 // @icon					http://lkytal.qiniudn.com/ic.ico
 // @grant					GM_xmlhttpRequest
 // @grant					GM_addStyle
@@ -27,8 +27,8 @@
 // @downloadURL				https://git.oschina.net/coldfire/GM/raw/master/popsearch.user.js
 // ==/UserScript==
 
-"use strict";
-var CopyText, GetOpt, InTextBox, OpenSet, PopupInit, PopupLoad, SaveEngine, SaveOpt, SettingWin, ShowBar, TimeOutHide, addCSS, fixPos, getLastRange, get_selection_offsets, isChrome, log, popData, praseTranslation, praseTranslationMore,
+"use strict";;
+var CopyText, GetOpt, InTextBox, OpenSet, PopupInit, PopupLoad, SaveEngine, SaveOpt, SettingWin, ShowBar, TimeOutHide, addCSS, ajaxError, fixPos, getLastRange, get_selection_offsets, isChrome, log, popData, praseTranslationGoogle,
   hasProp = {}.hasOwnProperty;
 
 window.$ = this.$ = this.jQuery = jQuery.noConflict(true);
@@ -339,34 +339,22 @@ PopupInit = function() {
     $DivBox.find('a').attr('target', '_self');
   }
   $('#gtrans').on("click", function(event) {
-    var callback;
     event.preventDefault();
     popData.bTrans = 1;
     $("#Gspan").empty().append("<div style='padding:10px;'><img src='" + popData.icons.pending + "' /></div>").show();
     $('#popupwapper').hide();
     fixPos(document.defaultView.getSelection());
-    callback = function(res) {
-      return $('#Gspan').empty().append("Translate Error:<br />" + res.statusText).show();
-    };
-    if (popData.text.length < 200) {
-      return GM_xmlhttpRequest({
-        method: 'GET',
-        timeout: 3000,
-        url: "http://fanyi.youdao.com/openapi.do?keyfrom=Popper&key=1898676916&type=data&doctype=json&version=1.1&q=" + popData.text,
-        onload: praseTranslation,
-        onerror: callback,
-        ontimeout: callback
-      });
-    } else {
-      return GM_xmlhttpRequest({
-        method: 'GET',
-        timeout: 3000,
-        url: "http://fanyi.baidu.com/transapi?from=auto&to=auto&query=" + popData.text,
-        onload: praseTranslationMore,
-        onerror: callback,
-        ontimeout: callback
-      });
-    }
+    return GM_xmlhttpRequest({
+      method: 'POST',
+      url: 'https://translate.google.cn/translate_a/single',
+      data: "client=gtx&dj=1&q=" + popData.text + "&sl=auto&tl=auto&ie=UTF-8&oe=UTF-8&source=icon&dt=t&dt=bd",
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8'
+      },
+      onload: praseTranslationGoogle,
+      onerror: ajaxError,
+      ontimeout: ajaxError
+    });
   });
   if (GetOpt('Dis_st')) {
     popData.tip = popData.tipup;
@@ -377,44 +365,54 @@ PopupInit = function() {
   }
 };
 
-praseTranslation = function(responseDetails) {
-  var Result, Rline, Rst, Rtxt, i, j, len, len1, lines, ref, ref1;
-  if (!popData.bTrans) {
-    return;
-  }
-  Rtxt = JSON.parse(responseDetails.responseText);
-  Rline = "";
-  ref = Rtxt.translation;
-  for (i = 0, len = ref.length; i < len; i++) {
-    lines = ref[i];
-    Rline += lines + "<br>";
-  }
-  Rst = "";
-  if (Rtxt.basic != null) {
-    ref1 = Rtxt.basic.explains;
-    for (j = 0, len1 = ref1.length; j < len1; j++) {
-      lines = ref1[j];
-      Rst = lines + "<br>";
-    }
-  }
-  Result = "<div id=\"tranRst\" style=\"font-size:13px;overflow:auto;padding:5px 15px;\"> <div style=\"line-height:160%;font-size:14px;padding:5px 0px;\">" + Rline + "</div> <p style=\"line-height:180%;font-size:13px;\"> " + Rst + " </p> </div>";
-  $('#Gspan').empty().append(Result).show();
-  fixPos(document.defaultView.getSelection());
+ajaxError = function(res) {
+  return $('#Gspan').empty().append("<p>Translate Error:<br />" + res.statusText + "</p>").show();
 };
 
-praseTranslationMore = function(responseDetails) {
-  var Result, Rline, Rtxt, i, len, lines, ref;
+praseTranslationGoogle = function(responseDetails) {
+  var PickMeaning, Result, Rline, Rtxt, line, sentence;
   if (!popData.bTrans) {
     return;
   }
-  Rtxt = JSON.parse(responseDetails.responseText);
-  Rline = "";
-  ref = Rtxt.data;
-  for (i = 0, len = ref.length; i < len; i++) {
-    lines = ref[i];
-    Rline += lines.dst + "<br>";
+  try {
+    Rtxt = JSON.parse(responseDetails.responseText);
+  } catch (error) {
+    return ajaxError(responseDetails);
   }
-  Result = "<div id=\"tranRst\" style=\"font-size:13px;overflow:auto;padding:5px 15px;\"> <p style=\"line-height:180%;font-size:13px;\"> " + Rline + " </p> </div>";
+  Rline = (function() {
+    var i, len, ref, results;
+    ref = Rtxt.sentences;
+    results = [];
+    for (i = 0, len = ref.length; i < len; i++) {
+      sentence = ref[i];
+      results.push(sentence.trans);
+    }
+    return results;
+  })();
+  PickMeaning = function(list) {
+    var i, item, len, results;
+    results = [];
+    for (i = 0, len = list.length; i < len; i++) {
+      item = list[i];
+      if (item.score > 0.005) {
+        results.push(item.word);
+      }
+    }
+    return results;
+  };
+  if (Rtxt.dict != null) {
+    Rline += (function() {
+      var i, len, ref, results;
+      ref = Rtxt.dict;
+      results = [];
+      for (i = 0, len = ref.length; i < len; i++) {
+        line = ref[i];
+        results.push("<br>" + (line.pos + " : " + (PickMeaning(line.entry))));
+      }
+      return results;
+    })();
+  }
+  Result = "<div id=\"tranRst\" style=\"font-size:13px;overflow:auto;padding:5px 12px;\"> <div style=\"line-height:200%;font-size:13px;\"> " + Rline + " </div> </div>";
   $('#Gspan').empty().append(Result).show();
   fixPos(document.defaultView.getSelection());
 };
