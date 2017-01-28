@@ -10,7 +10,7 @@
 // @exclude					http://www.acfun.tv/*
 // @exclude					http://www.sf-express.com/*
 // @require					https://cdn.bootcss.com/jquery/3.1.1/jquery.min.js
-// @version					4.0.5
+// @version					4.0.6
 // @icon					http://lkytal.qiniudn.com/ic.ico
 // @grant					GM_xmlhttpRequest
 // @grant					GM_addStyle

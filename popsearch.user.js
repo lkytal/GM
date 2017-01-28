@@ -10,7 +10,7 @@
 // @exclude					http://www.acfun.tv/*
 // @exclude					http://www.sf-express.com/*
 // @require					https://cdn.bootcss.com/jquery/3.1.1/jquery.min.js
-// @version					4.0.5
+// @version					4.0.6
 // @icon					http://lkytal.qiniudn.com/ic.ico
 // @grant					GM_xmlhttpRequest
 // @grant					GM_addStyle
@@ -28,7 +28,7 @@
 // ==/UserScript==
 
 "use strict";;
-var CopyText, GetOpt, InTextBox, OpenSet, PopupInit, PopupLoad, SaveEngine, SaveOpt, SettingWin, ShowBar, TimeOutHide, addCSS, ajaxError, fixPos, getLastRange, get_selection_offsets, isChrome, log, popData, praseTranslationGoogle,
+var CopyText, GetOpt, InTextBox, OpenSet, PopupInit, PopupLoad, SaveOpt, SettingWin, ShowBar, TimeOutHide, addCSS, ajaxError, fixPos, getLastRange, get_selection_offsets, isChrome, log, popData, praseTranslationGoogle,
   hasProp = {}.hasOwnProperty;
 
 window.$ = this.$ = this.jQuery = jQuery.noConflict(true);
@@ -349,7 +349,7 @@ PopupInit = function() {
       url: 'https://translate.google.cn/translate_a/single',
       data: "client=gtx&dj=1&q=" + popData.text + "&sl=auto&tl=auto&ie=UTF-8&oe=UTF-8&source=icon&dt=t&dt=bd",
       headers: {
-        'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8'
+        'Content-Type': 'application/x-www-form-urlencoded'
       },
       onload: praseTranslationGoogle,
       onerror: ajaxError,
@@ -572,7 +572,7 @@ SettingWin = function() {
     $("#popup_tab3").hide();
   }
   $("#popup_save").click(function() {
-    var engineString, j, len1, ref1, result;
+    var j, len1, ref1, userEngineString;
     ref1 = $("#popup_setting_win .setting_item");
     for (j = 0, len1 = ref1.length; j < len1; j++) {
       item = ref1[j];
@@ -580,17 +580,16 @@ SettingWin = function() {
         SaveOpt(item.id);
       }
     }
-    engineString = $("#engines").val();
-    if (engineString !== "") {
+    userEngineString = $("#engines").val();
+    if (userEngineString !== "") {
       try {
-        result = JSON.parse(engineString);
-        popData.engines = result;
+        popData.userEngines = JSON.parse(userEngineString);
+        GM_setValue("engineString", userEngineString);
       } catch (error) {
         alert("搜索列表错误!请检查\nEngine config Error!");
-        log(engineString);
+        log(userEngineString);
       }
     }
-    SaveEngine();
     return $("#popup_setting_bg").fadeOut(300, function() {
       $("#popup_setting_bg").remove();
       $('#ShowUpBox').remove();
@@ -607,12 +606,8 @@ SettingWin = function() {
   });
 };
 
-SaveEngine = function() {
-  return GM_setValue("engineString", JSON.stringify(popData.engines, null, 4));
-};
-
 PopupLoad = function() {
-  var engine, i, j, k, len, len1, len2, newEngine, option, popupmenu, ref, ref1, ref2, setDefault;
+  var engine, i, j, k, len, len1, len2, newEngine, option, popupmenu, ref, ref1, ref2, setDefault, userEngineString;
   if (window.self !== window.top || window.frameElement) {
     if (!GM_getValue("Iframe_st", 0)) {
       return;
@@ -638,7 +633,8 @@ PopupLoad = function() {
   }
   if (GetOpt("userEngine_st")) {
     try {
-      popData.userEngines = JSON.parse(GM_getValue("engineString", "[]"));
+      userEngineString = GM_getValue("engineString", "[]");
+      popData.userEngines = JSON.parse(userEngineString);
       ref2 = popData.userEngines;
       for (k = 0, len2 = ref2.length; k < len2; k++) {
         newEngine = ref2[k];
