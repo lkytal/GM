@@ -37,6 +37,8 @@ GM的"用户脚本设置"下的"Popup Search设置"打开选项选择需要的�
 
 Update Log:
 
+* 4.0.6 : Fix userEngine Error
+* 4.0.5 : Back to google translation
 * 4.0.4 : Fixed open as link
 * 4.0.3 : Add douban engine
 * 4.0.2 : Fixed open as link and style in v2ex

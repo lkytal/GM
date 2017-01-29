@@ -542,7 +542,7 @@ SettingWin = function() {
     return results;
   })()).join(' ');
   $("body").append("<div id='popup_setting_bg'> <div id='popup_setting_win'> <div id='popup_title'>PopUp Search Setting</div> <div id='popup_content'> <div id='tabs_box'> <div id='popup_tab1' class='popup_tab popup_selected'>选项 / General</div> <div id='popup_tab2' class='popup_tab'>搜索引擎 / Engines</div> <div id='popup_tab3' class='popup_tab'>自定义 / Customize</div> <div id='popup_tab4' class='popup_tab'>关于 / About</div> </div> <div id='page_box'> <div id='option_box'> <div id='popup_tab1Page'> " + optionList + " </div> <div id='popup_tab2Page'> " + engineOptionList + " </div> <div id='popup_tab3Page'> <div id='editTitle'> <div>Engine Edit</div> <span id='popReset'><u>Reset</u></span> <span id='popHelp'><u>Help</u></span> </div> <textarea id='popup_engines'></textarea> </div> <div id='popup_tab4Page'> <h3>Authured by Lkytal</h3> <p> Source Code at <a href='https://git.oschina.net/coldfire/GM'> https://git.oschina.net/coldfire/GM </a> <br /> You can redistribute it under <a href='https://creativecommons.org/licenses/by-nc/4.0/'> Creative Commons Attribution-NonCommercial Lisence </a> </p> <p class='contact-line'> Github <a class='tab-text' href='https://github.com/lkytal'>https://github.com/lkytal</a> <br> Git OSChina <a class='tab-text' href='https://git.oschina.net/coldfire/GM'> https://git.oschina.net/coldfire/GM </a> <br> Greasy fork <a class='tab-text' href='https://greasyfork.org/en/users/152-lkytal'>https://greasyfork.org/en/users/152-lkytal</a> </p> </div> </div> <div id='btnarea'> <div id='popup_close' class='setting_btn'>Close</div> <div id='popup_save' class='setting_btn'>Save</div> </div> </div> </div> </div> <div id='helpDlg'> </div> </div>");
-  $("#engines").val(GM_getValue("engineString"));
+  $("#popup_engines").val(GM_getValue("engineString"), "[]");
   $('#popup_setting_bg').hide();
   $("#tabs_box > .popup_tab").on("click", function(e) {
     $("#tabs_box > .popup_tab").removeClass("popup_selected");
@@ -556,7 +556,7 @@ SettingWin = function() {
     return $("#" + id + " > input").prop("checked", GM_getValue(id));
   };
   $("#popReset").click(function() {
-    return $("#engines").val(JSON.parse(popData.defaultEngines));
+    return $("#popup_engines").val(JSON.parse(popData.defaultEngines));
   });
   $("#popHelp").click(function() {
     return $("#helpDlg").show();
@@ -580,7 +580,7 @@ SettingWin = function() {
         SaveOpt(item.id);
       }
     }
-    userEngineString = $("#engines").val();
+    userEngineString = $("#popup_engines").val();
     if (userEngineString !== "") {
       try {
         popData.userEngines = JSON.parse(userEngineString);
