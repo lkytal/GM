@@ -37,6 +37,7 @@ GM的"用户脚本设置"下的"Popup Search设置"打开选项选择需要的�
 
 Update Log:
 
+* 4.0.7 : False popup in textbox in chrome
 * 4.0.6 : Fix userEngine Error
 * 4.0.5 : Back to google translation
 * 4.0.4 : Fixed open as link

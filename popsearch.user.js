@@ -10,7 +10,7 @@
 // @exclude					http://www.acfun.tv/*
 // @exclude					http://www.sf-express.com/*
 // @require					https://cdn.bootcss.com/jquery/3.1.1/jquery.min.js
-// @version					4.0.6
+// @version					4.0.7
 // @icon					http://lkytal.qiniudn.com/ic.ico
 // @grant					GM_xmlhttpRequest
 // @grant					GM_addStyle
@@ -219,7 +219,7 @@ popData.engines = [
 
 log = function(msg) {
   popData.count += 1;
-  return console.log("MsgId " + popData.count + " : " + msg);
+  return console.log("Popup Msg " + popData.count + " : " + msg);
 };
 
 isChrome = function() {
@@ -276,12 +276,12 @@ TimeOutHide = function() {
 };
 
 PopupInit = function() {
-  var $DivBox, $icon, EngineList, engine, i, j, len, len1, ref, ref1;
+  var $DivBox, $icon, EngineList, engine, j, k, len, len1, ref, ref1;
   $('#ShowUpBox').remove();
   EngineList = "<a id='gtrans'><img title='Translate' src='" + popData.icons.translateIcon + "' /></a>";
   ref = popData.engines;
-  for (i = 0, len = ref.length; i < len; i++) {
-    engine = ref[i];
+  for (j = 0, len = ref.length; j < len; j++) {
+    engine = ref[j];
     EngineList += "<a id='" + engine.id + "Icon' href=''><img title='" + engine.title + "' src='" + engine.src + "' /></a>";
   }
   $('body').append("<span id=\"ShowUpBox\"> <span id=\"showupbody\"> <span id=\"popupwapper\"> " + EngineList + " </span> <span id=\"Gspan\" /> </span> </span>");
@@ -315,8 +315,8 @@ PopupInit = function() {
     return false;
   });
   ref1 = popData.engines;
-  for (j = 0, len1 = ref1.length; j < len1; j++) {
-    engine = ref1[j];
+  for (k = 0, len1 = ref1.length; k < len1; k++) {
+    engine = ref1[k];
     $icon = $("#" + engine.id + "Icon");
     if (!GetOpt(engine.id)) {
       $icon.hide();
@@ -380,21 +380,21 @@ praseTranslationGoogle = function(responseDetails) {
     return ajaxError(responseDetails);
   }
   Rline = (function() {
-    var i, len, ref, results;
+    var j, len, ref, results;
     ref = Rtxt.sentences;
     results = [];
-    for (i = 0, len = ref.length; i < len; i++) {
-      sentence = ref[i];
+    for (j = 0, len = ref.length; j < len; j++) {
+      sentence = ref[j];
       results.push(sentence.trans);
     }
     return results;
   })();
   PickMeaning = function(list) {
-    var i, item, len, results;
+    var i, item, j, len, results;
     results = [];
-    for (i = 0, len = list.length; i < len; i++) {
+    for (i = j = 0, len = list.length; j < len; i = ++j) {
       item = list[i];
-      if (item.score > 0.005) {
+      if (item.score > 0.005 || i < 3) {
         results.push(item.word);
       }
     }
@@ -402,11 +402,11 @@ praseTranslationGoogle = function(responseDetails) {
   };
   if (Rtxt.dict != null) {
     Rline += (function() {
-      var i, len, ref, results;
+      var j, len, ref, results;
       ref = Rtxt.dict;
       results = [];
-      for (i = 0, len = ref.length; i < len; i++) {
-        line = ref[i];
+      for (j = 0, len = ref.length; j < len; j++) {
+        line = ref[j];
         results.push("<br>" + (line.pos + " : " + (PickMeaning(line.entry))));
       }
       return results;
@@ -427,11 +427,14 @@ $(document).on("mouseup", function(event) {
   return ShowBar(event);
 });
 
-InTextBox = function(selection) {
-  var area, i, len, ref;
+InTextBox = function(selection, event) {
+  var area, j, len, ref;
+  if ($(event.target).is('textarea, input[type=text], *[contenteditable="true"]')) {
+    return true;
+  }
   ref = $('textarea, input[type=text], *[contenteditable="true"]', document);
-  for (i = 0, len = ref.length; i < len; i++) {
-    area = ref[i];
+  for (j = 0, len = ref.length; j < len; j++) {
+    area = ref[j];
     if (selection.containsNode(area, true)) {
       return true;
     }
@@ -440,10 +443,10 @@ InTextBox = function(selection) {
 };
 
 ShowBar = function(event) {
-  var engine, href, i, len, para, paraList, ref, sel, seltxt, value;
+  var engine, href, j, len, para, paraList, ref, sel, seltxt, value;
   sel = document.defaultView.getSelection();
   seltxt = sel.toString();
-  if (seltxt === '' || InTextBox(sel)) {
+  if (seltxt === '' || InTextBox(sel, event)) {
     return;
   }
   if (GetOpt("Copy_st")) {
@@ -458,8 +461,8 @@ ShowBar = function(event) {
     "\\${url}": location.href
   };
   ref = popData.engines;
-  for (i = 0, len = ref.length; i < len; i++) {
-    engine = ref[i];
+  for (j = 0, len = ref.length; j < len; j++) {
+    engine = ref[j];
     href = engine.href;
     for (para in paraList) {
       if (!hasProp.call(paraList, para)) continue;
@@ -511,17 +514,17 @@ OpenSet = function() {
 };
 
 SettingWin = function() {
-  var ReadOpt, engine, engineOptionList, generateEngineOption, generateOption, i, item, len, option, optionList, ref;
+  var ReadOpt, engine, engineOptionList, generateEngineOption, generateOption, item, j, len, option, optionList, ref;
   $('#popup_setting_bg').remove();
   generateOption = function(option) {
     return "<span id='" + option.id + "' class='setting_item'> <img src=" + popData.icons.settingIcon + " /> <span class='text'>" + option.text + "</span> <input class='tgl tgl-flat' id='" + option.id + "_checkbox' type='checkbox'> <label class='tgl-btn' for='" + option.id + "_checkbox'></label> </span>";
   };
   optionList = ((function() {
-    var i, len, ref, results;
+    var j, len, ref, results;
     ref = popData.optionList;
     results = [];
-    for (i = 0, len = ref.length; i < len; i++) {
-      option = ref[i];
+    for (j = 0, len = ref.length; j < len; j++) {
+      option = ref[j];
       if (!option.hidden) {
         results.push(generateOption(option));
       }
@@ -532,11 +535,11 @@ SettingWin = function() {
     return "<span id='" + engine.id + "' class='setting_item'> <img src=" + engine.src + " /> <span class='text'>" + engine.description + "</span> <input class='tgl tgl-flat' id='" + engine.id + "_checkbox' type='checkbox'> <label class='tgl-btn' for='" + engine.id + "_checkbox'></label> </span>";
   };
   engineOptionList = ((function() {
-    var i, len, ref, results;
+    var j, len, ref, results;
     ref = popData.engines;
     results = [];
-    for (i = 0, len = ref.length; i < len; i++) {
-      engine = ref[i];
+    for (j = 0, len = ref.length; j < len; j++) {
+      engine = ref[j];
       results.push(generateEngineOption(engine));
     }
     return results;
@@ -562,8 +565,8 @@ SettingWin = function() {
     return $("#helpDlg").show();
   });
   ref = $("#popup_setting_win .setting_item");
-  for (i = 0, len = ref.length; i < len; i++) {
-    item = ref[i];
+  for (j = 0, len = ref.length; j < len; j++) {
+    item = ref[j];
     if (item != null) {
       ReadOpt(item.id);
     }
@@ -572,10 +575,10 @@ SettingWin = function() {
     $("#popup_tab3").hide();
   }
   $("#popup_save").click(function() {
-    var j, len1, ref1, userEngineString;
+    var k, len1, ref1, userEngineString;
     ref1 = $("#popup_setting_win .setting_item");
-    for (j = 0, len1 = ref1.length; j < len1; j++) {
-      item = ref1[j];
+    for (k = 0, len1 = ref1.length; k < len1; k++) {
+      item = ref1[k];
       if (item != null) {
         SaveOpt(item.id);
       }
@@ -607,7 +610,7 @@ SettingWin = function() {
 };
 
 PopupLoad = function() {
-  var engine, i, j, k, len, len1, len2, newEngine, option, popupmenu, ref, ref1, ref2, setDefault, userEngineString;
+  var engine, j, k, l, len, len1, len2, newEngine, option, popupmenu, ref, ref1, ref2, setDefault, userEngineString;
   if (window.self !== window.top || window.frameElement) {
     if (!GM_getValue("Iframe_st", 0)) {
       return;
@@ -620,13 +623,13 @@ PopupLoad = function() {
       return GM_setValue(key, GM_getValue(key, defaultValue));
     };
     ref = popData.optionList;
-    for (i = 0, len = ref.length; i < len; i++) {
-      option = ref[i];
+    for (j = 0, len = ref.length; j < len; j++) {
+      option = ref[j];
       setDefault(option.id, option.defaultValue);
     }
     ref1 = popData.engines;
-    for (j = 0, len1 = ref1.length; j < len1; j++) {
-      engine = ref1[j];
+    for (k = 0, len1 = ref1.length; k < len1; k++) {
+      engine = ref1[k];
       setDefault(engine.id, engine.defaultState);
     }
     OpenSet();
@@ -636,8 +639,8 @@ PopupLoad = function() {
       userEngineString = GM_getValue("engineString", "[]");
       popData.userEngines = JSON.parse(userEngineString);
       ref2 = popData.userEngines;
-      for (k = 0, len2 = ref2.length; k < len2; k++) {
-        newEngine = ref2[k];
+      for (l = 0, len2 = ref2.length; l < len2; l++) {
+        newEngine = ref2[l];
         popData.Engines.push(newEngine);
       }
     } catch (error) {
@@ -664,8 +667,8 @@ addCSS = function() {
 };
 
 getLastRange = function(selection) {
-  var i, rangeNum, ref;
-  for (rangeNum = i = ref = selection.rangeCount - 1; ref <= 0 ? i <= 0 : i >= 0; rangeNum = ref <= 0 ? ++i : --i) {
+  var j, rangeNum, ref;
+  for (rangeNum = j = ref = selection.rangeCount - 1; ref <= 0 ? j <= 0 : j >= 0; rangeNum = ref <= 0 ? ++j : --j) {
     if (!selection.getRangeAt(rangeNum).collapsed) {
       return selection.getRangeAt(rangeNum);
     }
