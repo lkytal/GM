@@ -358,13 +358,13 @@ onTranslate = function(event) {
   $("#Gspan").empty().append("<div style='padding:10px;'><img src='" + popData.icons.pending + "' /></div>").show();
   $('#popupwapper').hide();
   fixPos(document.defaultView.getSelection());
-  return doRequest(0);
+  return doRequest(0, 1000);
 };
 
 doRequest = function(i, wait) {
   var ErrHandle;
   ErrHandle = function() {
-    return doRequest(i + 1, wait + 1000);
+    return doRequest(i + 1, wait + 2000);
   };
   if (i >= 2) {
     ErrHandle = ajaxError;
@@ -376,7 +376,7 @@ doRequest = function(i, wait) {
     headers: {
       'Content-Type': 'application/x-www-form-urlencoded'
     },
-    timeout: 1000,
+    timeout: wait,
     onload: praseTranslationGoogle,
     onerror: ErrHandle,
     ontimeout: ErrHandle
