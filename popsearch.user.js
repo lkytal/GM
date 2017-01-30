@@ -10,7 +10,7 @@
 // @exclude					http://www.acfun.tv/*
 // @exclude					http://www.sf-express.com/*
 // @require					https://cdn.bootcss.com/jquery/3.1.1/jquery.min.js
-// @version					4.0.7
+// @version					4.0.8
 // @icon					http://lkytal.qiniudn.com/ic.ico
 // @grant					GM_xmlhttpRequest
 // @grant					GM_addStyle
@@ -28,7 +28,7 @@
 // ==/UserScript==
 
 "use strict";;
-var CopyText, GetOpt, InTextBox, OpenSet, PopupInit, PopupLoad, SaveOpt, SettingWin, ShowBar, TimeOutHide, addCSS, ajaxError, fixPos, getLastRange, get_selection_offsets, isChrome, log, popData, praseTranslationGoogle,
+var CopyText, GetOpt, InTextBox, OpenSet, PopupInit, PopupLoad, SaveOpt, SettingWin, ShowBar, TimeOutHide, addCSS, ajaxError, doRequest, fixPos, getLastRange, get_selection_offsets, isChrome, log, onTranslate, popData, praseTranslationGoogle,
   hasProp = {}.hasOwnProperty;
 
 window.$ = this.$ = this.jQuery = jQuery.noConflict(true);
@@ -314,6 +314,7 @@ PopupInit = function() {
   $('#popupwapper').on("contextmenu", function(event) {
     return false;
   });
+  $('#gtrans').on("click", onTranslate);
   ref1 = popData.engines;
   for (k = 0, len1 = ref1.length; k < len1; k++) {
     engine = ref1[k];
@@ -338,24 +339,6 @@ PopupInit = function() {
   } else {
     $DivBox.find('a').attr('target', '_self');
   }
-  $('#gtrans').on("click", function(event) {
-    event.preventDefault();
-    popData.bTrans = 1;
-    $("#Gspan").empty().append("<div style='padding:10px;'><img src='" + popData.icons.pending + "' /></div>").show();
-    $('#popupwapper').hide();
-    fixPos(document.defaultView.getSelection());
-    return GM_xmlhttpRequest({
-      method: 'POST',
-      url: 'https://translate.google.cn/translate_a/single',
-      data: "client=gtx&dj=1&q=" + popData.text + "&sl=auto&tl=auto&ie=UTF-8&oe=UTF-8&source=icon&dt=t&dt=bd",
-      headers: {
-        'Content-Type': 'application/x-www-form-urlencoded'
-      },
-      onload: praseTranslationGoogle,
-      onerror: ajaxError,
-      ontimeout: ajaxError
-    });
-  });
   if (GetOpt('Dis_st')) {
     popData.tip = popData.tipup;
     return $DivBox.append('<span id="popuptip" class="tipup"></span>');
@@ -367,6 +350,37 @@ PopupInit = function() {
 
 ajaxError = function(res) {
   return $('#Gspan').empty().append("<p>Translate Error:<br />" + res.statusText + "</p>").show();
+};
+
+onTranslate = function(event) {
+  event.preventDefault();
+  popData.bTrans = 1;
+  $("#Gspan").empty().append("<div style='padding:10px;'><img src='" + popData.icons.pending + "' /></div>").show();
+  $('#popupwapper').hide();
+  fixPos(document.defaultView.getSelection());
+  return doRequest(0);
+};
+
+doRequest = function(i, wait) {
+  var ErrHandle;
+  ErrHandle = function() {
+    return doRequest(i + 1, wait + 1000);
+  };
+  if (i >= 2) {
+    ErrHandle = ajaxError;
+  }
+  return GM_xmlhttpRequest({
+    method: 'POST',
+    url: 'https://translate.google.cn/translate_a/single',
+    data: "client=gtx&dj=1&q=" + popData.text + "&sl=auto&tl=auto&ie=UTF-8&oe=UTF-8&source=icon&dt=t&dt=bd",
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded'
+    },
+    timeout: 1000,
+    onload: praseTranslationGoogle,
+    onerror: ErrHandle,
+    ontimeout: ErrHandle
+  });
 };
 
 praseTranslationGoogle = function(responseDetails) {
@@ -429,7 +443,7 @@ $(document).on("mouseup", function(event) {
 
 InTextBox = function(selection, event) {
   var area, j, len, ref;
-  if ($(event.target).is('textarea, input[type=text], *[contenteditable="true"]')) {
+  if ($(event.target).is('textarea, input[type=text], input[type=search], *[contenteditable="true"]')) {
     return true;
   }
   ref = $('textarea, input[type=text], *[contenteditable="true"]', document);
