@@ -509,8 +509,8 @@ ShowBar = function(event) {
     engine = ref1[k];
     setHref(engine);
   }
-  if (seltxt.indexOf('http://') === -1 && seltxt.indexOf('https://') === -1) {
-    $('#Open_stIcon').attr('href', "http://" + seltxt);
+  if (popData.rawText.indexOf('http://') === -1 && popData.rawText.indexOf('https://') === -1) {
+    $('#Open_stIcon').attr('href', "http://" + popData.rawText);
   }
   popData.mouseIn = 0;
   popData.bTrans = 0;
