@@ -10,7 +10,7 @@
 // @exclude					http://www.acfun.tv/*
 // @exclude					http://www.sf-express.com/*
 // @require					https://cdn.bootcss.com/jquery/3.1.1/jquery.min.js
-// @version					4.1.0
+// @version					4.1.1
 // @icon					http://lkytal.qiniudn.com/ic.ico
 // @grant					GM_xmlhttpRequest
 // @grant					GM_addStyle
@@ -28,7 +28,7 @@
 // ==/UserScript==
 
 "use strict";;
-var CopyText, GetOpt, InTextBox, OpenSet, PopupInit, PopupLoad, ReadOpt, SaveOpt, SettingWin, ShowBar, TimeOutHide, UpdateLog, UpdateNotificated, addAditionalCSS, addCSS, ajaxError, doRequest, fixPos, getLastRange, get_selection_offsets, isChrome, log, onTranslate, paraList, popData, praseTranslationGoogle,
+var CopyText, GetOpt, InTextBox, OpenSet, PopupInit, PopupLoad, ReadOpt, SaveOpt, SettingWin, ShowBar, TimeOutHide, UpdateLog, UpdateNotificated, addAditionalCSS, addCSS, ajaxError, doRequest, fixPos, getLastRange, get_selection_offsets, isChrome, log, onTranslate, popData, praseTranslationGoogle,
   hasProp = {}.hasOwnProperty;
 
 window.$ = this.$ = this.jQuery = jQuery.noConflict(true);
@@ -470,25 +470,24 @@ InTextBox = function(selection, event) {
   return false;
 };
 
-paraList = {
-  "\\${text}": popData.text,
-  "\\${rawText}": popData.rawText,
-  "\\${domain}": document.domain,
-  "\\${url}": location.href
-};
-
 ShowBar = function(event) {
-  var engine, j, k, len, len1, ref, ref1, sel, setHref;
+  var engine, j, k, len, len1, paraList, ref, ref1, sel, setHref;
   sel = document.defaultView.getSelection();
   popData.rawText = sel.toString();
+  popData.text = encodeURIComponent(popData.rawText);
   if (popData.rawText === '' || InTextBox(sel, event)) {
     return;
   }
   if (GetOpt("Copy_st")) {
     CopyText(popData.rawText);
   }
-  popData.text = encodeURIComponent(popData.rawText);
   $('#Gspan').empty().hide();
+  paraList = {
+    "\\${rawText}": popData.rawText,
+    "\\${text}": popData.text,
+    "\\${domain}": document.domain,
+    "\\${url}": location.href
+  };
   setHref = function(engine) {
     var href, para, value;
     href = engine.href;
