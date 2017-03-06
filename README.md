@@ -37,6 +37,8 @@ GM的"用户脚本设置"下的"Popup Search设置"打开选项选择需要的�
 
 Update Log:
 
+* 4.1.2 : Fix false popup in chrome
+* 4.1.1 : Fixup incorrect customization
 * 4.1.0 : New: customization
 * 4.0.8 : Retry when tranlate timeout
 * 4.0.7 : False popup in textbox in chrome

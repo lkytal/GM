@@ -10,7 +10,7 @@
 // @exclude					http://www.acfun.tv/*
 // @exclude					http://www.sf-express.com/*
 // @require					https://cdn.bootcss.com/jquery/3.1.1/jquery.min.js
-// @version					4.1.1
+// @version					4.1.2
 // @icon					http://lkytal.qiniudn.com/ic.ico
 // @grant					GM_xmlhttpRequest
 // @grant					GM_addStyle
@@ -28,7 +28,7 @@
 // ==/UserScript==
 
 "use strict";;
-var CopyText, GetOpt, InTextBox, OpenSet, PopupInit, PopupLoad, ReadOpt, SaveOpt, SettingWin, ShowBar, TimeOutHide, UpdateLog, UpdateNotificated, addAditionalCSS, addCSS, ajaxError, doRequest, fixPos, getLastRange, get_selection_offsets, isChrome, log, onTranslate, popData, praseTranslationGoogle,
+var CopyText, GetOpt, InTextBox, OpenSet, PopupInit, PopupLoad, ReadOpt, SaveOpt, SettingWin, ShowBar, TimeOutHide, UpdateLog, UpdateNotificated, addAditionalCSS, addCSS, ajaxError, doRequest, eventFromTextbox, fixPos, getLastRange, get_selection_offsets, isChrome, log, onTranslate, popData, praseTranslationGoogle,
   hasProp = {}.hasOwnProperty;
 
 window.$ = this.$ = this.jQuery = jQuery.noConflict(true);
@@ -40,6 +40,7 @@ popData = {
   additionalCSSLoaded: 0,
   codeVersion: 8,
   text: "",
+  mousedownEvent: null,
   icons: {
     baiduIcon: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAAFiUAABYlAUlSJPAAAASzSURBVFhH7ZZNbBtFFMf//ljbtZ2149hp4zgkKamSNNDykapQKEH5QCKiBYGgIkpVQasegiok1CIOHCpRDkjcQIhbJUo5waUSB8SHBAWJCCRQgJRQmjaNEyd2nMTfG9u7y5v1prbT9doBRb3wk9aembc78595b96M4b4xWcYdxKj+3zH+F7ApAQZD4QMz/RipzOr/lc0JgIzulhTGnozjmX0xWMzF+DUZZdQ7ZbjsMomTaxa3KQGt3gTOjQp4aZjHGyN2HNozo1qAod1hXDydxoXX0ni4I662VmdTAg50SWhpqlfKHMfhyIBbKd/TBowdNqDJ5yC7A8cHY2huUExVqVmAkd50SldhMhU/8dWbYOWAx+6+joDfp7YCu9q98Fmm1Zo+VQWw8VjAsXSVkX2QJEm1ALFEDjkRaPaayedFpyeSAkRzUZAeFQUYyLK3NYFTfT/i2MEbaK5PYnK+DkvRmGIXRRFf/xQlQcBcJFcm7PfpDILLdWpNH9OOfWfPquUyfLyEt0YSGHq0E73dPJyGBXz3lxfB4E1wchzjv87jk/FWJAUOiTUbmvkw7QoRv0yGcPGyGwnBAD9PYmn5hBz5qcKu0DwL2LvDDwo497Kt0EDEE2m8eT6P8Ws8XA5AyNJSZwo25qLtFJu8ZRmrAo8mdx4nBpbQ01GPP69F8N4XfkzOkggNFZouYO7cuaP8ZYfdhgYXkM0DEZpYJivB48hhO5+jwJQRWgGmFjwkyoyB7jk88kAAbt6Bh+5vw+vPZWG3qh1tQDsGaE0WVoo+ZeTyIuJJaiNdvF3CC/sXceFMHh+dEXFyMAKfU1ASlc0CtPuLK8fobHXATu1aaApgPvn2NxNWVlOFBmLiShB/BC3KTI71RXF6pAl+3zY0emw4cagRb4/G4XGSXwjmko3c5meVigKWkhac+pDDZ9+EcP7zJbxzKYDltB2DXTN4caDutlTb2+PD0ceT4EzAjbnCTlnn5mKOXKZWNlDxQsIGYBaO/CvSv4ka+vdm8cpwCoEd7rJ9v04qLeD9T6O4Msfh1adF7GzxIEzb9t1LPvw8BUgaQVjTjYgt+1DXNJ0BTgSavGXZsBRRlDC/uIqPv1rDD1cbYONkpAQgnLAqk9EaSbunEljwHNk/i+NP8WgNNFYcnMFsLX4Pnj0goX93BOG4FQsxq5KsKk1TVwBb5cGeEI4+wVPHXrW1Op0dzTh52IPRg4vKWaGHrgCPExjpN8Lt5tWW2nE6tuH5Pjv2tFPi0EFXwF2NgL+R0t6/xO1yosP1t1rTRldAmrZOnhKQVsTXCmfIqSVtdAVMh2gPzxf2dOlpVyupdAYzmXvVmja6AnLkvg++9OP67BJdSIwUyTKWV9MILiYRiqSQWctDoGclLiht7AlHU8p7TPD3EwLGaf/rUTUPsHtBe0MSve0JuJwmuoDIiKyICIaziGXpSmaqg1WeQ08bh10tNrgsMayJNkzMmHF5qgHRBJ0QOiPUlIhYCJjoYf8yPYo36Ctp/UvVrlzVQctGqvMirRiZqvWu64J1WCd5GpRdv/LUPxNwa3AGlSkJKvasaKYj26jYq0+tRIDWCbZVlI51S0DZjLaY0rFqcsHWAfwDnVStvcSt8MwAAAAASUVORK5CYII=",
     bingIcon: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAACeklEQVRYhe2Wy2sTURTGu1fapOZRTKj2kaag1VaTNA9NjHkWLS3diC5q6wNc+A+EIkVw40ZRFBeuirgQF1JfuFBboYiIzb2TmdimCA0YWyupqalBTRo/F4M3KE0mhrR2kQsfDHPvOfOb794zZ6qErlb8T1VVACoAFYANDcD7dKAWFahFBd7TvL4AvE8HobsNqSmK1FuC6WP71gQiP4C3GeGe3fg9Zk54EHI35ub9evBenSi/fm0AhJ5dDCAy4Abn0ILa1CCGGlCrCsLhnRAO7QAxK0CMMlBb3R+QZQUId7ch0u9EYuwBVhs/s1l8fnIX00dtIEY5eF9LeQG+RWfYdeLZKGaHTiLS70TkuAvR4TP48vIpm19+MwFqURZ1ZooGAIAf8+/B2TWgZgVCzm0IuRtFHagH6awF72vBytek6EgmDWpVSTpRNEA2k0awYxN4T1PeZCFXA6hZwWKWxh+CWtXlAYhdHgK3f6ukpdSqxqfb11kcMckLVknhMuxtZ4lmA4MIOeslATiHFrFLARbH2TUFtyE/gF8PYpKzRIuP7oAYZZIAwY7NWJ6cEM/BSgbEIINQigNCVys4uwZz187nPkan/CCdW1Z9I96rAzHIMBsYZOuj505Lula4F/j1CO6tRnz0Fku6MHIF1KIEMclBrSpQqwrEKANn1yJ+b4Stm795EcRUW3oZ/r0V7872IZOI50ryYwzJV2NIvh5HenGB3f8eiyIy4AK1KCUfXhQAK7GD2xHcU42pI2bM3biApRePkQoHkQpPIvH8Pj5cHUa4tx3EUIOQq6GonP8EIEoP3tPEegK1KEXZ6sA5tCV1y439Q1IBqABUANZDvwDe9YuA3jr3dgAAAABJRU5ErkJggg==",
@@ -269,13 +270,6 @@ fixPos = function(sel, e) {
   return $('#popuptip').css('margin-left', m_left - 20 - fix);
 };
 
-$(document).mousedown(function(event) {
-  if (popData.bTrans === 1) {
-    PopupInit();
-  }
-  return $('#ShowUpBox').hide();
-});
-
 TimeOutHide = function() {
   if (popData.mouseIn === 0 && GetOpt("Fade_st") && !popData.bTrans) {
     return $('#ShowUpBox').fadeOut(600);
@@ -445,6 +439,14 @@ praseTranslationGoogle = function(responseDetails) {
   fixPos(document.defaultView.getSelection());
 };
 
+$(document).on("mousedown", function(event) {
+  popData.mousedownEvent = event;
+  if (popData.bTrans === 1) {
+    PopupInit();
+  }
+  return $('#ShowUpBox').hide();
+});
+
 $(document).on("mouseup", function(event) {
   if (event.which !== 1) {
     return;
@@ -455,12 +457,23 @@ $(document).on("mouseup", function(event) {
   return ShowBar(event);
 });
 
-InTextBox = function(selection, event) {
-  var area, j, len, ref;
-  if ($(event.target).is('textarea, input[type=text], input[type=search], *[contenteditable="true"]')) {
-    return true;
+eventFromTextbox = function(eventList) {
+  var event, j, len;
+  for (j = 0, len = eventList.length; j < len; j++) {
+    event = eventList[j];
+    if ($(event.target).is('textarea, input[type=text], input[type=search], *[contenteditable="true"]')) {
+      return true;
+    }
   }
-  ref = $('textarea, input[type=text], *[contenteditable="true"]', document);
+  return false;
+};
+
+InTextBox = function(selection) {
+  var area, j, len, ref;
+  if (isChrome()) {
+    return false;
+  }
+  ref = $('textarea, input[type=text], input[type=search], *[contenteditable="true"]', document);
   for (j = 0, len = ref.length; j < len; j++) {
     area = ref[j];
     if (selection.containsNode(area, true)) {
@@ -475,7 +488,7 @@ ShowBar = function(event) {
   sel = document.defaultView.getSelection();
   popData.rawText = sel.toString();
   popData.text = encodeURIComponent(popData.rawText);
-  if (popData.rawText === '' || InTextBox(sel, event)) {
+  if (popData.rawText === '' || InTextBox(sel) || eventFromTextbox([event, popData.mousedownEvent])) {
     return;
   }
   if (GetOpt("Copy_st")) {
