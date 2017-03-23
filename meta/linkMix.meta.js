@@ -14,8 +14,8 @@
 // @exclude						*www.google.*
 // @exclude						*acid3.acidtests.org/*
 // @exclude						*.163.com/*
-// @version						2.7.2
-// @icon						http://lkytal.qiniudn.com/ic.ico
+// @version						2.7.3
+// @icon						http://lkytal.qiniudn.com/link.png
 // @grant						unsafeWindow
 // @homepageURL					https://git.oschina.net/coldfire/GM
 // @updateURL					https://git.oschina.net/coldfire/GM/raw/master/meta/linkMix.meta.js
