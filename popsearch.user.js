@@ -231,9 +231,7 @@ log = function(msg) {
 };
 
 isChrome = function() {
-  if ($.browser.webkit) {
-    return true;
-  }
+  return navigator.userAgent.indexOf("Chrome") > -1;
 };
 
 fixPos = function(sel, e) {
