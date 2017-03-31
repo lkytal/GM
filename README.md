@@ -1,16 +1,14 @@
-#GM script for Firefox
+# GM scripts for Firefox and Chrome
 
 [![Join the chat at https://gitter.im/lkytal/GM](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/lkytal/GM?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
-原创 & 修改的GM脚本
+原创 & 修改的GM脚本 / GM scripts written or adapted by me
 
-个人主页: http://lkytal.github.io/
+个人主页 / Home Page: https://lkytal.github.io/
 
-微博： http://weibo.com/u/3836876207
+## 安装链接 / Install links
 
-## 安装链接
-
-点击下面的链接安装GM脚本
+点击下面的链接安装GM脚本 / Click links bellow to install
 
 * [Popup Search](https://git.oschina.net/coldfire/GM/raw/master/popsearch.user.js)
 * [Text to link](https://git.oschina.net/coldfire/GM/raw/master/linkMix.user.js)
@@ -18,9 +16,9 @@
 * [Scroll with mouse plus](https://git.oschina.net/coldfire/GM/raw/master/scroll.user.js)
 * [Select like Opera](https://git.oschina.net/coldfire/GM/raw/master/select.user.js)
 * [Search Image with Google & Baidu](https://git.oschina.net/coldfire/GM/raw/master/img.user.js)
-* [Discuz新标签打开](https://git.oschina.net/coldfire/GM/raw/master/discuz_in_tab.user.js)
+* [Discuz in new tab](https://git.oschina.net/coldfire/GM/raw/master/discuz_in_tab.user.js)
 
-## 部分文件说明
+## 部分文件说明 / Details
 
 ### popupsearch.user.js
 
@@ -32,11 +30,12 @@ Popup search/translate(etc) button for selected texts
 
 GM的"用户脚本设置"下的"Popup Search设置"打开选项选择需要的项目
 
-![Set](https://dn-lkytal.qbox.me/pset1.png)
-![Set](https://dn-lkytal.qbox.me/pset2.png)
+![Set](http://lkytal.qiniudn.com/pset1.png)
+![Set](http://lkytal.qiniudn.com/pset2.png)
 
-Update Log:
+#### Update Log:
 
+* 4.1.3 : Update icon and jquery
 * 4.1.2 : Fix false popup in chrome
 * 4.1.1 : Fixup incorrect customization
 * 4.1.0 : New: customization
@@ -96,14 +95,14 @@ Update Log:
 * 2.6.6 : Clean up codes
 * 2.6.5 : Update translation
 * 2.6.4 : promote css
-* 2.6.3 : 完全重写了翻译功能, 稳定 + 快捷
+* 2.6.3 : 完全重写了翻译功能, 提升稳定
 * 2.6.2 : Add failsafe translation
 * 2.6.1 : Fix Popup size
 * 2.6.0 : Update Jquery
 
 ### linkMix.user.js
 
-相比于大部分文字链接化的脚步,加入了如下改善:
+#### 相比于大部分文字链接化的脚步,加入了如下改善:
 
 1. 识别大部分不以http开头的链接
 2. 不会把相连的中文错误识别为链接的一部分
@@ -111,7 +110,7 @@ Update Log:
 
 注意 : 为了提高执行速度, 去除了对邮箱地址和ftp链接的识别
 
-Advances:
+#### Advances:
 
 1. Support links that does not start with “http”
 2. Support Autopage, Superpreload(etc)
@@ -119,6 +118,9 @@ Advances:
 
 Notice: Will NOT handle email address and ftp links in order to speed up execution.
 
+#### Update Log:
+
+* 2.7.2 : Update icon and links
 * 2.7.0 : Exclude 163.com
 * 2.6.9 : exclude rule
 * 2.6.8 : exclude *www.google.*
@@ -177,8 +179,9 @@ __修改小尾巴之后记得点击"保存当前尾巴"按钮!__
 
 ![Win](http://lkytal.qiniudn.com/win.jpg)
 
-Update Log:
+#### Update Log:
 
+* 6.1.5 : Update icon and jquery
 * 6.1.1 : Random Tail
 * 6.1.0 : Fixed all known issues
 * 6.0.5 : Soft checking
