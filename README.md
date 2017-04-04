@@ -1,10 +1,8 @@
 # GM scripts for Firefox and Chrome
 
-[![Join the chat at https://gitter.im/lkytal/GM](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/lkytal/GM?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
-
 原创 & 修改的GM脚本 / GM scripts written or adapted by me
 
-个人主页 / Home Page: https://lkytal.github.io/
+个人主页 / Personal Home Page : [https://lkytal.github.io/](https://lkytal.github.io/)
 
 ## 安装链接 / Install links
 
@@ -33,7 +31,7 @@ GM的"用户脚本设置"下的"Popup Search设置"打开选项选择需要的�
 ![Set](http://lkytal.qiniudn.com/pset1.png)
 ![Set](http://lkytal.qiniudn.com/pset2.png)
 
-#### Update Log:
+#### Update Log
 
 * 4.1.3 : Update icon and jquery
 * 4.1.2 : Fix false popup in chrome
@@ -102,23 +100,23 @@ GM的"用户脚本设置"下的"Popup Search设置"打开选项选择需要的�
 
 ### linkMix.user.js
 
-#### 相比于大部分文字链接化的脚步,加入了如下改善:
+#### 相比于大部分文字链接化的脚步,加入了如下改善
 
 1. 识别大部分不以http开头的链接
-2. 不会把相连的中文错误识别为链接的一部分
-3. 支持Autopage, Superpreload等
+1. 不会把相连的中文错误识别为链接的一部分
+1. 支持Autopage, Superpreload等
 
 注意 : 为了提高执行速度, 去除了对邮箱地址和ftp链接的识别
 
-#### Advances:
+#### Advances
 
 1. Support links that does not start with “http”
-2. Support Autopage, Superpreload(etc)
-3. Support Unicode characters
+1. Support Autopage, Superpreload(etc)
+1. Support Unicode characters
 
 Notice: Will NOT handle email address and ftp links in order to speed up execution.
 
-#### Update Log:
+#### Update Log
 
 * 2.7.2 : Update icon and links
 * 2.7.0 : Exclude 163.com
@@ -179,7 +177,7 @@ __修改小尾巴之后记得点击"保存当前尾巴"按钮!__
 
 ![Win](http://lkytal.qiniudn.com/win.jpg)
 
-#### Update Log:
+#### Update Log
 
 * 6.1.5 : Update icon and jquery
 * 6.1.1 : Random Tail
