@@ -10,7 +10,7 @@
 // @exclude					http://www.acfun.tv/*
 // @exclude					http://www.sf-express.com/*
 // @require					https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js
-// @version					4.1.4
+// @version					4.1.5
 // @icon					http://lkytal.qiniudn.com/search.png
 // @grant					GM_xmlhttpRequest
 // @grant					GM_addStyle
@@ -293,9 +293,6 @@ PopupInit = function() {
   $('body').append("<span id=\"ShowUpBox\"> <span id=\"showupbody\"> <span id=\"popupwapper\"> " + EngineList + " </span> <span id=\"Gspan\" /> </span> </span>");
   $DivBox = $('#ShowUpBox');
   $DivBox.hide();
-  $DivBox.on("click mousedown dblclick mouseup", function(event) {
-    return event.stopPropagation();
-  });
   $DivBox.hover(function() {
     $(this).fadeTo(150, 1);
     return popData.mouseIn = 1;
@@ -307,7 +304,7 @@ PopupInit = function() {
     }
     return popData.mouseIn = 0;
   });
-  $('#popupwapper').on("mouseup", function(event) {
+  $('#showupbody').on("mouseup", function(event) {
     if (event.which === 3) {
       CopyText();
       $('#ShowUpBox').fadeOut(200);
@@ -317,10 +314,15 @@ PopupInit = function() {
       return false;
     }
   });
-  $('#popupwapper').on("contextmenu", function(event) {
+  $('#showupbody').on("contextmenu", function(event) {
     return false;
   });
-  $('#gtrans').on("click", onTranslate);
+  $('#Gspan').on("mouseup contextmenu", function(event) {
+    return event.stopPropagation();
+  });
+  $DivBox.on("click dblclick mousedown mouseup contextmenu", function(event) {
+    return event.stopPropagation();
+  });
   ref2 = popData.engines;
   for (l = 0, len2 = ref2.length; l < len2; l++) {
     engine = ref2[l];
@@ -340,6 +342,7 @@ PopupInit = function() {
       return false;
     });
   }
+  $('#gtrans').on("click", onTranslate);
   if (GetOpt('Tab_st')) {
     $DivBox.find('a').attr('target', '_blank');
   } else {
@@ -531,17 +534,15 @@ ShowBar = function(event) {
 };
 
 CopyText = function(seltxt) {
-  var e;
   if (seltxt == null) {
     seltxt = document.defaultView.getSelection().toString();
   }
   try {
     return GM_setClipboard(seltxt, "text");
   } catch (error) {
-    e = error;
     if (GetOpt("Copy_st")) {
-      alert("ERROR: Auto copying not supported and will be disabled now");
-      return SetOpt("Copy_st", 0);
+      alert("ERROR: Auto copy not supported and will be disabled now");
+      return SaveOpt("Copy_st", 0);
     }
   }
 };
@@ -742,7 +743,7 @@ PopupLoad = function() {
 setTimeout(PopupLoad, 100);
 
 addCSS = function() {
-  return GM_addStyle("#ShowUpBox { all: unset; width: auto; height: auto; position: absolute; z-index: 10240; color: black; display: inline-block; line-height: 0; vertical-align: baseline; box-sizing: content-box; } #showupbody { min-width: 20px; max-width: 750px; min-height: 20px; max-height: 500px; display: block; border:solid 2px rgb(144,144,144); border-radius:1px; background:rgba(252, 252, 252, 1); } #popupwapper { all: unset; margin: 3px 2px 3.8px 2px; display:block; line-height: 0; font-size:0; } #Gspan { line-height: normal; width: auto; font-size: 16px; overflow: auto; display: none; } #ShowUpBox img { all: unset; margin: 0px 2px; height: 24px; width: 24px; border-radius: 0px; padding: 0px; display: inline-block; transition-duration: 0.1s; -moz-transition-duration: 0.1s; -webkit-transition-duration: 0.1s; } #ShowUpBox img:hover { margin: -1px 1px -1px 1px; height: 26px; width: 26px; } #popuptip { display: inline-block; clear: both; height: 9px; width: 9px; } .tipup { background: url(" + popData.icons.tipup + ") 0px 0px no-repeat transparent; margin-top: -2px; margin-bottom: 0px; } .tipdown { background: url(" + popData.icons.tipdown + ") 0px 0px no-repeat transparent; margin-top: 0px; margin-bottom: -2px; } #ShowUpBox a { text-decoration: none; display: inline-block; }");
+  return GM_addStyle("#ShowUpBox { all: unset; width: auto; height: auto; position: absolute; z-index: 10240; color: black; display: inline-block; line-height: 0; vertical-align: baseline; box-sizing: content-box; } #showupbody { min-width: 20px; max-width: 750px; min-height: 20px; max-height: 500px; display: block; border:solid 2px rgb(144,144,144); border-radius:1px; background:rgba(252, 252, 252, 1); } #popupwapper { all: unset; margin: 3px 2px 3.8px 2px; display:block; line-height: 0; font-size:0; } #Gspan { line-height: normal; width: auto; font-size: 16px; overflow: auto; display: none; } #popupwapper > a { all: unset; margin: 0px 2px; } #popupwapper img { all: unset; margin: 0px; height: 24px; width: 24px; border-radius: 0px; padding: 0px; display: inline-block; transition-duration: 0.1s; -moz-transition-duration: 0.1s; -webkit-transition-duration: 0.1s; } #popupwapper img:hover { margin: -1px -1px; height: 26px; width: 26px; } #popuptip { display: inline-block; clear: both; height: 9px; width: 9px; } .tipup { background: url(" + popData.icons.tipup + ") 0px 0px no-repeat transparent; margin-top: -2px; margin-bottom: 0px; } .tipdown { background: url(" + popData.icons.tipdown + ") 0px 0px no-repeat transparent; margin-top: 0px; margin-bottom: -2px; } #ShowUpBox a { text-decoration: none; display: inline-block; }");
 };
 
 addAditionalCSS = function() {

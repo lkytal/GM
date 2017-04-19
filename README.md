@@ -18,7 +18,7 @@
 
 ## 部分文件说明 / Details
 
-### popupsearch.user.js
+### PopupSearch.user.js
 
 在选中的文字上弹出搜索/翻译等快捷操作按钮
 
@@ -33,11 +33,12 @@ GM的"用户脚本设置"下的"Popup Search设置"打开选项选择需要的�
 
 #### Update Log
 
+* 4.1.5 : Ensure right click copy
 * 4.1.3 : Update icon and jquery
 * 4.1.2 : Fix false popup in chrome
 * 4.1.1 : Fixup incorrect customization
 * 4.1.0 : New: customization
-* 4.0.8 : Retry when tranlate timeout
+* 4.0.8 : Retry when translate timeout
 * 4.0.7 : False popup in textbox in chrome
 * 4.0.6 : Fix userEngine Error
 * 4.0.5 : Back to google translation
@@ -47,7 +48,7 @@ GM的"用户脚本设置"下的"Popup Search设置"打开选项选择需要的�
 * 4.0.1 : Better performance
 * 4.0.0 : New setting UI with many new engines
 * 3.5.0 : Setting enhance
-* 3.4.0 : Fix Unhidden problem
+* 3.4.0 : Fix hidden problem
 * 3.3.3 : Better position locating
 * 3.3.1 : update jquery
 * 3.3.0 : Position problem in chrome
@@ -68,7 +69,7 @@ GM的"用户脚本设置"下的"Popup Search设置"打开选项选择需要的�
 * 3.1.3 : Background mode
 * 3.1.2 : fix translation
 * 3.1.0 : iframe support
-* 3.0.5 : taobao fix
+* 3.0.5 : Taobao fix
 * 3.0.4 : mouseup event
 * 3.0.3 : css fix
 * 3.0.2 : new setting box
@@ -80,7 +81,7 @@ GM的"用户脚本设置"下的"Popup Search设置"打开选项选择需要的�
 * 2.8.5 : Translate sync
 * 2.8.4 : cleanup
 * 2.8.2 : better css style
-* 2.8.1 : Multiply tranlate address
+* 2.8.1 : Multiply translate address
 * 2.8.0 : More translation methods
 * 2.7.5 : Exclude test page
 * 2.7.4 : Fix up
@@ -104,14 +105,14 @@ GM的"用户脚本设置"下的"Popup Search设置"打开选项选择需要的�
 
 1. 识别大部分不以http开头的链接
 1. 不会把相连的中文错误识别为链接的一部分
-1. 支持Autopage, Superpreload等
+1. 支持AutoPage, SuperPreload等
 
 注意 : 为了提高执行速度, 去除了对邮箱地址和ftp链接的识别
 
 #### Advances
 
 1. Support links that does not start with “http”
-1. Support Autopage, Superpreload(etc)
+1. Support AutoPage, SuperPreload (etc)
 1. Support Unicode characters
 
 Notice: Will NOT handle email address and ftp links in order to speed up execution.
@@ -122,7 +123,7 @@ Notice: Will NOT handle email address and ftp links in order to speed up executi
 * 2.7.0 : Exclude 163.com
 * 2.6.9 : exclude rule
 * 2.6.8 : exclude *www.google.*
-* 2.6.7 : Fix for zhihu
+* 2.6.7 : Fix for Zhihu
 * 2.6.5 : Meta update
 * 2.6.4 : Ext tag
 * 2.6.3 : '/' as end char
@@ -135,7 +136,7 @@ Notice: Will NOT handle email address and ftp links in order to speed up executi
 * 2.4.1 : Update regexp, "use strict" mode to enhance performance
 * 2.4.0 : Fix scan error on ending chapter
 * 2.3.9 : 更新meta内容
-* 2.3.8 : 迁移到Greasefork
+* 2.3.8 : 迁移到 greasyfork
 * 2.3.7 : 更新正则表达式
 * 2.3.6 : 更新正则表达式
 * 2.3.5 : 恢复对微博的支持
@@ -199,7 +200,7 @@ __修改小尾巴之后记得点击"保存当前尾巴"按钮!__
 * 5.8.5 : Fix recent img
 * 5.8.4 : Fix jquery
 * 5.8.2 : Clear tieba link function
-* 5.8.1 : Minified storage
+* 5.8.1 : Minify storage
 * 5.8.0 : Switch to git
 * 5.7.8 : Update to suite new tieba
 * 5.7.7 : Meta info added
