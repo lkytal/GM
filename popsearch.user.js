@@ -367,7 +367,7 @@ onTranslate = function(event) {
   $("#Gspan").empty().append("<div style='padding:10px;'><img src='" + popData.icons.pending + "' /></div>").show();
   $('#popupwapper').hide();
   fixPos(document.defaultView.getSelection());
-  return doRequest(0, 1000);
+  return doRequest(0, 1500);
 };
 
 doRequest = function(i, wait) {
@@ -540,10 +540,8 @@ CopyText = function(seltxt) {
   try {
     return GM_setClipboard(seltxt, "text");
   } catch (error) {
-    if (GetOpt("Copy_st")) {
-      alert("ERROR: Auto copy not supported and will be disabled now");
-      return SaveOpt("Copy_st", 0);
-    }
+    alert("ERROR: Auto copy not supported and will be disabled now");
+    return SaveOpt("Copy_st", 0);
   }
 };
 

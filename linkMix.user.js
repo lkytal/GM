@@ -14,7 +14,7 @@
 // @exclude						*www.google.*
 // @exclude						*acid3.acidtests.org/*
 // @exclude						*.163.com/*
-// @version						2.7.3
+// @version						2.8.0
 // @icon						http://lkytal.qiniudn.com/link.png
 // @grant						unsafeWindow
 // @homepageURL					https://git.oschina.net/coldfire/GM
@@ -23,9 +23,9 @@
 // ==/UserScript==
 
 "use strict";
-var clearLink, excludedTags, filter, linkMixInit, linkPack, linkify, observePage, observer, setLink, url_regexp, xpath;
+var clearLink, excludedTags, linkFilter, linkMixInit, linkPack, linkify, observePage, observer, setLink, url_regexp, xpath;
 
-url_regexp = /((https?:\/\/|www\.)[\x21-\x7e]+[\w\/]|(\w[\w._-]+\.(com|cn|org|net|info|tv|cc))(\/[\x21-\x7e]*[\w\/])?|ed2k:\/\/[\x21-\x7e]+\|\/|thunder:\/\/[\x21-\x7e]+=)/gi;
+url_regexp = /((https?:\/\/|www\.)[\x21-\x7e]+[\w\/]|(\w[\w._-]+\.(com|cn|org|net|info|tv|cc|gov|xxx))(\/[\x21-\x7e]*[\w\/])?|ed2k:\/\/[\x21-\x7e]+\|\/|thunder:\/\/[\x21-\x7e]+=)/gi;
 
 clearLink = function(event) {
   var link, ref, url;
@@ -59,38 +59,44 @@ excludedTags = "a,svg,canvas,applet,input,button,area,pre,embed,frame,frameset,h
 
 xpath = "//text()[not(ancestor::" + (excludedTags.join(') and not(ancestor::')) + ")]";
 
-filter = new RegExp("^(" + (excludedTags.join('|')) + ")$", "i");
-
 linkPack = function(result, start) {
-  var i, j, k, ref, ref1, ref2, ref3;
-  if (start + 10000 < result.snapshotLength) {
+  var i, j, k, ref, ref1, ref2, ref3, startTime;
+  startTime = Date.now();
+  while (start + 10000 < result.snapshotLength) {
     for (i = j = ref = start, ref1 = start + 10000; ref <= ref1 ? j <= ref1 : j >= ref1; i = ref <= ref1 ? ++j : --j) {
       setLink(result.snapshotItem(i));
     }
-    setTimeout(function() {
-      return linkPack(result, start + 10000);
-    }, 15);
-  } else {
-    for (i = k = ref2 = start, ref3 = result.snapshotLength; ref2 <= ref3 ? k <= ref3 : k >= ref3; i = ref2 <= ref3 ? ++k : --k) {
-      setLink(result.snapshotItem(i));
+    start += 10000;
+    if (Date.now() - startTime > 2500) {
+      return;
     }
+  }
+  for (i = k = ref2 = start, ref3 = result.snapshotLength; ref2 <= ref3 ? k <= ref3 : k >= ref3; i = ref2 <= ref3 ? ++k : --k) {
+    setLink(result.snapshotItem(i));
   }
 };
 
-linkify = function(doc) {
+linkify = function(node) {
   var result;
-  result = document.evaluate(xpath, doc, null, XPathResult.UNORDERED_NODE_SNAPSHOT_TYPE, null);
+  result = document.evaluate(xpath, node, null, XPathResult.UNORDERED_NODE_SNAPSHOT_TYPE, null);
   return linkPack(result, 0);
+};
+
+linkFilter = function(node) {
+  var j, len, tag;
+  for (j = 0, len = excludedTags.length; j < len; j++) {
+    tag = excludedTags[j];
+    if (tag === node.parentNode.localName.toLowerCase()) {
+      return NodeFilter.FILTER_REJECT;
+    }
+  }
+  return NodeFilter.FILTER_ACCEPT;
 };
 
 observePage = function(root) {
   var tW;
   tW = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, {
-    acceptNode: function(a) {
-      if (!filter.test(a.parentNode.localName)) {
-        return NodeFilter.FILTER_ACCEPT;
-      }
-    }
+    acceptNode: linkFilter
   }, false);
   while (tW.nextNode()) {
     setLink(tW.currentNode);

@@ -43,7 +43,7 @@ GM的"用户脚本设置"下的"Popup Search设置"打开选项选择需要的�
 * 4.0.6 : Fix userEngine Error
 * 4.0.5 : Back to google translation
 * 4.0.4 : Fixed open as link
-* 4.0.3 : Add douban engine
+* 4.0.3 : Add Douban engine
 * 4.0.2 : Fixed open as link and style in v2ex
 * 4.0.1 : Better performance
 * 4.0.0 : New setting UI with many new engines
@@ -119,6 +119,7 @@ Notice: Will NOT handle email address and ftp links in order to speed up executi
 
 #### Update Log
 
+* 2.8.0 : Support timeout
 * 2.7.2 : Update icon and links
 * 2.7.0 : Exclude 163.com
 * 2.6.9 : exclude rule
