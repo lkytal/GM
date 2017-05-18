@@ -33,6 +33,7 @@ GM的"用户脚本设置"下的"Popup Search设置"打开选项选择需要的�
 
 #### Update Log
 
+* 4.1.6 : Respect tab setting for user engines
 * 4.1.5 : Ensure right click copy
 * 4.1.3 : Update icon and jquery
 * 4.1.2 : Fix false popup in chrome
@@ -43,7 +44,7 @@ GM的"用户脚本设置"下的"Popup Search设置"打开选项选择需要的�
 * 4.0.6 : Fix userEngine Error
 * 4.0.5 : Back to google translation
 * 4.0.4 : Fixed open as link
-* 4.0.3 : Add Douban engine
+* 4.0.3 : Add DouBan engine
 * 4.0.2 : Fixed open as link and style in v2ex
 * 4.0.1 : Better performance
 * 4.0.0 : New setting UI with many new engines
@@ -61,7 +62,7 @@ GM的"用户脚本设置"下的"Popup Search设置"打开选项选择需要的�
 * 3.2.3 : fix popup position
 * 3.2.2 : Multiline fixup
 * 3.2.1 : fix translation
-* 3.2.0 : transform to Youdao
+* 3.2.0 : transform to YouDao
 * 3.1.7 : Ip fix
 * 3.1.6 : Ip Updated
 * 3.1.5 : no jquery conflicts
@@ -69,7 +70,7 @@ GM的"用户脚本设置"下的"Popup Search设置"打开选项选择需要的�
 * 3.1.3 : Background mode
 * 3.1.2 : fix translation
 * 3.1.0 : iframe support
-* 3.0.5 : Taobao fix
+* 3.0.5 : TaoBao fix
 * 3.0.4 : mouseup event
 * 3.0.3 : css fix
 * 3.0.2 : new setting box
@@ -124,7 +125,7 @@ Notice: Will NOT handle email address and ftp links in order to speed up executi
 * 2.7.0 : Exclude 163.com
 * 2.6.9 : exclude rule
 * 2.6.8 : exclude *www.google.*
-* 2.6.7 : Fix for Zhihu
+* 2.6.7 : Fix for ZhiHu
 * 2.6.5 : Meta update
 * 2.6.4 : Ext tag
 * 2.6.3 : '/' as end char
@@ -181,6 +182,7 @@ __修改小尾巴之后记得点击"保存当前尾巴"按钮!__
 
 #### Update Log
 
+* 6.2.0 : Add tail correctly
 * 6.1.5 : Update icon and jquery
 * 6.1.1 : Random Tail
 * 6.1.0 : Fixed all known issues

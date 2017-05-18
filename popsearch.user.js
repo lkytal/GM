@@ -10,7 +10,7 @@
 // @exclude					http://www.acfun.tv/*
 // @exclude					http://www.sf-express.com/*
 // @require					https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js
-// @version					4.1.5
+// @version					4.1.6
 // @icon					http://lkytal.qiniudn.com/search.png
 // @grant					GM_xmlhttpRequest
 // @grant					GM_addStyle
@@ -28,7 +28,7 @@
 // ==/UserScript==
 
 "use strict";;
-var CopyText, GetOpt, InTextBox, OpenSet, PopupInit, PopupLoad, ReadOpt, SaveOpt, SettingWin, ShowBar, TimeOutHide, UpdateLog, UpdateNotificated, addAditionalCSS, addCSS, ajaxError, doRequest, eventFromTextbox, fixPos, getLastRange, get_selection_offsets, isChrome, log, onTranslate, popData, praseTranslationGoogle,
+var CopyText, GetOpt, InTextBox, OnEngine, OpenSet, PopupInit, PopupLoad, ReadOpt, SaveOpt, SettingWin, ShowBar, TimeOutHide, UpdateLog, UpdateNotificated, addAditionalCSS, addCSS, ajaxError, doRequest, eventFromTextbox, fixPos, getLastRange, get_selection_offsets, isChrome, log, onTranslate, popData, praseTranslationGoogle,
   hasProp = {}.hasOwnProperty;
 
 window.$ = this.$ = this.jQuery = jQuery.noConflict(true);
@@ -274,6 +274,18 @@ TimeOutHide = function() {
   }
 };
 
+OnEngine = function(e) {
+  if (isChrome()) {
+    GM_openInTab($(this).attr('href'), {
+      active: GetOpt("Focus_st") === 1
+    });
+  } else {
+    GM_openInTab($(this).attr('href'), !GetOpt("Focus_st"));
+  }
+  $('#ShowUpBox').fadeOut(200);
+  return false;
+};
+
 PopupInit = function() {
   var $DivBox, $icon, EngineList, engine, j, k, l, len, len1, len2, ref, ref1, ref2;
   $('#ShowUpBox').remove();
@@ -281,13 +293,13 @@ PopupInit = function() {
   ref = popData.engines;
   for (j = 0, len = ref.length; j < len; j++) {
     engine = ref[j];
-    EngineList += "<a id='" + engine.id + "Icon' href=''><img title='" + engine.title + "' src='" + engine.src + "' /></a>";
+    EngineList += "<a id='" + engine.id + "Icon' class='engine' href=''><img title='" + engine.title + "' src='" + engine.src + "' /></a>";
   }
   if (GetOpt("userEngine_st")) {
     ref1 = popData.userEngines;
     for (k = 0, len1 = ref1.length; k < len1; k++) {
       engine = ref1[k];
-      EngineList += "<a id='" + engine.id + "Icon' href=''><img title='" + engine.title + "' src='" + engine.src + "' /></a>";
+      EngineList += "<a id='" + engine.id + "Icon' class='userEngine' href=''><img title='" + engine.title + "' src='" + engine.src + "' /></a>";
     }
   }
   $('body').append("<span id=\"ShowUpBox\"> <span id=\"showupbody\"> <span id=\"popupwapper\"> " + EngineList + " </span> <span id=\"Gspan\" /> </span> </span>");
@@ -330,18 +342,8 @@ PopupInit = function() {
     if (!GetOpt(engine.id)) {
       $icon.hide();
     }
-    $icon.on("click", function(e) {
-      if (isChrome()) {
-        GM_openInTab($(this).attr('href'), {
-          active: GetOpt("Focus_st") === 1
-        });
-      } else {
-        GM_openInTab($(this).attr('href'), !GetOpt("Focus_st"));
-      }
-      $('#ShowUpBox').fadeOut(200);
-      return false;
-    });
   }
+  $('#ShowUpBox').find('.engine, .userEngine').on('click', OnEngine);
   $('#gtrans').on("click", onTranslate);
   if (GetOpt('Tab_st')) {
     $DivBox.find('a').attr('target', '_blank');
@@ -503,14 +505,15 @@ ShowBar = function(event) {
     "\\${url}": location.href
   };
   setHref = function(engine) {
-    var href, para, value;
+    var $engine, href, para, value;
     href = engine.href;
     for (para in paraList) {
       if (!hasProp.call(paraList, para)) continue;
       value = paraList[para];
       href = href.replace(RegExp("" + para, "g"), value);
     }
-    return $("#" + engine.id + "Icon").attr("href", href);
+    $engine = $("#" + engine.id + "Icon");
+    return $engine.attr("href", href);
   };
   ref = popData.engines;
   for (j = 0, len = ref.length; j < len; j++) {
