@@ -10,7 +10,7 @@
 // @exclude					http://www.acfun.tv/*
 // @exclude					http://www.sf-express.com/*
 // @require					https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js
-// @version					4.1.6
+// @version					4.2.0
 // @icon					http://lkytal.qiniudn.com/search.png
 // @grant					GM_xmlhttpRequest
 // @grant					GM_addStyle
@@ -28,7 +28,7 @@
 // ==/UserScript==
 
 "use strict";;
-var CopyText, GetOpt, InTextBox, OnEngine, OpenSet, PopupInit, PopupLoad, ReadOpt, SaveOpt, SettingWin, ShowBar, TimeOutHide, UpdateLog, UpdateNotificated, addAditionalCSS, addCSS, ajaxError, doRequest, eventFromTextbox, fixPos, getLastRange, get_selection_offsets, isChrome, log, onTranslate, popData, praseTranslationGoogle,
+var CopyText, GetOpt, InTextBox, OnEngine, OpenSet, PopupInit, PopupLoad, ReadOpt, SaveOpt, SettingWin, ShowBar, TimeOutHide, UpdateLog, UpdateNotified, addAdditionalCSS, addCSS, ajaxError, doRequest, eventFromTextbox, fixPos, getLastRange, get_selection_offsets, isChrome, log, onTranslate, parseTranslationGoogle, popData,
   hasProp = {}.hasOwnProperty;
 
 window.$ = this.$ = this.jQuery = jQuery.noConflict(true);
@@ -59,8 +59,8 @@ popData = {
     tiebaIcon: "data:image/png;base64,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",
     inSiteIcon: 'data:image/png;base64,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',
     settingIcon: "data:image/png;base64,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",
-    tipdown: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAkAAAAJCAYAAADgkQYQAAAAXElEQVQYlYXMsQ5AQBREUSoVjQ+f+S0lSi2livJlr4ZEZDcmud3JVJIW2yPQVqXZPmwjaQXqEuJJ0vCLbrgDfRZFxBsH0GTRCybbcxF9HhPQZdEHbkUUEUg6JU0Xm2KvCU6v27kAAAAASUVORK5CYII=",
-    tipup: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAkAAAAJCAYAAADgkQYQAAAAZElEQVQYlXXMIQ4CMBBE0UWhwHDw+ddCAhILEgWy4WNo0tAyyZidly1AwNba1CSvJOf6h/oduC/RAN7qfkJ9BC7VM6LhQ1O3E+pN8lAPNeYHHGsV4PkFN3WzREmuwEndLUFVfQC3Xa8Jl+92RAAAAABJRU5ErkJggg==",
+    tipDown: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAkAAAAJCAYAAADgkQYQAAAAXElEQVQYlYXMsQ5AQBREUSoVjQ+f+S0lSi2livJlr4ZEZDcmud3JVJIW2yPQVqXZPmwjaQXqEuJJ0vCLbrgDfRZFxBsH0GTRCybbcxF9HhPQZdEHbkUUEUg6JU0Xm2KvCU6v27kAAAAASUVORK5CYII=",
+    tipUp: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAkAAAAJCAYAAADgkQYQAAAAZElEQVQYlXXMIQ4CMBBE0UWhwHDw+ddCAhILEgWy4WNo0tAyyZidly1AwNba1CSvJOf6h/oduC/RAN7qfkJ9BC7VM6LhQ1O3E+pN8lAPNeYHHGsV4PkFN3WzREmuwEndLUFVfQC3Xa8Jl+92RAAAAABJRU5ErkJggg==",
     pending: "data:image/png;base64,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"
   },
   optionList: [
@@ -162,7 +162,7 @@ popData.engines = [
   }, {
     id: "Taobao_st",
     title: "Search with Taobao",
-    description: "搜索淘宝 / Search with Taoabo",
+    description: "搜索淘宝 / Search with Taobao",
     defaultState: 1,
     src: popData.icons.taobaoIcon,
     href: 'https://s.taobao.com/search?q=${text}'
@@ -189,7 +189,7 @@ popData.engines = [
     href: 'http://www.soku.com/search_video/q_${text}'
   }, {
     id: "amazon_st",
-    title: "Search with Amazou",
+    title: "Search with Amazon",
     description: "搜索亚马逊/ Search with Amazon",
     defaultState: 1,
     src: popData.icons.amazonIcon,
@@ -249,7 +249,7 @@ fixPos = function(sel, e) {
       offsetLeft = eventLeft + 10;
     }
   } else {
-    $('#showupbody').css('margin-left', '60px');
+    $('#showUpBody').css('margin-left', '60px');
   }
   if (GetOpt('Dis_st')) {
     offsetTop = offsetTop - 2 - $('#ShowUpBox').height();
@@ -265,7 +265,7 @@ fixPos = function(sel, e) {
     fix = 4 - offsetLeft + m_left;
   }
   $('#ShowUpBox').css("top", offsetTop + "px").css("left", (offsetLeft - m_left + fix) + "px");
-  return $('#popuptip').css('margin-left', m_left - 20 - fix);
+  return $('#popupTip').css('margin-left', m_left - 20 - fix);
 };
 
 TimeOutHide = function() {
@@ -289,7 +289,7 @@ OnEngine = function(e) {
 PopupInit = function() {
   var $DivBox, $icon, EngineList, engine, j, k, l, len, len1, len2, ref, ref1, ref2;
   $('#ShowUpBox').remove();
-  EngineList = "<a id='gtrans'><img title='Translate' src='" + popData.icons.translateIcon + "' /></a>";
+  EngineList = "<a id='transBtn'><img title='Translate' src='" + popData.icons.translateIcon + "' /></a>";
   ref = popData.engines;
   for (j = 0, len = ref.length; j < len; j++) {
     engine = ref[j];
@@ -302,7 +302,7 @@ PopupInit = function() {
       EngineList += "<a id='" + engine.id + "Icon' class='userEngine' href=''><img title='" + engine.title + "' src='" + engine.src + "' /></a>";
     }
   }
-  $('body').append("<span id=\"ShowUpBox\"> <span id=\"showupbody\"> <span id=\"popupwapper\"> " + EngineList + " </span> <span id=\"Gspan\" /> </span> </span>");
+  $('body').append("<span id=\"ShowUpBox\"> <span id=\"showUpBody\"> <span id=\"popupWrapper\"> " + EngineList + " </span> <span id=\"transPanel\" /> </span> </span>");
   $DivBox = $('#ShowUpBox');
   $DivBox.hide();
   $DivBox.hover(function() {
@@ -316,7 +316,7 @@ PopupInit = function() {
     }
     return popData.mouseIn = 0;
   });
-  $('#showupbody').on("mouseup", function(event) {
+  $('#showUpBody').on("mouseup", function(event) {
     if (event.which === 3) {
       CopyText();
       $('#ShowUpBox').fadeOut(200);
@@ -326,10 +326,10 @@ PopupInit = function() {
       return false;
     }
   });
-  $('#showupbody').on("contextmenu", function(event) {
+  $('#showUpBody').on("contextmenu", function(event) {
     return false;
   });
-  $('#Gspan').on("mouseup contextmenu", function(event) {
+  $('#transPanel').on("mouseup contextmenu", function(event) {
     return event.stopPropagation();
   });
   $DivBox.on("click dblclick mousedown mouseup contextmenu", function(event) {
@@ -344,30 +344,30 @@ PopupInit = function() {
     }
   }
   $('#ShowUpBox').find('.engine, .userEngine').on('click', OnEngine);
-  $('#gtrans').on("click", onTranslate);
+  $('#transBtn').on("click", onTranslate);
   if (GetOpt('Tab_st')) {
     $DivBox.find('a').attr('target', '_blank');
   } else {
     $DivBox.find('a').attr('target', '_self');
   }
   if (GetOpt('Dis_st')) {
-    popData.tip = popData.tipup;
-    return $DivBox.append('<span id="popuptip" class="tipup"></span>');
+    popData.tip = popData.tipUp;
+    return $DivBox.append('<span id="popupTip" class="tipUp"></span>');
   } else {
-    popData.tip = popData.tipdown;
-    return $DivBox.prepend('<span id="popuptip" class="tipdown"></span>');
+    popData.tip = popData.tipDown;
+    return $DivBox.prepend('<span id="popupTip" class="tipDown"></span>');
   }
 };
 
 ajaxError = function(res) {
-  return $('#Gspan').empty().append("<p>Translate Error:<br />" + res.statusText + "</p>").show();
+  return $('#transPanel').empty().append("<p>Translate Error:<br /> " + res.statusText + " </p>").show();
 };
 
 onTranslate = function(event) {
   event.preventDefault();
   popData.bTrans = 1;
-  $("#Gspan").empty().append("<div style='padding:10px;'><img src='" + popData.icons.pending + "' /></div>").show();
-  $('#popupwapper').hide();
+  $("#transPanel").empty().append("<div style='padding:10px;'><img src='" + popData.icons.pending + "' /></div>").show();
+  $('#popupWrapper').hide();
   fixPos(document.defaultView.getSelection());
   return doRequest(0, 1500);
 };
@@ -388,25 +388,25 @@ doRequest = function(i, wait) {
       'Content-Type': 'application/x-www-form-urlencoded'
     },
     timeout: wait,
-    onload: praseTranslationGoogle,
+    onload: parseTranslationGoogle,
     onerror: ErrHandle,
     ontimeout: ErrHandle
   });
 };
 
-praseTranslationGoogle = function(responseDetails) {
-  var PickMeaning, Result, Rline, Rtxt, line, sentence;
+parseTranslationGoogle = function(responseDetails) {
+  var PickMeaning, RLine, RTxt, Result, line, sentence;
   if (!popData.bTrans) {
     return;
   }
   try {
-    Rtxt = JSON.parse(responseDetails.responseText);
+    RTxt = JSON.parse(responseDetails.responseText);
   } catch (error) {
     return ajaxError(responseDetails);
   }
-  Rline = (function() {
+  RLine = (function() {
     var j, len, ref, results;
-    ref = Rtxt.sentences;
+    ref = RTxt.sentences;
     results = [];
     for (j = 0, len = ref.length; j < len; j++) {
       sentence = ref[j];
@@ -425,10 +425,10 @@ praseTranslationGoogle = function(responseDetails) {
     }
     return results;
   };
-  if (Rtxt.dict != null) {
-    Rline += (function() {
+  if (RTxt.dict != null) {
+    RLine += (function() {
       var j, len, ref, results;
-      ref = Rtxt.dict;
+      ref = RTxt.dict;
       results = [];
       for (j = 0, len = ref.length; j < len; j++) {
         line = ref[j];
@@ -437,8 +437,8 @@ praseTranslationGoogle = function(responseDetails) {
       return results;
     })();
   }
-  Result = "<div id=\"tranRst\" style=\"font-size:13px;overflow:auto;padding:5px 12px;\"> <div style=\"line-height:200%;font-size:13px;\"> " + Rline + " </div> </div>";
-  $('#Gspan').empty().append(Result).show();
+  Result = "<div id=\"tranRst\" style=\"font-size:13px;overflow:auto;padding:5px 12px;\"> <div style=\"line-height:200%;font-size:13px;\"> " + RLine + " </div> </div>";
+  $('#transPanel').empty().append(Result).show();
   fixPos(document.defaultView.getSelection());
 };
 
@@ -464,7 +464,11 @@ eventFromTextbox = function(eventList) {
   var event, j, len;
   for (j = 0, len = eventList.length; j < len; j++) {
     event = eventList[j];
-    if ($(event.target).is('textarea, input[type=text], input[type=search], *[contenteditable="true"]')) {
+    if (!(event != null)) {
+      continue;
+    }
+    console.log($(event.target));
+    if ($(event.target).is('textarea, input, *[contenteditable="true"]')) {
       return true;
     }
   }
@@ -476,7 +480,7 @@ InTextBox = function(selection) {
   if (isChrome()) {
     return false;
   }
-  ref = $('textarea, input[type=text], input[type=search], *[contenteditable="true"]', document);
+  ref = $('textarea, input, *[contenteditable="true"]', document);
   for (j = 0, len = ref.length; j < len; j++) {
     area = ref[j];
     if (selection.containsNode(area, true)) {
@@ -489,15 +493,18 @@ InTextBox = function(selection) {
 ShowBar = function(event) {
   var engine, j, k, len, len1, paraList, ref, ref1, sel, setHref;
   sel = document.defaultView.getSelection();
+  if (InTextBox(sel) || eventFromTextbox([event, popData.mousedownEvent])) {
+    return;
+  }
   popData.rawText = sel.toString();
   popData.text = encodeURIComponent(popData.rawText);
-  if (popData.rawText === '' || InTextBox(sel) || eventFromTextbox([event, popData.mousedownEvent])) {
+  if (popData.rawText === '') {
     return;
   }
   if (GetOpt("Copy_st")) {
     CopyText(popData.rawText);
   }
-  $('#Gspan').empty().hide();
+  $('#transPanel').empty().hide();
   paraList = {
     "\\${rawText}": popData.rawText,
     "\\${text}": popData.text,
@@ -536,12 +543,12 @@ ShowBar = function(event) {
   return $('#ShowUpBox').css('opacity', 0.9).fadeIn(150);
 };
 
-CopyText = function(seltxt) {
-  if (seltxt == null) {
-    seltxt = document.defaultView.getSelection().toString();
+CopyText = function(selText) {
+  if (selText == null) {
+    selText = document.defaultView.getSelection().toString();
   }
   try {
-    return GM_setClipboard(seltxt, "text");
+    return GM_setClipboard(selText, "text");
   } catch (error) {
     alert("ERROR: Auto copy not supported and will be disabled now");
     return SaveOpt("Copy_st", 0);
@@ -569,7 +576,7 @@ OpenSet = function() {
 
 SettingWin = function() {
   var chsJSON, engJSON, engine, engineOptionList, generateEngineOption, generateOption, item, j, len, option, optionList, ref;
-  addAditionalCSS();
+  addAdditionalCSS();
   $('#popup_setting_bg').remove();
   generateOption = function(option) {
     return "<span id='" + option.id + "' class='setting_item'> <img src=" + popData.icons.settingIcon + " /> <span class='text'>" + option.text + "</span> <input class='tgl tgl-flat' id='" + option.id + "_checkbox' type='checkbox'> <label class='tgl-btn' for='" + option.id + "_checkbox'></label> </span>";
@@ -599,7 +606,7 @@ SettingWin = function() {
   })()).join(' ');
   engJSON = '[\n    {\n        id: "UserEngine",\n        title: "Example Engine",\n        description: "Example of user-defined engine",\n        src: "http://lkytal.qiniudn.com/ic.ico",\n        href: "https://www.google.com/search?q=${text}"\n    }\n]';
   chsJSON = '[\n    {\n        id: "UserEngine",\n        title: "Example Engine",\n        description: "自定义引擎实例",\n        src: "http://lkytal.qiniudn.com/ic.ico",\n        href: "https://www.google.com/search?q=${text}"\n    }\n]';
-  $("body").append("<div id='popup_setting_bg'> <div id='popup_setting_win'> <div id='popup_title'>PopUp Search Setting</div> <div id='popup_content'> <div id='tabs_box'> <div id='popup_tab1' class='popup_tab popup_selected'>选项 / General</div> <div id='popup_tab2' class='popup_tab'>搜索引擎 / Engines</div> <div id='popup_tab3' class='popup_tab'>自定义 / Customize</div> <div id='popup_tab4' class='popup_tab'>关于 / About</div> </div> <div id='page_box'> <div id='option_box'> <div id='popup_tab1Page'> " + optionList + " </div> <div id='popup_tab2Page'> " + engineOptionList + " </div> <div id='popup_tab3Page'> <div id='editTitle'> <div><b>请阅读帮助 / Read HELP first</b></div> <span id='popHelp'><u>Help</u></span> <span id='popReset'><u>Reset</u></span> </div> <textarea id='popup_engines'></textarea> </div> <div id='popup_tab4Page'> <h3>Authured by Lkytal</h3> <p> You can redistribute it under <a href='http://creativecommons.org/licenses/by-nc-sa/4.0/'> Creative Commons Attribution-NonCommercial-ShareAlike Lisence </a> </p> <p class='contact-line'> Source Code at<br> Git OSChina <a class='tab-text' href='https://git.oschina.net/coldfire/GM'> https://git.oschina.net/coldfire/GM </a> <br /> Github <a class='tab-text' href='https://github.com/lkytal/GM'> https://github.com/lkytal/GM </a> </p> <p> Contact:<br> Github <a class='tab-text' href='https://github.com/lkytal'> https://github.com/lkytal/ </a> <br> Greasy fork <a class='tab-text' href='https://greasyfork.org/en/users/152-lkytal'> https://greasyfork.org/en/users/152-lkytal </a> </p> </div> </div> <div id='btnarea'> <div id='popup_save' class='setting_btn'>Save</div> <div id='popup_close' class='setting_btn'>Close</div> </div> </div> </div> </div> <div id='popup_help_bg'> <div id='popup_help_win'> <div id='popup_help_content'> <div id='helplang'> <span id='engHead' class='popup_head_selected'>English</span> <span id='chsHead'>中文</span> </div> <div id='help_box'> <div id='engContent'> The content of custom engine should be in standard JSON format, in forms of following: <pre> " + engJSON + " </pre> The 'id' should be unique for every entry and must NOT contain any space character , the 'title' and the 'description' can be any text you like, the 'src' indicates the icon of every entry, should be the url to an image or a <a href='http://dataurl.net/#about'>DataURL</a>. The 'href' is the link to be open upon click, you may have noticed the '${text}' variable, which will be replaced by selected text. Avaliable variables are listed bellow: <ul> <li>${text} : will be replaced by selected text (Url encoded, should use this in default)</li> <li>${rawText} : will be replaced by untouched selected text</li> <li>${domain} : will be replaced by corrent url\'s domain</li> <li>${url} : will be replaced by corrent webpage\'s url</li> </ul> Note: You can't modify built-in engines directly, however, you can disable them and add your own. </div> <div id='chsContent'> 自定义引擎内容应当是合法的JSON格式, 如下 <pre> " + chsJSON + " </pre> 每一项的 id 必须各不相同且不能含有空格, title 和 description 可以随意填写, src 是该项的图标, 可以是指向图标的 url 或者是一个 <a href='http://dataurl.net/#about'>DataURL</a>. href 是引擎的 url 链接, 其中可以包含诸如 ${text} 这样的变量, 变量的大小写必须正确, 可用的变量有: <ul> <li>${text} : 代表选中文字, 经过 url encoding, 一般应当使用此项</li> <li>${rawText} : 代表未经 encoding 的原始选中文字</li> <li>${domain} : 代表当前页面的域名</li> <li>${url} : 代表当前页面的 url 地址</li> </ul> 注意: 内置引擎无法直接修改, 你可以禁用它们然后添加你自定义的引擎 </div> </div> <div id='help_btnarea'> <div id='popup_help_close' class='setting_btn'>Close</div> </div> </div> </div> </div> </div>");
+  $("body").append("<div id='popup_setting_bg'> <div id='popup_setting_win'> <div id='popup_title'>PopUp Search Setting</div> <div id='popup_content'> <div id='tabs_box'> <div id='popup_tab1' class='popup_tab popup_selected'>选项 / General</div> <div id='popup_tab2' class='popup_tab'>搜索引擎 / Engines</div> <div id='popup_tab3' class='popup_tab'>自定义 / Customize</div> <div id='popup_tab4' class='popup_tab'>关于 / About</div> </div> <div id='page_box'> <div id='option_box'> <div id='popup_tab1Page'> " + optionList + " </div> <div id='popup_tab2Page'> " + engineOptionList + " </div> <div id='popup_tab3Page'> <div id='editTitle'> <div><b>请阅读帮助 / Read HELP first</b></div> <span id='popHelp'><u>Help</u></span> <span id='popReset'><u>Reset</u></span> </div> <textarea id='popup_engines'></textarea> </div> <div id='popup_tab4Page'> <h3>Authored by Lkytal</h3> <p> You can redistribute it under <a href='http://creativecommons.org/licenses/by-nc-sa/4.0/'> Creative Commons Attribution-NonCommercial-ShareAlike Licence </a> </p> <p class='contact-line'> Source Code at<br> Git OSChina <a class='tab-text' href='https://git.oschina.net/coldfire/GM'> https://git.oschina.net/coldfire/GM </a> <br /> Github <a class='tab-text' href='https://github.com/lkytal/GM'> https://github.com/lkytal/GM </a> </p> <p> Contact:<br> Github <a class='tab-text' href='https://github.com/lkytal'> https://github.com/lkytal/ </a> <br> Greasy fork <a class='tab-text' href='https://greasyfork.org/en/users/152-lkytal'> https://greasyfork.org/en/users/152-lkytal </a> </p> </div> </div> <div id='btnArea'> <div id='popup_save' class='setting_btn'>Save</div> <div id='popup_close' class='setting_btn'>Close</div> </div> </div> </div> </div> <div id='popup_help_bg'> <div id='popup_help_win'> <div id='popup_help_content'> <div id='helpLang'> <span id='engHead' class='popup_head_selected'>English</span> <span id='chsHead'>中文</span> </div> <div id='help_box'> <div id='engContent'> The content of custom engine should be in standard JSON format, in forms of following: <pre> " + engJSON + " </pre> The 'id' should be unique for every entry and must NOT contain any space character , the 'title' and the 'description' can be any text you like, the 'src' indicates the icon of every entry, should be the url to an image or a <a href='http://dataurl.net/#about'>DataURL</a>. The 'href' is the link to be open upon click, you may have noticed the '${text}' variable, which will be replaced by selected text. Available variables are listed bellow: <ul> <li>${text} : will be replaced by selected text (Url encoded, should use this in default)</li> <li>${rawText} : will be replaced by untouched selected text</li> <li>${domain} : will be replaced by current url\'s domain</li> <li>${url} : will be replaced by current webpage\'s url</li> </ul> Note: You can't modify built-in engines directly, however, you can disable them and add your own. </div> <div id='chsContent'> 自定义引擎内容应当是合法的JSON格式, 如下 <pre> " + chsJSON + " </pre> 每一项的 id 必须各不相同且不能含有空格, title 和 description 可以随意填写, src 是该项的图标, 可以是指向图标的 url 或者是一个 <a href='http://dataurl.net/#about'>DataURL</a>. href 是引擎的 url 链接, 其中可以包含诸如 ${text} 这样的变量, 变量的大小写必须正确, 可用的变量有: <ul> <li>${text} : 代表选中文字, 经过 url encoding, 一般应当使用此项</li> <li>${rawText} : 代表未经 encoding 的原始选中文字</li> <li>${domain} : 代表当前页面的域名</li> <li>${url} : 代表当前页面的 url 地址</li> </ul> 注意: 内置引擎无法直接修改, 你可以禁用它们然后添加你自定义的引擎 </div> </div> <div id='help_btnArea'> <div id='popup_help_close' class='setting_btn'>Close</div> </div> </div> </div> </div> </div>");
   $("#popup_setting_bg, #popup_help_bg").hide();
   $("#tabs_box > .popup_tab").on("click", function(e) {
     $("#tabs_box > .popup_tab").removeClass("popup_selected");
@@ -679,25 +686,25 @@ SettingWin = function() {
 };
 
 UpdateLog = function() {
-  addAditionalCSS();
-  $("body").append("<div id='popup_update_bg'> <div id='popup_update_win'> <div id='update_header'> Popup Search Updated (ver 4.1.0) </div> <div id='popup_update_content'> <div id='update_texts'> <p> <h3>此版本引入的重要改变:</h3> <p> 自定义引擎功能开放, 点击 'Open setting' 可以打开设置并启用该功能. 请记得在自定义前请点击'HELP'按钮以阅读帮助文档. </p> <p> 注意: 启用自定义引擎后, 重新打开设置窗口才会生效. </p> </p> <p> <h3>What's new in this version:</h3> <p> You can customize your own engines now. Click 'Open setting' to check it out. Remember to read 'HELP' before edit. </p> <p> Note: After you enabled customization, reopen setting window to take effect. </p> </p> </div> <div id='update_btnarea'> <div id='popup_update_open' class='setting_btn'>Open Setting</div> <div id='popup_update_close' class='setting_btn'>Close</div> </div> </div> </div> </div>");
+  addAdditionalCSS();
+  $("body").append("<div id='popup_update_bg'> <div id='popup_update_win'> <div id='update_header'> Popup Search Updated (ver 4.1.0) </div> <div id='popup_update_content'> <div id='update_texts'> <p> <h3>此版本引入的重要改变:</h3> <p> 自定义引擎功能开放, 点击 'Open setting' 可以打开设置并启用该功能. 在自定义前请点击 'Help' 按钮以阅读帮助文档. </p> <p> 注意: 启用自定义引擎后, 重新打开设置窗口才会生效. </p> </p> <p> <h3>What's new in this version:</h3> <p> You can customize your own engines now. Click 'Open setting' to check it out. Remember to read 'HELP' before edit. </p> <p> Note: After you enabled customization, reopen setting window to take effect. </p> </p> </div> <div id='update_btnArea'> <div id='popup_update_open' class='setting_btn'>Open Setting</div> <div id='popup_update_close' class='setting_btn'>Close</div> </div> </div> </div> </div>");
   $('#popup_update_open').on('click', function(event) {
-    UpdateNotificated();
+    UpdateNotified();
     $("#popup_update_bg").hide();
     OpenSet();
   });
   return $('#popup_update_close').on('click', function(event) {
-    UpdateNotificated();
+    UpdateNotified();
     $("#popup_update_bg").hide();
   });
 };
 
-UpdateNotificated = function() {
+UpdateNotified = function() {
   return GM_setValue("UpdateAlert", popData.codeVersion);
 };
 
 PopupLoad = function() {
-  var engine, j, k, len, len1, option, popupmenu, ref, ref1, setDefault, userEngineString;
+  var engine, j, k, len, len1, option, popupMenu, ref, ref1, setDefault, userEngineString;
   if (window.self !== window.top || window.frameElement) {
     if (!GM_getValue("Iframe_st", 0)) {
       return;
@@ -732,9 +739,9 @@ PopupLoad = function() {
   PopupInit();
   GM_registerMenuCommand("Popup Search Setting / 设置", OpenSet, 'p');
   if (GM_getValue("PopupMenu", 0)) {
-    popupmenu = document.body.appendChild(document.createElement("menu"));
-    popupmenu.outerHTML = '<menu id="userscript-popup" type="context"><menuitem id="Popupset" label="Popup Search设置"></menuitem></menu>';
-    document.querySelector("#Popupset").addEventListener("click", OpenSet, false);
+    popupMenu = document.body.appendChild(document.createElement("menu"));
+    popupMenu.outerHTML = '<menu id="userscript-popup" type="context"><menuitem id="PopupSet" label="Popup Search设置"></menuitem></menu>';
+    document.querySelector("#PopupSet").addEventListener("click", OpenSet, false);
     return $(document).on("contextmenu", function() {
       return document.body.setAttribute("contextmenu", "userscript-popup");
     });
@@ -744,15 +751,15 @@ PopupLoad = function() {
 setTimeout(PopupLoad, 100);
 
 addCSS = function() {
-  return GM_addStyle("#ShowUpBox { all: unset; width: auto; height: auto; position: absolute; z-index: 10240; color: black; display: inline-block; line-height: 0; vertical-align: baseline; box-sizing: content-box; } #showupbody { min-width: 20px; max-width: 750px; min-height: 20px; max-height: 500px; display: block; border:solid 2px rgb(144,144,144); border-radius:1px; background:rgba(252, 252, 252, 1); } #popupwapper { all: unset; margin: 3px 2px 3.8px 2px; display:block; line-height: 0; font-size:0; } #Gspan { line-height: normal; width: auto; font-size: 16px; overflow: auto; display: none; } #popupwapper > a { all: unset; margin: 0px 2px; } #popupwapper img { all: unset; margin: 0px; height: 24px; width: 24px; border-radius: 0px; padding: 0px; display: inline-block; transition-duration: 0.1s; -moz-transition-duration: 0.1s; -webkit-transition-duration: 0.1s; } #popupwapper img:hover { margin: -1px -1px; height: 26px; width: 26px; } #popuptip { display: inline-block; clear: both; height: 9px; width: 9px; } .tipup { background: url(" + popData.icons.tipup + ") 0px 0px no-repeat transparent; margin-top: -2px; margin-bottom: 0px; } .tipdown { background: url(" + popData.icons.tipdown + ") 0px 0px no-repeat transparent; margin-top: 0px; margin-bottom: -2px; } #ShowUpBox a { text-decoration: none; display: inline-block; }");
+  return GM_addStyle("#ShowUpBox { all: unset; width: auto; height: auto; position: absolute; z-index: 10240; color: black; display: inline-block; line-height: 0; vertical-align: baseline; box-sizing: content-box; } #showUpBody { min-width: 20px; max-width: 750px; min-height: 20px; max-height: 500px; display: block; border:solid 2px rgb(144,144,144); border-radius:1px; background:rgba(252, 252, 252, 1); } #popupWrapper { all: unset; margin: 3px 2px 3.8px 2px; display:block; line-height: 0; font-size:0; } #transPanel { line-height: normal; width: auto; font-size: 16px; overflow: auto; display: none; } #popupWrapper > a { all: unset; margin: 0px 2px; } #popupWrapper img { all: unset; margin: 0px; height: 24px; width: 24px; border-radius: 0px; padding: 0px; display: inline-block; transition-duration: 0.1s; -moz-transition-duration: 0.1s; -webkit-transition-duration: 0.1s; } #popupWrapper img:hover { margin: -1px -1px; height: 26px; width: 26px; } #popupTip { display: inline-block; clear: both; height: 9px; width: 9px; } .tipUp { background: url(" + popData.icons.tipUp + ") 0px 0px no-repeat transparent; margin-top: -2px; margin-bottom: 0px; } .tipDown { background: url(" + popData.icons.tipDown + ") 0px 0px no-repeat transparent; margin-top: 0px; margin-bottom: -2px; } #ShowUpBox a { text-decoration: none; display: inline-block; }");
 };
 
-addAditionalCSS = function() {
+addAdditionalCSS = function() {
   if (popData.additionalCSSLoaded === 1) {
     return;
   }
   popData.additionalCSSLoaded = 1;
-  return GM_addStyle("#popup_setting_bg { all: unset; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.2); position: fixed; left: 0px; top: 0px; z-index:102400; font-family: \"Hiragino Sans GB\", \"Microsoft Yahei\", Arial, sans-serif; display: -webkit-flex; display: flex; justify-content: center; align-items: center; } #popup_setting_win { all: unset; width: 760px; height: 90%; box-shadow: 0 0 10px #222; box-sizing: content-box !important; background: rgba(255, 255, 255, 0.98); overflow: hidden; display: -webkit-flex; display: -moz-flex; display: flex; flex-direction: column; } #popup_title { font-size:24px; font-weight: bold; text-align: center; padding: 15px; background: #16A085; color: white; flex-shrink: 0; height: 40px; } #popup_content { flex-grow: 1; flex-shrink: 1; height: calc(100% - 70px); padding: 0px; display: -webkit-flex; display: -moz-flex; display: flex; justify-content: space-between; align-items: stretch; } #tabs_box { display: -webkit-flex; display: -moz-flex; display: flex; flex-direction: column; flex-basis: 25%; flex-shrink: 0; background: #EEE; } .popup_tab { width: 100%; background: #EEE; padding: 15px; font-weight: bold; text-align: center; box-sizing: border-box; cursor: pointer; user-select: none; -moz-user-select: none; -webkit-user-select: none; } .popup_tab:hover { background: #ccc; } .popup_selected { border-right: none; background: #FFF; } .popup_selected:hover { background: #FFF; } #page_box { padding: 20px 30px; flex-grow: 1; flex-shrink: 1; max-height: 100%; display: -webkit-flex; display: -moz-flex; display: flex; flex-direction: column; } #option_box { display: -webkit-flex; display: -moz-flex; display: flex; flex-direction: column; align-items: stretch; flex-grow: 1; flex-shrink: 1; overflow-y: auto; } #option_box > div { scroll-behavior: smooth; flex-grow: 1; display: -webkit-flex; display: -moz-flex; display: flex; flex-direction: column; align-items: stretch; } #popup_engines { flex-grow: 1; border: solid 2px #ddd; text-overflow: clip; white-space: pre; overflow-x: auto; overflow-y: auto; word-wrap: break-word; resize: none; } #editTitle { padding: 0px 0px 15px 0px; display: -webkit-flex; display: -moz-flex; display: flex; justify-content: space-between; } #editTitle div { flex-grow: 1; } #editTitle span { margin-left: 20px; color : #1ABC9C; cursor: pointer; } #btnarea { display: -webkit-flex; display: -moz-flex; display: flex; justify-content: flex-end; margin-top: 20px; flex-shrink: 0; } .setting_btn { display: inline-block; font-size: 16px; text-align: center; mix-width: 50px; padding: 4px 10px 4px 10px; border-radius: 2px; margin: 0px 0px 0px 20px; background: #1ABC9C; color: #fff; cursor: pointer; user-select: none; -moz-user-select: none; -webkit-user-select: none; } .setting_btn:hover { text-shadow: 0px 0px 2px #FFF; } .setting_item { min-height: 28px; font-size: 14px; margin: 5px 0px 10px 0px; display: -webkit-flex; display: -moz-flex; display: flex; align-items: center; } .setting_item > img { width: 24px; height: auto; margin-right: 7px; } .setting_item .text{ flex-grow: 1; font-size: 16px; } #popup_help_bg { all: unset; width: 100%; height: 100%; position: fixed; top: 0; left: 0; background: transparent; display: -webkit-flex; display: flex; justify-content: center; align-items: center; z-index: 10240000; } #popup_help_win { all: unset; width: 650px; height: 80%; box-shadow: 0 0 10px #222; box-sizing: content-box !important; background: rgba(255, 255, 255, 0.98); padding: 20px; display: -webkit-flex; display: flex; flex-direction: column; align-items: stretch; /*overflow: hidden;*/ } #popup_help_content { max-height: 100%; flex-grow: 1; display: -webkit-flex; display: flex; flex-direction: column; align-items: stretch; } #helplang { flex-grow: 0; flex-shrink: 0; display: -webkit-flex; display: flex; border-bottom: solid 1px #ccc; } #helplang span { padding: 8px 30px; margin-bottom: -1px; cursor: pointer; user-select: none; -moz-user-select: none; -webkit-user-select: none; } #helplang span.popup_head_selected { border-top: solid 1px #ccc; border-left: solid 1px #ccc; border-right: solid 1px #ccc; border-bottom: solid 3px #FFF; } #help_box { overflow-y: auto; flex-grow: 1; flex-shrink: 1; margin-top: 15px; } #help_box > div { word-wrap: break-word; } #help_btnarea { flex-grow: 0; flex-shrink: 0; display: -webkit-flex; display: flex; justify-content: flex-end; margin-top: 20px; } #popup_update_bg { all: unset; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.2); position: fixed; left: 0px; top: 0px; z-index: 1024000; font-family: \"Hiragino Sans GB\", \"Microsoft Yahei\", Arial, sans-serif; display: -webkit-flex; display: flex; justify-content: center; align-items: center; } #popup_update_win { all: unset; width: 50%; height: 80%; box-shadow:0 0 10px #222; box-sizing: content-box !important; background: rgba(255, 255, 255, 0.98); overflow: hidden; font-size: 16px; display: -webkit-flex; display: -moz-flex; display: flex; flex-direction: column; } #update_header { font-size: 24px; font-weight: bold; text-align: center; padding: 15px; background: #16A085; color: white; flex-shrink: 0; height: 40px; } #popup_update_content { flex-grow: 1; flex-shrink: 1; height: calc(100% - 70px); overflow: auto; padding: 15px; display: -webkit-flex; display: -moz-flex; display: flex; flex-direction: column; justify-content: space-between; align-items: stretch; } #update_texts{ flex-grow: 1; flex-shrink: 1; } #update_btnarea { flex-grow: 0; flex-shrink: 0; display: -webkit-flex; display: flex; justify-content: flex-end; margin-top: 20px; } #unshown { display: none; } .tgl { display: none; } .tgl, .tgl:after, .tgl:before, .tgl *, .tgl *:after, .tgl *:before, .tgl+.tgl-btn { -webkit-box-sizing: border-box; -moz-box-sizing: border-box; box-sizing: border-box; } .tgl::-moz-selection, .tgl:after::-moz-selection, .tgl:before::-moz-selection, .tgl *::-moz-selection, .tgl *:after::-moz-selection, .tgl *:before::-moz-selection, .tgl+.tgl-btn::-moz-selection { background: none; } .tgl::selection, .tgl:after::selection, .tgl:before::selection, .tgl *::selection, .tgl *:after::selection, .tgl *:before::selection, .tgl+.tgl-btn::selection { background: none; } .tgl+.tgl-btn { outline: 0; display: inline-block; width: 4em; height: 2em; position: relative; cursor: pointer; } .tgl+.tgl-btn:after, .tgl+.tgl-btn:before { position: relative; display: inline-block; content: \"\"; width: 50%; height: 100%; } .tgl+.tgl-btn:after { left: 0; } .tgl+.tgl-btn:before { display: none; } .tgl:checked+.tgl-btn:after { left: 50%; } .tgl-flat+.tgl-btn { padding: 2px; -webkit-transition: all .2s ease; transition: all .2s ease; background: #fff; border: 4px solid #f2f2f2; border-radius: 2em; } .tgl-flat+.tgl-btn:after { -webkit-transition: all .2s ease; transition: all .2s ease; background: #f2f2f2; content: \"\"; border-radius: 1em; } .tgl-flat:checked+.tgl-btn { border: 4px solid #1ABC9C; } .tgl-flat:checked+.tgl-btn:after { left: 50%; background: #1ABC9C; }");
+  return GM_addStyle("#popup_setting_bg { all: unset; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.2); position: fixed; left: 0px; top: 0px; z-index:102400; font-family: \"Hiragino Sans GB\", \"Microsoft Yahei\", Arial, sans-serif; display: -webkit-flex; display: flex; justify-content: center; align-items: center; } #popup_setting_win { all: unset; width: 760px; height: 90%; box-shadow: 0 0 10px #222; box-sizing: content-box !important; background: rgba(255, 255, 255, 0.98); overflow: hidden; display: -webkit-flex; display: -moz-flex; display: flex; flex-direction: column; } #popup_title { font-size:24px; font-weight: bold; text-align: center; padding: 15px; background: #16A085; color: white; flex-shrink: 0; height: 40px; } #popup_content { flex-grow: 1; flex-shrink: 1; height: calc(100% - 70px); padding: 0px; display: -webkit-flex; display: -moz-flex; display: flex; justify-content: space-between; align-items: stretch; } #tabs_box { display: -webkit-flex; display: -moz-flex; display: flex; flex-direction: column; flex-basis: 25%; flex-shrink: 0; background: #EEE; } .popup_tab { width: 100%; background: #EEE; padding: 15px; font-weight: bold; text-align: center; box-sizing: border-box; cursor: pointer; user-select: none; -moz-user-select: none; -webkit-user-select: none; } .popup_tab:hover { background: #ccc; } .popup_selected { border-right: none; background: #FFF; } .popup_selected:hover { background: #FFF; } #page_box { padding: 20px 30px; flex-grow: 1; flex-shrink: 1; max-height: 100%; display: -webkit-flex; display: -moz-flex; display: flex; flex-direction: column; } #option_box { display: -webkit-flex; display: -moz-flex; display: flex; flex-direction: column; align-items: stretch; flex-grow: 1; flex-shrink: 1; overflow-y: auto; } #option_box > div { scroll-behavior: smooth; flex-grow: 1; display: -webkit-flex; display: -moz-flex; display: flex; flex-direction: column; align-items: stretch; } #popup_engines { flex-grow: 1; border: solid 2px #ddd; text-overflow: clip; white-space: pre; overflow-x: auto; overflow-y: auto; word-wrap: break-word; resize: none; } #editTitle { padding: 0px 0px 15px 0px; display: -webkit-flex; display: -moz-flex; display: flex; justify-content: space-between; } #editTitle div { flex-grow: 1; } #editTitle span { margin-left: 20px; color : #1ABC9C; cursor: pointer; } #btnArea { display: -webkit-flex; display: -moz-flex; display: flex; justify-content: flex-end; margin-top: 20px; flex-shrink: 0; } .setting_btn { display: inline-block; font-size: 16px; text-align: center; mix-width: 50px; padding: 4px 10px 4px 10px; border-radius: 2px; margin: 0px 0px 0px 20px; background: #1ABC9C; color: #fff; cursor: pointer; user-select: none; -moz-user-select: none; -webkit-user-select: none; } .setting_btn:hover { text-shadow: 0px 0px 2px #FFF; } .setting_item { min-height: 28px; font-size: 14px; margin: 5px 0px 10px 0px; display: -webkit-flex; display: -moz-flex; display: flex; align-items: center; } .setting_item > img { width: 24px; height: auto; margin-right: 7px; } .setting_item .text{ flex-grow: 1; font-size: 16px; } #popup_help_bg { all: unset; width: 100%; height: 100%; position: fixed; top: 0; left: 0; background: transparent; display: -webkit-flex; display: flex; justify-content: center; align-items: center; z-index: 10240000; } #popup_help_win { all: unset; width: 650px; height: 80%; box-shadow: 0 0 10px #222; box-sizing: content-box !important; background: rgba(255, 255, 255, 0.98); padding: 20px; display: -webkit-flex; display: flex; flex-direction: column; align-items: stretch; /*overflow: hidden;*/ } #popup_help_content { max-height: 100%; flex-grow: 1; display: -webkit-flex; display: flex; flex-direction: column; align-items: stretch; } #helpLang { flex-grow: 0; flex-shrink: 0; display: -webkit-flex; display: flex; border-bottom: solid 1px #ccc; } #helpLang span { padding: 8px 30px; margin-bottom: -1px; cursor: pointer; user-select: none; -moz-user-select: none; -webkit-user-select: none; } #helpLang span.popup_head_selected { border-top: solid 1px #ccc; border-left: solid 1px #ccc; border-right: solid 1px #ccc; border-bottom: solid 3px #FFF; } #help_box { overflow-y: auto; flex-grow: 1; flex-shrink: 1; margin-top: 15px; } #help_box > div { word-wrap: break-word; } #help_btnArea { flex-grow: 0; flex-shrink: 0; display: -webkit-flex; display: flex; justify-content: flex-end; margin-top: 20px; } #popup_update_bg { all: unset; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.2); position: fixed; left: 0px; top: 0px; z-index: 1024000; font-family: \"Hiragino Sans GB\", \"Microsoft Yahei\", Arial, sans-serif; display: -webkit-flex; display: flex; justify-content: center; align-items: center; } #popup_update_win { all: unset; width: 50%; height: 80%; box-shadow:0 0 10px #222; box-sizing: content-box !important; background: rgba(255, 255, 255, 0.98); overflow: hidden; font-size: 16px; display: -webkit-flex; display: -moz-flex; display: flex; flex-direction: column; } #update_header { font-size: 24px; font-weight: bold; text-align: center; padding: 15px; background: #16A085; color: white; flex-shrink: 0; height: 40px; } #popup_update_content { flex-grow: 1; flex-shrink: 1; height: calc(100% - 70px); overflow: auto; padding: 15px; display: -webkit-flex; display: -moz-flex; display: flex; flex-direction: column; justify-content: space-between; align-items: stretch; } #update_texts{ flex-grow: 1; flex-shrink: 1; } #update_btnArea { flex-grow: 0; flex-shrink: 0; display: -webkit-flex; display: flex; justify-content: flex-end; margin-top: 20px; } .hidden { display: none; } .tgl { display: none; } .tgl, .tgl:after, .tgl:before, .tgl *, .tgl *:after, .tgl *:before, .tgl+.tgl-btn { -webkit-box-sizing: border-box; -moz-box-sizing: border-box; box-sizing: border-box; } .tgl::-moz-selection, .tgl:after::-moz-selection, .tgl:before::-moz-selection, .tgl *::-moz-selection, .tgl *:after::-moz-selection, .tgl *:before::-moz-selection, .tgl+.tgl-btn::-moz-selection { background: none; } .tgl::selection, .tgl:after::selection, .tgl:before::selection, .tgl *::selection, .tgl *:after::selection, .tgl *:before::selection, .tgl+.tgl-btn::selection { background: none; } .tgl+.tgl-btn { outline: 0; display: inline-block; width: 4em; height: 2em; position: relative; cursor: pointer; } .tgl+.tgl-btn:after, .tgl+.tgl-btn:before { position: relative; display: inline-block; content: \"\"; width: 50%; height: 100%; } .tgl+.tgl-btn:after { left: 0; } .tgl+.tgl-btn:before { display: none; } .tgl:checked+.tgl-btn:after { left: 50%; } .tgl-flat+.tgl-btn { padding: 2px; -webkit-transition: all .2s ease; transition: all .2s ease; background: #fff; border: 4px solid #f2f2f2; border-radius: 2em; } .tgl-flat+.tgl-btn:after { -webkit-transition: all .2s ease; transition: all .2s ease; background: #f2f2f2; content: \"\"; border-radius: 1em; } .tgl-flat:checked+.tgl-btn { border: 4px solid #1ABC9C; } .tgl-flat:checked+.tgl-btn:after { left: 50%; background: #1ABC9C; }");
 };
 
 getLastRange = function(selection) {
