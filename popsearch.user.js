@@ -10,7 +10,7 @@
 // @exclude					http://www.acfun.tv/*
 // @exclude					http://www.sf-express.com/*
 // @require					https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js
-// @version					4.2.0
+// @version					4.2.1
 // @icon					http://lkytal.qiniudn.com/search.png
 // @grant					GM_xmlhttpRequest
 // @grant					GM_addStyle
@@ -28,7 +28,7 @@
 // ==/UserScript==
 
 "use strict";;
-var CopyText, GetOpt, InTextBox, OnEngine, OpenSet, PopupInit, PopupLoad, ReadOpt, SaveOpt, SettingWin, ShowBar, TimeOutHide, UpdateLog, UpdateNotified, addAdditionalCSS, addCSS, ajaxError, doRequest, eventFromTextbox, fixPos, getLastRange, get_selection_offsets, isChrome, log, onTranslate, parseTranslationGoogle, popData,
+var CopyText, GetOpt, InTextBox, OnEngine, OpenSet, PopupInit, PopupLoad, ReadOpt, SaveOpt, SettingWin, ShowBar, TimeOutHide, UpdateLog, UpdateNotified, addAdditionalCSS, addCSS, ajaxError, doRequest, eventFromTextbox, fixPos, getLastRange, get_selection_offsets, isChrome, log, needPrefix, onTranslate, parseTranslationGoogle, popData,
   hasProp = {}.hasOwnProperty;
 
 window.$ = this.$ = this.jQuery = jQuery.noConflict(true);
@@ -464,12 +464,10 @@ eventFromTextbox = function(eventList) {
   var event, j, len;
   for (j = 0, len = eventList.length; j < len; j++) {
     event = eventList[j];
-    if (!(event != null)) {
-      continue;
-    }
-    console.log($(event.target));
-    if ($(event.target).is('textarea, input, *[contenteditable="true"]')) {
-      return true;
+    if (event != null) {
+      if ($(event.target).is('textarea, input, *[contenteditable="true"]')) {
+        return true;
+      }
     }
   }
   return false;
@@ -532,7 +530,7 @@ ShowBar = function(event) {
     engine = ref1[k];
     setHref(engine);
   }
-  if (popData.rawText.indexOf('http://') === -1 && popData.rawText.indexOf('https://') === -1) {
+  if (needPrefix(popData.rawText)) {
     $('#Open_stIcon').attr('href', "http://" + popData.rawText);
   }
   popData.mouseIn = 0;
@@ -541,6 +539,18 @@ ShowBar = function(event) {
   popData.timer = setTimeout(TimeOutHide, 6000);
   fixPos(sel, event);
   return $('#ShowUpBox').css('opacity', 0.9).fadeIn(150);
+};
+
+needPrefix = function(url) {
+  var j, len, prefix, urlPrefixes;
+  urlPrefixes = ['http://', 'https://', 'ftp://', 'file://', 'thunder://', 'ed2k://'];
+  for (j = 0, len = urlPrefixes.length; j < len; j++) {
+    prefix = urlPrefixes[j];
+    if (url.indexOf(prefix) !== -1) {
+      return 0;
+    }
+  }
+  return 1;
 };
 
 CopyText = function(selText) {

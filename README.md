@@ -33,6 +33,7 @@ GM的"用户脚本设置"下的"Popup Search设置"打开选项选择需要的�
 
 #### Update Log
 
+* 4.2.1 : Fix http prefix.
 * 4.2.0 : Won't trigger within search area.
 * 4.1.6 : Respect tab setting for user engines
 * 4.1.5 : Ensure right click copy
