@@ -42,18 +42,18 @@ GM的"用户脚本设置"下的"Popup Search设置"打开选项选择需要的�
 * 4.1.1 : Fixup incorrect customization
 * 4.1.0 : New: customization
 * 4.0.8 : Retry when translate timeout
-* 4.0.7 : False popup in textbox in chrome
+* 4.0.7 : Unwanted popup in textbox in chrome
 * 4.0.6 : Fix userEngine Error
-* 4.0.5 : Back to google translation
+* 4.0.5 : Switch back to google translation
 * 4.0.4 : Fixed open as link
 * 4.0.3 : Add DouBan engine
 * 4.0.2 : Fixed open as link and style in v2ex
 * 4.0.1 : Better performance
 * 4.0.0 : New setting UI with many new engines
-* 3.5.0 : Setting enhance
+* 3.5.0 : Setting enhancement
 * 3.4.0 : Fix hidden problem
 * 3.3.3 : Better position locating
-* 3.3.1 : update jquery
+* 3.3.1 : Update jquery
 * 3.3.0 : Position problem in chrome
 * 3.2.9 : Update to jquery v3
 * 3.2.8 : Fix multi tabs
@@ -61,43 +61,43 @@ GM的"用户脚本设置"下的"Popup Search设置"打开选项选择需要的�
 * 3.2.6 : Auto copying in chrome
 * 3.2.5 : Translation fixup for large texts
 * 3.2.4 : Multiline fixup
-* 3.2.3 : fix popup position
+* 3.2.3 : Fix popup position
 * 3.2.2 : Multiline fixup
-* 3.2.1 : fix translation
-* 3.2.0 : transform to YouDao
+* 3.2.1 : Fix translation
+* 3.2.0 : Transform to YouDao
 * 3.1.7 : Ip fix
 * 3.1.6 : Ip Updated
-* 3.1.5 : no jquery conflicts
-* 3.1.4 : fix Background mode for chrome
+* 3.1.5 : No jquery conflicts
+* 3.1.4 : Fix Background mode for chrome
 * 3.1.3 : Background mode
-* 3.1.2 : fix translation
-* 3.1.0 : iframe support
+* 3.1.2 : Fix translation
+* 3.1.0 : Iframe support
 * 3.0.5 : TaoBao fix
-* 3.0.4 : mouseup event
-* 3.0.3 : css fix
-* 3.0.2 : new setting box
+* 3.0.4 : Mouseup event
+* 3.0.3 : Css fix
+* 3.0.2 : New setting box
 * 3.0.0 : UI redesigned
 * 2.9.7 : Google Page
 * 2.9.5 : Setting window
-* 2.9.1 : In site search fix
-* 2.9.0 : In site search
+* 2.9.1 : In site search fix up
+* 2.9.0 : In site search added
 * 2.8.5 : Translate sync
-* 2.8.4 : cleanup
-* 2.8.2 : better css style
+* 2.8.4 : Cleanup
+* 2.8.2 : Better css style
 * 2.8.1 : Multiply translate address
 * 2.8.0 : More translation methods
-* 2.7.5 : Exclude test page
+* 2.7.5 : Exclude test pages
 * 2.7.4 : Fix up
-* 2.7.3 : UI improve
-* 2.7.2 : Update Method change
+* 2.7.3 : UI improvement
+* 2.7.2 : Update method change
 * 2.7.1 : Meta info added
 * 2.7.0 : Switch to git
 * 2.6.8 : New setting window
 * 2.6.7 : New style code
 * 2.6.6 : Clean up codes
 * 2.6.5 : Update translation
-* 2.6.4 : promote css
-* 2.6.3 : 完全重写了翻译功能, 提升稳定
+* 2.6.4 : Improve css style
+* 2.6.3 : Rewritten translation part.
 * 2.6.2 : Add failsafe translation
 * 2.6.1 : Fix Popup size
 * 2.6.0 : Update Jquery
@@ -122,6 +122,7 @@ Notice: Will NOT handle email address and ftp links in order to speed up executi
 
 #### Update Log
 
+* 2.8.1 : Recognize prefix correctly.
 * 2.8.0 : Support timeout
 * 2.7.2 : Update icon and links
 * 2.7.0 : Exclude 163.com

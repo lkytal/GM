@@ -14,7 +14,7 @@
 // @exclude						*www.google.*
 // @exclude						*acid3.acidtests.org/*
 // @exclude						*.163.com/*
-// @version						2.8.0
+// @version						2.8.1
 // @icon						http://lkytal.qiniudn.com/link.png
 // @grant						unsafeWindow
 // @homepageURL					https://git.oschina.net/coldfire/GM
@@ -23,30 +23,36 @@
 // ==/UserScript==
 
 "use strict";
-var clearLink, excludedTags, linkFilter, linkMixInit, linkPack, linkify, observePage, observer, setLink, url_regexp, xpath;
+var clearLink, excludedTags, linkFilter, linkMixInit, linkPack, linkify, observePage, observer, setLink, urlPrefixes, url_regexp, xPath;
 
 url_regexp = /((https?:\/\/|www\.)[\x21-\x7e]+[\w\/]|(\w[\w._-]+\.(com|cn|org|net|info|tv|cc|gov|xxx))(\/[\x21-\x7e]*[\w\/])?|ed2k:\/\/[\x21-\x7e]+\|\/|thunder:\/\/[\x21-\x7e]+=)/gi;
 
+urlPrefixes = ['http://', 'https://', 'ftp://', 'thunder://', 'ed2k://'];
+
 clearLink = function(event) {
-  var link, ref, url;
+  var j, len, link, prefix, ref, url;
   link = (ref = event.originalTarget) != null ? ref : event.target;
-  if (!((link != null) && link.localName === "a" && link.className.indexOf("texttolink") !== -1)) {
+  if (!((link != null) && link.localName === "a" && link.className.indexOf("textToLink") !== -1)) {
     return;
   }
   url = link.getAttribute("href");
-  if (url.indexOf("http") !== 0 && url.indexOf("ed2k://") !== 0 && url.indexOf("thunder://") !== 0) {
-    return link.setAttribute("href", "http://" + url);
+  for (j = 0, len = urlPrefixes.length; j < len; j++) {
+    prefix = urlPrefixes[j];
+    if (url.indexOf(prefix) === 0) {
+      return;
+    }
   }
+  return link.setAttribute("href", "http://" + url);
 };
 
 document.addEventListener("mouseover", clearLink);
 
 setLink = function(candidate) {
   var span, text;
-  if ((candidate == null) || candidate.parentNode.className.indexOf("texttolink") !== -1 || candidate.nodeName === "#cdata-section") {
+  if ((candidate == null) || candidate.parentNode.className.indexOf("textToLink") !== -1 || candidate.nodeName === "#cdata-section") {
     return;
   }
-  text = candidate.textContent.replace(url_regexp, '<a href="$1" target="_blank" class="texttolink">$1</a>');
+  text = candidate.textContent.replace(url_regexp, '<a href="$1" target="_blank" class="textToLink">$1</a>');
   if (candidate.textContent.length === text.length) {
     return;
   }
@@ -57,7 +63,7 @@ setLink = function(candidate) {
 
 excludedTags = "a,svg,canvas,applet,input,button,area,pre,embed,frame,frameset,head,iframe,img,option,map,meta,noscript,object,script,style,textarea,code".split(",");
 
-xpath = "//text()[not(ancestor::" + (excludedTags.join(') and not(ancestor::')) + ")]";
+xPath = "//text()[not(ancestor::" + (excludedTags.join(') and not(ancestor::')) + ")]";
 
 linkPack = function(result, start) {
   var i, j, k, ref, ref1, ref2, ref3, startTime;
@@ -78,7 +84,7 @@ linkPack = function(result, start) {
 
 linkify = function(node) {
   var result;
-  result = document.evaluate(xpath, node, null, XPathResult.UNORDERED_NODE_SNAPSHOT_TYPE, null);
+  result = document.evaluate(xPath, node, null, XPathResult.UNORDERED_NODE_SNAPSHOT_TYPE, null);
   return linkPack(result, 0);
 };
 

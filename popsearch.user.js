@@ -546,7 +546,7 @@ needPrefix = function(url) {
   urlPrefixes = ['http://', 'https://', 'ftp://', 'file://', 'thunder://', 'ed2k://'];
   for (j = 0, len = urlPrefixes.length; j < len; j++) {
     prefix = urlPrefixes[j];
-    if (url.indexOf(prefix) !== -1) {
+    if (url.indexOf(prefix) === 0) {
       return 0;
     }
   }

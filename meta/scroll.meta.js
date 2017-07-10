@@ -5,7 +5,6 @@
 // @namespace				Lkytal
 // @include					*
 // @exclude					*pan.baidu.com/*
-// @exclude					*c5.yunpan.360.cn/*
 // @version					1.4.1
 // @icon					http://lkytal.qiniudn.com/ic.ico
 // @grant					GM_getValue

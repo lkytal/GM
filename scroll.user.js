@@ -5,7 +5,6 @@
 // @namespace				Lkytal
 // @include					*
 // @exclude					*pan.baidu.com/*
-// @exclude					*c5.yunpan.360.cn/*
 // @version					1.4.1
 // @icon					http://lkytal.qiniudn.com/ic.ico
 // @grant					GM_getValue
@@ -57,7 +56,7 @@ function scrollPlus()
 		{
 			return;
 		}
-		
+
         var dheightMax = Math.max(document.body.scrollHeight, document.documentElement.scrollHeight);
         var cwidthMax = Math.max(document.body.clientWidth, document.documentElement.clientWidth) - ScrollbarWidth;
         var cwinHeight = window.innerHeight;
