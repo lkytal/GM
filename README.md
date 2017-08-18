@@ -122,6 +122,7 @@ Notice: Will NOT handle email address and ftp links in order to speed up executi
 
 #### Update Log
 
+* 2.8.3 : Exclude ali pay.
 * 2.8.1 : Recognize prefix correctly.
 * 2.8.0 : Support timeout
 * 2.7.2 : Update icon and links
