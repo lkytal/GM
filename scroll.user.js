@@ -20,7 +20,7 @@ function scrollPlus()
     //###Customization: |可自定义的东西：
 
 	//go directly to top/down page | 回到顶部按钮
-	var goTopButtom = 1;
+	var goTopButton = 1;
 
     //Show the scrolling indicator box or not, "1" to show. | 1－显示提示条，其他－不显示。
     var scrollShowIndicator = 1;
@@ -169,7 +169,7 @@ function scrollPlus()
 		);
 	}
 
-	if (goTopButtom) addToTop();
+	if (goTopButton) addToTop();
 }
 
 if (!(window !== window.top || window.document.title === "")) {
