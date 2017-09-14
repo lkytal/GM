@@ -4,6 +4,7 @@ All notable changes to all the scripts will be documented in this file.
 
 ## Popup Search
 
+* 4.2.2 : Exclude `Furk.net`.
 * 4.2.1 : Fix http prefix.
 * 4.2.0 : Won't trigger within search area.
 * 4.1.6 : Respect tab setting for user engines
