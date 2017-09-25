@@ -11,11 +11,10 @@
 // @exclude					http://www.sf-express.com/*
 // @exclude					http://furk.net/*
 // @require					https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js
-// @version					4.2.2
+// @version					4.2.3
 // @icon					http://lkytal.qiniudn.com/search.png
 // @grant					GM_xmlhttpRequest
 // @grant					GM_addStyle
-// @grant					unsafeWindow
 // @grant					GM_openInTab
 // @grant					GM_setClipboard
 // @grant					GM_download

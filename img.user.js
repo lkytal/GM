@@ -29,29 +29,24 @@ menu.outerHTML = '<menu id="userscript-search-by-image" type="context">\
 document.querySelector("#SearchGoogle").addEventListener("click", searchImage, false);
 document.querySelector("#SearchBaidu").addEventListener("click", search_baidu, false);
 
-function initMenu(aEvent)
-{
+function initMenu(aEvent) {
 	var node = aEvent.target;
 	var item = document.querySelectorAll("#userscript-search-by-image menuitem");
 
-	if (node.localName == "img")
-	{
+	if (node.localName == "img") {
 		body.setAttribute("contextmenu", "userscript-search-by-image");
 
-		for (var i = item.length - 1; i > -1; i--)
-		{
+		for (var i = item.length - 1; i > -1; i--) {
 			item[i].setAttribute("imageURL", node.src);
 		}
 	}
-	else
-	{
+	else {
 		body.removeAttribute("contextmenu");
 		//item.removeAttribute("imageURL");
 	}
 }
 
-function addParamsToForm(aForm, aKey, aValue)
-{
+function addParamsToForm(aForm, aKey, aValue) {
 	var hiddenField = document.createElement("input");
 	hiddenField.setAttribute("type", "hidden");
 	hiddenField.setAttribute("name", aKey);
@@ -59,17 +54,14 @@ function addParamsToForm(aForm, aKey, aValue)
 	aForm.appendChild(hiddenField);
 }
 
-function searchImage(aEvent)
-{
+function searchImage(aEvent) {
 	// Executed when user click on menuitem
 	// aEvent.target is the <menuitem> element
 	var imageURL = aEvent.target.getAttribute("imageURL");
 
-	if (imageURL.indexOf("data:") == 0)
-	{
+	if (imageURL.indexOf("data:") == 0) {
 		var base64Offset = imageURL.indexOf(",");
-		if (base64Offset != -1)
-		{
+		if (base64Offset != -1) {
 			var inlineImage = imageURL.substring(base64Offset + 1).replace(/\+/g, "-").replace(/\//g, "_").replace(/\./g, "=");
 
 			var form = document.createElement("form");
@@ -84,14 +76,12 @@ function searchImage(aEvent)
 			form.submit();
 		}
 	}
-	else
-	{
+	else {
 		GM_openInTab("//www.google.com/searchbyimage?image_url=" + encodeURIComponent(imageURL));
 	}
 }
 
-function search_baidu(aEvent)
-{
+function search_baidu(aEvent) {
 	var imageURL = aEvent.target.getAttribute("imageURL");
 
 	GM_openInTab("//image.baidu.com/n/pc_search?queryImageUrl=" + encodeURIComponent(imageURL) + "&uptype=urlsearch");

@@ -55,9 +55,11 @@ Notice: Will NOT handle email address and ftp links in order to speed up executi
 
 ### Select like Opera
 
-#### For Firefox only / 只适用于Firefox
+#### Now support both Firefox and Chrome / 支持 Firefox 和 Chrome
 
 Allow you to select texts within any links. / 使你可以自由的选择链接中的文本.
+
+This script is adapted from "Select like Boss" extension, version of 2014.10.14.
 
 ### Scroll with Mouse Plus
 

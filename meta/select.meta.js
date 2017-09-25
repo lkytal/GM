@@ -3,12 +3,10 @@
 // @namespace				lkytal
 // @author					lkytal
 // @homepage				https://lkytal.github.io/
-// @icon					http://lkytal.qiniudn.com/ic.ico
-// @version					1.1.2
-// @description				Select texts insider links, for firefox only
+// @icon					http://lkytal.qiniudn.com/select.png
+// @version					1.2.0
+// @description				Select texts insider links, support firefox and chrome
 // @include					*
-// @exclude					http://www.baidu.com/*
-// @exclude					https://www.baidu.com/*
 // @grant					unsafeWindow
 // @grant					GM_getValue
 // @grant					GM_setValue

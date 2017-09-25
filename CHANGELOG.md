@@ -4,6 +4,7 @@ All notable changes to all the scripts will be documented in this file.
 
 ## Popup Search
 
+* 4.2.3 : Use data property instead of href.
 * 4.2.2 : Exclude `Furk.net`.
 * 4.2.1 : Fix http prefix.
 * 4.2.0 : Won't trigger within search area.
@@ -76,6 +77,7 @@ All notable changes to all the scripts will be documented in this file.
 
 ## Text to Link
 
+* 2.8.4 : Complier by coffeescript 2
 * 2.8.3 : Exclude ali pay.
 * 2.8.1 : Recognize prefix correctly.
 * 2.8.0 : Support timeout
@@ -125,6 +127,7 @@ All notable changes to all the scripts will be documented in this file.
 
 ## Tieba Enhance
 
+* 6.2.1 : Complier by coffeescript 2
 * 6.2.0 : Add tail correctly
 * 6.1.5 : Update icon and jquery
 * 6.1.1 : Random Tail
