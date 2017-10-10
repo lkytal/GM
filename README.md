@@ -6,7 +6,7 @@
 
 ## 安装链接 / Install links
 
-点击下面的链接安装GM脚本 / Click links bellow to install
+点击下面的链接安装GM脚本 / Click links below to install
 
 * [Popup Search](https://git.oschina.net/coldfire/GM/raw/master/popsearch.user.js)
 * [Text to link](https://git.oschina.net/coldfire/GM/raw/master/linkMix.user.js)
@@ -30,7 +30,7 @@ Popup search/translate(etc) button for selected texts
 
 ![Function](http://lkytal.qiniudn.com/t.png)
 
-GM的"用户脚本设置"下的"Popup Search设置"打开选项选择需要的项目
+GM 的"用户脚本设置"下的"Popup Search设置"打开选项选择需要的项目
 
 ![Set](http://lkytal.qiniudn.com/pset1.png)
 ![Set](http://lkytal.qiniudn.com/pset2.png)
@@ -43,11 +43,11 @@ GM的"用户脚本设置"下的"Popup Search设置"打开选项选择需要的�
 1. 不会把相连的中文错误识别为链接的一部分
 1. 支持AutoPage, SuperPreload等
 
-注意 : 为了提高执行速度, 去除了对邮箱地址和ftp链接的识别
+注意: 为了提高执行速度, 去除了对邮箱地址和ftp链接的识别
 
 #### Advances
 
-1. Support links that does not start with “http”
+1. Support links that do not start with “http”
 1. Support AutoPage, SuperPreload (etc)
 1. Support Unicode characters
 

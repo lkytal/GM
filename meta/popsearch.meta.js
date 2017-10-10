@@ -11,7 +11,7 @@
 // @exclude					http://www.sf-express.com/*
 // @exclude					http://furk.net/*
 // @require					https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js
-// @version					4.2.3
+// @version					4.2.4
 // @icon					http://lkytal.qiniudn.com/search.png
 // @grant					GM_xmlhttpRequest
 // @grant					GM_addStyle
@@ -21,6 +21,7 @@
 // @grant					GM_getValue
 // @grant					GM_setValue
 // @grant					GM_registerMenuCommand
+// @grant					GM_info
 // @charset					UTF-8
 // @homepageURL				https://git.oschina.net/coldfire/GM
 // @updateURL				https://git.oschina.net/coldfire/GM/raw/master/meta/popsearch.meta.js

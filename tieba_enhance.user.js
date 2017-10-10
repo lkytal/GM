@@ -388,9 +388,9 @@ TailInit = function () {
 };
 
 clearLink = function (event) {
-  var link, url;
+  var link, ref, url;
   link = event.target;
-  if (link.href.indexOf("http://jump.bdimg.com/safecheck") === 0) {
+  if (((ref = link.href) != null ? ref.indexOf("http://jump.bdimg.com/safecheck") : void 0) === 0) {
     url = link.textContent;
     if (url.indexOf("http") !== 0) {
       url = "http://" + url;

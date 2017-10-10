@@ -11,7 +11,7 @@
 // @exclude					http://www.sf-express.com/*
 // @exclude					http://furk.net/*
 // @require					https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js
-// @version					4.2.3
+// @version					4.2.4
 // @icon					http://lkytal.qiniudn.com/search.png
 // @grant					GM_xmlhttpRequest
 // @grant					GM_addStyle
@@ -21,6 +21,7 @@
 // @grant					GM_getValue
 // @grant					GM_setValue
 // @grant					GM_registerMenuCommand
+// @grant					GM_info
 // @charset					UTF-8
 // @homepageURL				https://git.oschina.net/coldfire/GM
 // @updateURL				https://git.oschina.net/coldfire/GM/raw/master/meta/popsearch.meta.js
@@ -96,16 +97,16 @@ popData = {
     text: "超时自动隐藏 / Hide after timeout",
     defaultValue: 1
   }, {
-    id: "Dis_st",
-    text: "显示于文字上方 / Display above selection",
-    defaultValue: 1
-  }, {
     id: "Tab_st",
     text: "新标签页打开 / Open in new tabs",
     defaultValue: 1
   }, {
     id: "Focus_st",
     text: "前台标签页打开 / Force foreground tabs",
+    defaultValue: 1
+  }, {
+    id: "Trans_st",
+    text: "显示翻译按钮 / Display translate button",
     defaultValue: 1
   }, {
     id: "Iframe_st",
@@ -115,6 +116,10 @@ popData = {
     id: "Copy_st",
     text: "自动复制选中文字 / Auto copy selections",
     defaultValue: 0
+  }, {
+    id: "Dis_st",
+    text: "显示于文字上方 / Display above selection",
+    defaultValue: 1
   }, {
     id: "Ctrl_st",
     text: "仅按下Ctrl时显示 / Only when ctrl pressed",
@@ -369,8 +374,11 @@ PopupInit = function () {
       $icon.hide();
     }
   }
-  $('#ShowUpBox').find('.engine, .userEngine').on('click', OnEngine);
+  $DivBox.find('.engine, .userEngine').on('click', OnEngine);
   $('#transBtn').on("click", onTranslate);
+  if (!GetOpt('Trans_st')) {
+    $('#transBtn').hide();
+  }
   if (GetOpt('Tab_st')) {
     $DivBox.find('a').attr('target', '_blank');
   } else {
@@ -468,7 +476,7 @@ $(document).on("mousedown", function (event) {
   if (popData.bTrans === 1) {
     PopupInit();
   }
-  return $('#ShowUpBox').hide();
+  return $('#ShowUpBox').fadeOut(200);
 });
 
 $(document).on("mouseup", function (event) {
@@ -517,7 +525,7 @@ ShowBar = function (event) {
     return;
   }
   popData.rawText = sel.toString();
-  popData.text = encodeURIComponent(popData.rawText);
+  popData.text = encodeURIComponent(popData.rawText.trim());
   if (popData.rawText === '') {
     return;
   }
@@ -554,14 +562,14 @@ ShowBar = function (event) {
     setHref(engine);
   }
   if (needPrefix(popData.rawText)) {
-    $('#Open_stIcon').data('link', "http://" + popData.rawText);
+    $('#Open_stIcon').data('link', "http://" + popData.rawText.trim());
   }
   popData.mouseIn = 0;
   popData.bTrans = 0;
   clearTimeout(popData.timer);
   popData.timer = setTimeout(TimeOutHide, 6000);
   fixPos(sel, event);
-  return $('#ShowUpBox').css('opacity', 0.9).fadeIn(150);
+  return $('#ShowUpBox').css('opacity', 0.9).fadeIn(200);
 };
 
 needPrefix = function (url) {
@@ -580,16 +588,21 @@ CopyText = function (selText) {
   if (selText == null) {
     selText = document.defaultView.getSelection().toString();
   }
+  if (GM_info.scriptHandler === "Violentmonkey") {
+    return document.execCommand('copy');
+  }
   try {
     return GM_setClipboard(selText, "text");
   } catch (error) {
-    alert("ERROR: Auto copy not supported and will be disabled now");
-    return SaveOpt("Copy_st", 0);
+    return document.execCommand('copy');
   }
 };
 
 GetOpt = function (id) {
-  return GM_getValue(id);
+  var ref;
+  return GM_getValue(id, (ref = popData.optionList.find(function (item) {
+    return item.id === id;
+  })) != null ? ref.defaultValue : void 0);
 };
 
 SaveOpt = function (id) {
@@ -597,7 +610,7 @@ SaveOpt = function (id) {
 };
 
 ReadOpt = function (id) {
-  return $("#" + id + " > input").prop("checked", GM_getValue(id));
+  return $("#" + id + " > input").prop("checked", GetOpt(id));
 };
 
 OpenSet = function () {
@@ -638,8 +651,8 @@ SettingWin = function () {
     return results;
   }().join(' ');
   engJSON = '[\n    {\n        id: "UserEngine",\n        title: "Example Engine",\n        description: "Example of user-defined engine",\n        src: "http://lkytal.qiniudn.com/ic.ico",\n        href: "https://www.google.com/search?q=${text}"\n    }\n]';
-  chsJSON = '[\n    {\n        id: "UserEngine",\n        title: "Example Engine",\n        description: "自定义引擎实例",\n        src: "http://lkytal.qiniudn.com/ic.ico",\n        href: "https://www.google.com/search?q=${text}"\n    }\n]';
-  $("body").append("<div id='popup_setting_bg'> <div id='popup_setting_win'> <div id='popup_title'>PopUp Search Setting</div> <div id='popup_content'> <div id='tabs_box'> <div id='popup_tab1' class='popup_tab popup_selected'>\u9009\u9879 / General</div> <div id='popup_tab2' class='popup_tab'>\u641C\u7D22\u5F15\u64CE / Engines</div> <div id='popup_tab3' class='popup_tab'>\u81EA\u5B9A\u4E49 / Customize</div> <div id='popup_tab4' class='popup_tab'>\u5173\u4E8E / About</div> </div> <div id='page_box'> <div id='option_box'> <div id='popup_tab1Page'> " + optionList + " </div> <div id='popup_tab2Page'> " + engineOptionList + " </div> <div id='popup_tab3Page'> <div id='editTitle'> <div><b>\u8BF7\u9605\u8BFB\u5E2E\u52A9 / Read HELP first</b></div> <span id='popHelp'><u>Help</u></span> <span id='popReset'><u>Reset</u></span> </div> <textarea id='popup_engines'></textarea> </div> <div id='popup_tab4Page'> <h3>Authored by Lkytal</h3> <p> You can redistribute it under <a href='http://creativecommons.org/licenses/by-nc-sa/4.0/'> Creative Commons Attribution-NonCommercial-ShareAlike Licence </a> </p> <p class='contact-line'> Source Code at<br> Git OSChina <a class='tab-text' href='https://git.oschina.net/coldfire/GM'> https://git.oschina.net/coldfire/GM </a> <br /> Github <a class='tab-text' href='https://github.com/lkytal/GM'> https://github.com/lkytal/GM </a> </p> <p> Contact:<br> Github <a class='tab-text' href='https://github.com/lkytal'> https://github.com/lkytal/ </a> <br> Greasy fork <a class='tab-text' href='https://greasyfork.org/en/users/152-lkytal'> https://greasyfork.org/en/users/152-lkytal </a> </p> </div> </div> <div id='btnArea'> <div id='popup_save' class='setting_btn'>Save</div> <div id='popup_close' class='setting_btn'>Close</div> </div> </div> </div> </div> <div id='popup_help_bg'> <div id='popup_help_win'> <div id='popup_help_content'> <div id='helpLang'> <span id='engHead' class='popup_head_selected'>English</span> <span id='chsHead'>\u4E2D\u6587</span> </div> <div id='help_box'> <div id='engContent'> The content of custom engine should be in standard JSON format, in forms of following: <pre> " + engJSON + " </pre> The 'id' should be unique for every entry and must NOT contain any space character , the 'title' and the 'description' can be any text you like, the 'src' indicates the icon of every item, should be the url to an image or be a <a href='http://dataurl.net/#about'>DataURL</a>. The 'href' is the link to be open upon click, you may have noticed the '${text}' variable, which will be replaced by selected text. Available variables are listed bellow: <ul> <li>${text} : will be replaced by the selected text (Url encoded, should use this in default)</li> <li>${rawText} : will be replaced by the original selected text</li> <li>${domain} : will be replaced by the domain of current url</li> <li>${url} : will be replaced by the current webpage's url</li> </ul> Note: You can't modify built-in engines directly, however, you can disable them and add your own. </div> <div id='chsContent'> \u81EA\u5B9A\u4E49\u5F15\u64CE\u5185\u5BB9\u5E94\u5F53\u662F\u5408\u6CD5\u7684JSON\u683C\u5F0F, \u5982\u4E0B <pre> " + chsJSON + " </pre> \u6BCF\u4E00\u9879\u7684 id \u5FC5\u987B\u5404\u4E0D\u76F8\u540C\u4E14\u4E0D\u80FD\u542B\u6709\u7A7A\u683C, title \u548C description \u53EF\u4EE5\u968F\u610F\u586B\u5199, src \u662F\u8BE5\u9879\u7684\u56FE\u6807, \u53EF\u4EE5\u662F\u6307\u5411\u56FE\u6807\u7684 url \u6216\u8005\u662F\u4E00\u4E2A <a href='http://dataurl.net/#about'>DataURL</a>. href \u662F\u5F15\u64CE\u7684 url \u94FE\u63A5, \u5176\u4E2D\u53EF\u4EE5\u5305\u542B\u8BF8\u5982 ${text} \u8FD9\u6837\u7684\u53D8\u91CF, \u53D8\u91CF\u7684\u5927\u5C0F\u5199\u5FC5\u987B\u6B63\u786E, \u53EF\u7528\u7684\u53D8\u91CF\u6709: <ul> <li>${text} : \u4EE3\u8868\u9009\u4E2D\u6587\u5B57, \u7ECF\u8FC7 url encoding, \u4E00\u822C\u5E94\u5F53\u4F7F\u7528\u6B64\u9879</li> <li>${rawText} : \u4EE3\u8868\u672A\u7ECF encoding \u7684\u539F\u59CB\u9009\u4E2D\u6587\u5B57</li> <li>${domain} : \u4EE3\u8868\u5F53\u524D\u9875\u9762\u7684\u57DF\u540D</li> <li>${url} : \u4EE3\u8868\u5F53\u524D\u9875\u9762\u7684 url \u5730\u5740</li> </ul> \u6CE8\u610F: \u5185\u7F6E\u5F15\u64CE\u65E0\u6CD5\u76F4\u63A5\u4FEE\u6539, \u4F60\u53EF\u4EE5\u7981\u7528\u5B83\u4EEC\u7136\u540E\u6DFB\u52A0\u4F60\u81EA\u5B9A\u4E49\u7684\u5F15\u64CE </div> </div> <div id='help_btnArea'> <div id='popup_help_close' class='setting_btn'>Close</div> </div> </div> </div> </div> </div>");
+  chsJSON = '[\n    {\n        id: "UserEngine",\n        title: "Example Engine",\n        description: "自定义引擎示例",\n        src: "http://lkytal.qiniudn.com/ic.ico",\n        href: "https://www.google.com/search?q=${text}"\n    }\n]';
+  $("body").append("<div id='popup_setting_bg'> <div id='popup_setting_win'> <div id='popup_title'>PopUp Search Setting</div> <div id='popup_content'> <div id='tabs_box'> <div id='popup_tab1' class='popup_tab popup_selected'>\u9009\u9879 / General</div> <div id='popup_tab2' class='popup_tab'>\u641C\u7D22\u5F15\u64CE / Engines</div> <div id='popup_tab3' class='popup_tab'>\u81EA\u5B9A\u4E49 / Customize</div> <div id='popup_tab4' class='popup_tab'>\u5173\u4E8E / About</div> </div> <div id='page_box'> <div id='option_box'> <div id='popup_tab1Page'> " + optionList + " </div> <div id='popup_tab2Page'> " + engineOptionList + " </div> <div id='popup_tab3Page'> <div id='editTitle'> <div><b>\u8BF7\u9605\u8BFB\u5E2E\u52A9 / Read HELP first</b></div> <span id='popHelp'><u>Help</u></span> <span id='popReset'><u>Reset</u></span> </div> <textarea id='popup_engines'></textarea> </div> <div id='popup_tab4Page'> <h3>Authored by Lkytal</h3> <p> You can redistribute it under <a href='http://creativecommons.org/licenses/by-nc-sa/4.0/'> Creative Commons Attribution-NonCommercial-ShareAlike Licence </a> </p> <p class='contact-line'> Source Code at<br> Git OSChina <a class='tab-text' href='https://git.oschina.net/coldfire/GM'> https://git.oschina.net/coldfire/GM </a> <br /> Github <a class='tab-text' href='https://github.com/lkytal/GM'> https://github.com/lkytal/GM </a> </p> <p> Contact:<br> Github <a class='tab-text' href='https://github.com/lkytal'> https://github.com/lkytal/ </a> <br> Greasy fork <a class='tab-text' href='https://greasyfork.org/en/users/152-lkytal'> https://greasyfork.org/en/users/152-lkytal </a> </p> </div> </div> <div id='btnArea'> <div id='popup_save' class='setting_btn'>Save</div> <div id='popup_close' class='setting_btn'>Close</div> </div> </div> </div> </div> <div id='popup_help_bg'> <div id='popup_help_win'> <div id='popup_help_content'> <div id='helpLang'> <span id='engHead' class='popup_head_selected'>English</span> <span id='chsHead'>\u4E2D\u6587</span> </div> <div id='help_box'> <div id='engContent'> The content of custom engine should be in standard JSON format, in forms of following: <pre> " + engJSON + " </pre> The 'id' should be unique for every entry and must NOT contain any space character, the 'title' and the 'description' can be any text you like, the 'src' indicates the icon of every item, should be the URL to an image or be a <a href='http://dataurl.net/#about'>DataURL</a>. The 'href' is the link to be open upon click, you may have noticed the '${text}' variable, which will be replaced by selected text. Available variables are listed below: <ul> <li>${text} : will be replaced by the selected text (Url encoded, should use this by default)</li> <li>${rawText} : will be replaced by the original selected text</li> <li>${domain} : will be replaced by the domain of current URL</li> <li>${url} : will be replaced by the current web page's URL</li> </ul> Note: You can't modify built-in engines directly, however, you can disable them and add your own. </div> <div id='chsContent'> \u81EA\u5B9A\u4E49\u5F15\u64CE\u5185\u5BB9\u5E94\u5F53\u662F\u5408\u6CD5\u7684JSON\u683C\u5F0F, \u5982\u4E0B <pre> " + chsJSON + " </pre> \u6BCF\u4E00\u9879\u7684 id \u5FC5\u987B\u5404\u4E0D\u76F8\u540C\u4E14\u4E0D\u80FD\u542B\u6709\u7A7A\u683C, title \u548C description \u53EF\u4EE5\u968F\u610F\u586B\u5199, src \u662F\u8BE5\u9879\u7684\u56FE\u6807, \u53EF\u4EE5\u662F\u6307\u5411\u56FE\u6807\u7684 url \u6216\u8005\u662F\u4E00\u4E2A <a href='http://dataurl.net/#about'>DataURL</a>. href \u662F\u5F15\u64CE\u7684 url \u94FE\u63A5, \u5176\u4E2D\u53EF\u4EE5\u5305\u542B\u8BF8\u5982 ${text} \u8FD9\u6837\u7684\u53D8\u91CF, \u53D8\u91CF\u7684\u5927\u5C0F\u5199\u5FC5\u987B\u6B63\u786E, \u53EF\u7528\u7684\u53D8\u91CF\u6709: <ul> <li>${text} : \u4EE3\u8868\u9009\u4E2D\u6587\u5B57, \u7ECF\u8FC7 url encoding, \u4E00\u822C\u5E94\u5F53\u4F7F\u7528\u6B64\u9879</li> <li>${rawText} : \u4EE3\u8868\u672A\u7ECF encoding \u7684\u539F\u59CB\u9009\u4E2D\u6587\u5B57</li> <li>${domain} : \u4EE3\u8868\u5F53\u524D\u9875\u9762\u7684\u57DF\u540D</li> <li>${url} : \u4EE3\u8868\u5F53\u524D\u9875\u9762\u7684 url \u5730\u5740</li> </ul> \u6CE8\u610F: \u5185\u7F6E\u5F15\u64CE\u65E0\u6CD5\u76F4\u63A5\u4FEE\u6539, \u4F60\u53EF\u4EE5\u7981\u7528\u5B83\u4EEC\u7136\u540E\u6DFB\u52A0\u4F60\u81EA\u5B9A\u4E49\u7684\u5F15\u64CE </div> </div> <div id='help_btnArea'> <div id='popup_help_close' class='setting_btn'>Close</div> </div> </div> </div> </div> </div>");
   $("#popup_setting_bg, #popup_help_bg").hide();
   $("#tabs_box > .popup_tab").on("click", function (e) {
     $("#tabs_box > .popup_tab").removeClass("popup_selected");
@@ -720,7 +733,7 @@ SettingWin = function () {
 
 UpdateLog = function () {
   addAdditionalCSS();
-  $("body").append("<div id='popup_update_bg'> <div id='popup_update_win'> <div id='update_header'> Popup Search Updated (ver 4.1.0) </div> <div id='popup_update_content'> <div id='update_texts'> <p> <h3>此版本引入的重要改变:</h3> <p> 自定义引擎功能开放, 点击 'Open setting' 可以打开设置并启用该功能. 在自定义前请点击 'Help' 按钮以阅读帮助文档. </p> <p> 注意: 启用自定义引擎后, 重新打开设置窗口才会生效. </p> </p> <p> <h3>What's new in this version:</h3> <p> You can customize your own engines now. Click 'Open setting' to check it out. Remember to read 'HELP' before edit. </p> <p> Note: After you enabled customization, reopen setting window to take effect. </p> </p> </div> <div id='update_btnArea'> <div id='popup_update_open' class='setting_btn'>Open Setting</div> <div id='popup_update_close' class='setting_btn'>Close</div> </div> </div> </div> </div>");
+  $("body").append("<div id='popup_update_bg'> <div id='popup_update_win'> <div id='update_header'> Popup Search Updated (ver 4.1.0) </div> <div id='popup_update_content'> <div id='update_texts'> <p> <h3>此版本引入的重要改变:</h3> <p> 自定义引擎功能开放, 点击 'Open setting' 可以打开设置并启用该功能. 在自定义前请点击 'Help' 按钮以阅读帮助文档. </p> <p> 注意: 启用自定义引擎后, 重新打开设置窗口才会生效. </p> </p> <p> <h3>What's new in this version:</h3> <p> You can customize your own engines now. Click 'Open setting' to check it out. Remember to read 'HELP' before modify. </p> <p> Note: After you enabled customization, reopen setting window to take effect. </p> </p> </div> <div id='update_btnArea'> <div id='popup_update_open' class='setting_btn'>Open Setting</div> <div id='popup_update_close' class='setting_btn'>Close</div> </div> </div> </div> </div>");
   $('#popup_update_open').on('click', function (event) {
     UpdateNotified();
     $("#popup_update_bg").hide();
@@ -767,7 +780,7 @@ PopupLoad = function () {
       popData.userEngines = JSON.parse(userEngineString);
     } catch (error) {
       //alert "User Engine Syntax Error"
-      log(userEngineString);
+      console.error(userEngineString);
     }
   }
   PopupInit();
