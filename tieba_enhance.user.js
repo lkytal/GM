@@ -285,7 +285,7 @@ CheckPost = function () {
     }
     date_str = date_str.replace(" ", "-").replace(":", "-").split("-");
     date_time = new Date(date_str[0], date_str[1] - 1, date_str[2], date_str[3], date_str[4]);
-    days = Math.round(new Date() - date_time) / 86400000;
+    days = Math.round((new Date() - date_time) / 86400000);
     if (days >= tiebaData.fentie_date) {
       if (days >= 365) {
         years = Math.round(days / 365);

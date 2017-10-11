@@ -588,7 +588,7 @@ CopyText = function (selText) {
   if (selText == null) {
     selText = document.defaultView.getSelection().toString();
   }
-  if (GM_info.scriptHandler === "Violentmonkey") {
+  if ((typeof GM_info !== "undefined" && GM_info !== null ? GM_info.scriptHandler : void 0) === "Violentmonkey") {
     return document.execCommand('copy');
   }
   try {
