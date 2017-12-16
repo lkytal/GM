@@ -4,7 +4,7 @@
 // @author					lkytal
 // @homepage				https://lkytal.github.io/
 // @icon					http://lkytal.qiniudn.com/select.png
-// @version					1.2.0
+// @version					1.2.1
 // @description				Select texts insider links, support firefox and chrome
 // @include					*
 // @grant					unsafeWindow
@@ -49,8 +49,8 @@ var selectLikeOpera = function () {
 		}
 	})();
 
-	var j = (function () {
-		var o = [
+	var setStyle = (function () {
+		var styleList = [
 			{
 				p: rangeOperator.rangeAttr,
 				v: 'text'
@@ -61,22 +61,22 @@ var selectLikeOpera = function () {
 			}
 		];
 
-		var n;
+		var node;
 		var s;
-		return function (a) {
-			if (a) {
-				n = a, s = [];
-				for (var i = o.length - 1; i >= 0; i -= 1) {
-					s.push([n.style.getPropertyValue(o[i].p), n.style.getPropertyPriority(o[i].p)]);
-					n.style.setProperty(o[i].p, o[i].v, 'important');
+		return function (_node) {
+			if (_node) {
+				node = _node, s = [];
+				for (var i = styleList.length - 1; i >= 0; i -= 1) {
+					s.push([node.style.getPropertyValue(styleList[i].p), node.style.getPropertyPriority(styleList[i].p)]);
+					node.style.setProperty(styleList[i].p, styleList[i].v, 'important');
 				}
 			}
-			else if (n) {
-				for (var i = o.length; i-- > 0;) {
-					n.style.removeProperty(o[i].p);
-					if (s[i][0] !== null) n.style.setProperty(o[i].p, s[i][0], s[i][1]);
+			else if (node) {
+				for (var i = styleList.length; i-- > 0;) {
+					node.style.removeProperty(styleList[i].p);
+					if (s[i][0] !== null) node.style.setProperty(styleList[i].p, s[i][0], s[i][1]);
 				}
-				n = s = null;
+				node = s = null;
 			}
 		}
 	})();
@@ -99,12 +99,12 @@ var selectLikeOpera = function () {
 		toggleEvent(a, false);
 	};
 
-	var m, q, u, v, z, resetState = function () {
+	var position, q, u, v, z, resetState = function () {
 		q = v = true;
 		u = z = false;
 	};
 
-	var B, selection = document.getSelection();
+	var nodeInfo, selection = document.getSelection();
 
 	let selectEvent = function (e) {
 		if (e.which < 2) {
@@ -118,57 +118,58 @@ var selectLikeOpera = function () {
 					if (newRange && selectedRange.isPointInRange(newRange.startContainer, newRange.startOffset)) return;
 				}
 			}
-			j();
+			setStyle();
 			var target = e.target;
 			var node = findHTMLAnchor(target);
 			if (!node) node = target.nodeType !== 3 ? target : target.parentNode;
 			if (node.constructor === HTMLCanvasElement || node.textContent === '') return;
 			var range = node.getBoundingClientRect();
-			B = {
+			nodeInfo = {
 				n: node,
 				x: Math.round(range.left),
 				y: Math.round(range.top),
 				c: 0
 			};
-			m = {
+			position = {
 				x: x,
 				y: y
 			};
 			toggleEvent(['mousemove', 'mouseup', 'dragend', 'dragstart']);
-			j(node);
+			setStyle(node);
 		}
 	};
 
 	var D = 3, K = 0.8;
 	var eventList = {
 		'mousemove': function (e) {
-			if (B) {
-				if (B.c++ < 12) {
-					var r = B.n.getBoundingClientRect();
-					if (Math.round(r.left) !== B.x || Math.round(r.top) !== B.y) {
+			if (nodeInfo) {
+				if (nodeInfo.c++ < 12) {
+					var rect = nodeInfo.n.getBoundingClientRect();
+					if (Math.round(rect.left) !== nodeInfo.x || Math.round(rect.top) !== nodeInfo.y) {
 						removeEvent(['mousemove', 'mouseup', 'dragend', 'dragstart', 'click']);
-						j();
+						setStyle();
 						selection.removeAllRanges();
 						return;
 					}
-				} else {
-					B = null;
+				}
+				else {
+					nodeInfo = null;
 				}
 			}
 			var x = e.clientX,
 				y = e.clientY;
 			if (v) {
 				selection.removeAllRanges();
-				var a = x > m.x ? -2 : 2;
-				var newRange = rangeOperator.createRange(x + a, y);
+				var offset = x > position.x ? -2 : 2;
+				var newRange = rangeOperator.createRange(x + offset, y);
 				if (newRange) {
 					selection.addRange(newRange);
 					v = false;
 				}
 			}
 			if (q) {
-				var c = Math.abs(m.x - x),
-					d = Math.abs(m.y - y);
+				var c = Math.abs(position.x - x),
+					d = Math.abs(position.y - y);
 				u = d === 0 || c / d > K;
 				if (c > D || d > D) {
 					q = false;
@@ -190,7 +191,7 @@ var selectLikeOpera = function () {
 			if (!u && z) z = false;
 			setTimeout(function () {
 				removeEvent('click');
-			}, 111);
+			}, 25);
 		},
 		'dragend': function (e) {
 			removeEvent(['dragend', 'mousemove', 'mouseup']);

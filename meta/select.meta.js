@@ -4,7 +4,7 @@
 // @author					lkytal
 // @homepage				https://lkytal.github.io/
 // @icon					http://lkytal.qiniudn.com/select.png
-// @version					1.2.0
+// @version					1.2.1
 // @description				Select texts insider links, support firefox and chrome
 // @include					*
 // @grant					unsafeWindow
