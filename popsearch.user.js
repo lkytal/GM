@@ -7,6 +7,8 @@
 // @homepage				https://lkytal.github.io/
 // @homepageURL				https://lkytal.github.io/
 // @description				Popup search box and translate button (etc) for selected texts
+// @description:zh			为选中文字弹出搜索和翻译的快捷按钮
+// @license					LGPL
 // @include					*
 // @exclude					*/test/*.html*
 // @exclude					http://acid3.acidtests.org/*
@@ -22,6 +24,7 @@
 // @grant					GM_setValue
 // @grant					GM_registerMenuCommand
 // @grant					GM_info
+// @run-at					document-end
 // @require					https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js
 // @connect					google.com
 // @connect					translate.google.cn
