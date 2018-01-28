@@ -4,7 +4,7 @@
 // @description:zh				把文字链接转换为可点击链接
 // @author						lkytal
 // @namespace					Lkytal
-// @version						2.8.4
+// @version						2.8.5
 // @homepage					https://lkytal.github.io/
 // @homepageURL					https://lkytal.github.io/coldfire/GM
 // @license						LGPL
