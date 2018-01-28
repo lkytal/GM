@@ -2,8 +2,8 @@
 // @name					Popup Search
 // @author					lkytal
 // @namespace				Lkytal
-// @version					4.2.6
-// @icon					http://lkytal.qiniudn.com/search.png
+// @version					4.2.7
+// @icon					https://github.com/lkytal/GM/raw/master/icons/search.png
 // @homepage				https://lkytal.github.io/
 // @homepageURL				https://lkytal.github.io/
 // @description				Popup search box and translate button (etc) for selected texts

@@ -4,6 +4,8 @@ All notable changes to all the scripts will be documented in this file.
 
 ## Popup Search
 
+* 4.2.7: Https icons.
+* 4.2.6: Update Jquery
 * 4.2.4: Option to hide translator; fix for violentMonkey.
 * 4.2.3: Use data property instead of href.
 * 4.2.2: Exclude `Furk.net`.
@@ -78,6 +80,7 @@ All notable changes to all the scripts will be documented in this file.
 
 ## Text to Link
 
+* 2.8.5: Https icons.
 * 2.8.4: Complier by coffeescript 2
 * 2.8.3: Exclude ali pay.
 * 2.8.1: Recognize prefix correctly.
@@ -128,6 +131,8 @@ All notable changes to all the scripts will be documented in this file.
 
 ## Tieba Enhance
 
+* 6.2.3: Https icons.
+* 6.2.2: Update Jquery
 * 6.2.1: Complier by coffeescript 2
 * 6.2.0: Add tail correctly
 * 6.1.5: Update icon and jquery

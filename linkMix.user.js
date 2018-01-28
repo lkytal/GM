@@ -21,7 +21,7 @@
 // @exclude						*.163.com/*
 // @exclude						*.alipay.com/*
 // @run-at						document-end
-// @icon						http://lkytal.qiniudn.com/link.png
+// @icon						https://github.com/lkytal/GM/raw/master/icons/link.png
 // @grant						unsafeWindow
 // @charset						UTF-8
 // @supportURL					https://github.com/lkytal/GM/issues
