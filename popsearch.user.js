@@ -2,7 +2,7 @@
 // @name					Popup Search
 // @author					lkytal
 // @namespace				Lkytal
-// @version					4.2.5
+// @version					4.2.6
 // @icon					http://lkytal.qiniudn.com/search.png
 // @homepage				https://lkytal.github.io/
 // @homepageURL				https://lkytal.github.io/
@@ -25,7 +25,7 @@
 // @grant					GM_registerMenuCommand
 // @grant					GM_info
 // @run-at					document-end
-// @require					https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js
+// @require					https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.3.1.min.js
 // @connect					google.com
 // @connect					translate.google.cn
 // @charset					UTF-8

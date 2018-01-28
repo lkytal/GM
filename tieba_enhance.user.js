@@ -7,8 +7,8 @@
 // @description					贴吧小尾巴, 坟贴提醒, 去除跳转等功能
 // @include						http://tieba.baidu.com/*
 // @include						https://tieba.baidu.com/*
-// @version						6.2.1
-// @require						http://cdn.bootcss.com/jquery/3.2.1/jquery.min.js
+// @version						6.2.2
+// @require						https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.3.1.min.js
 // @icon						http://lkytal.qiniudn.com/tieba.png
 // @noframes
 // @license						LGPL
