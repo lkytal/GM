@@ -817,7 +817,7 @@ addAdditionalCSS = function () {
 
 getLastRange = function (selection) {
   var j, rangeNum, ref;
-  for (rangeNum = j = ref = selection.rangeCount - 1; ref <= 0 ? j <= 0 : j >= 0; rangeNum = ref <= 0 ? ++j : --j) {
+  for (rangeNum = j = ref = selection.rangeCount - 1; undefined !== 0 && (ref <= 0 ? ref <= j && j <= 0 : ref >= j && j >= 0); rangeNum = ref <= 0 ? ++j : --j) {
     if (!selection.getRangeAt(rangeNum).collapsed) {
       return selection.getRangeAt(rangeNum);
     }

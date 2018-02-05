@@ -78,7 +78,7 @@ linkPack = function (result, start) {
   var i, j, k, ref, ref1, ref2, ref3, startTime;
   startTime = Date.now();
   while (start + 10000 < result.snapshotLength) {
-    for (i = j = ref = start, ref1 = start + 10000; ref <= ref1 ? j <= ref1 : j >= ref1; i = ref <= ref1 ? ++j : --j) {
+    for (i = j = ref = start, ref1 = start + 10000; undefined !== 0 && (ref <= ref1 ? ref <= j && j <= ref1 : ref >= j && j >= ref1); i = ref <= ref1 ? ++j : --j) {
       setLink(result.snapshotItem(i));
     }
     start += 10000;
@@ -86,7 +86,7 @@ linkPack = function (result, start) {
       return;
     }
   }
-  for (i = k = ref2 = start, ref3 = result.snapshotLength; ref2 <= ref3 ? k <= ref3 : k >= ref3; i = ref2 <= ref3 ? ++k : --k) {
+  for (i = k = ref2 = start, ref3 = result.snapshotLength; undefined !== 0 && (ref2 <= ref3 ? ref2 <= k && k <= ref3 : ref2 >= k && k >= ref3); i = ref2 <= ref3 ? ++k : --k) {
     setLink(result.snapshotItem(i));
   }
 };

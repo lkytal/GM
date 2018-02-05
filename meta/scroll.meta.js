@@ -3,12 +3,12 @@
 // @description				Scroll pages when mouse hover on srcollbar
 // @author					lkytal
 // @namespace				Lkytal
-// @version					1.4.1
+// @version					1.4.2
 // @homepage				https://lkytal.github.io/
 // @homepageURL				https://lkytal.github.io/coldfire/GM
 // @include					*
 // @exclude					*pan.baidu.com/*
-// @icon					http://lkytal.qiniudn.com/ic.ico
+// @icon					https://github.com/lkytal/GM/raw/master/icons/scroll.png
 // @grant					GM_getValue
 // @grant					GM_setValue
 // @grant					GM_addStyle

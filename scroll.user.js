@@ -3,12 +3,12 @@
 // @description				Scroll pages when mouse hover on srcollbar
 // @author					lkytal
 // @namespace				Lkytal
-// @version					1.4.1
+// @version					1.4.2
 // @homepage				https://lkytal.github.io/
 // @homepageURL				https://lkytal.github.io/coldfire/GM
 // @include					*
 // @exclude					*pan.baidu.com/*
-// @icon					http://lkytal.qiniudn.com/ic.ico
+// @icon					https://github.com/lkytal/GM/raw/master/icons/scroll.png
 // @grant					GM_getValue
 // @grant					GM_setValue
 // @grant					GM_addStyle
@@ -18,12 +18,11 @@
 // @downloadURL				https://git.oschina.net/coldfire/GM/raw/master/scroll.user.js
 // ==/UserScript==
 
-function scrollPlus()
-{
+function scrollPlus() {
     //###Customization: |可自定义的东西：
 
-	//go directly to top/down page | 回到顶部按钮
-	var goTopButton = 1;
+    //go directly to top/down page | 回到顶部按钮
+    var goTopButton = 1;
 
     //Show the scrolling indicator box or not, "1" to show. | 1－显示提示条，其他－不显示。
     var scrollShowIndicator = 1;
@@ -50,74 +49,63 @@ function scrollPlus()
     var scrollStartSWTM = -1;
 
     var factor;
-    var b = 0;
+    var b = null;
     var VScrollOn = 0;
 
-    document.addEventListener('mousemove', function (event)
-    {
-		if (document.body.contentEditable == "true")
-		{
-			return;
-		}
+    document.addEventListener('mousemove', function (event) {
+        if (document.body.contentEditable == "true") {
+            return;
+        }
 
         var dheightMax = Math.max(document.body.scrollHeight, document.documentElement.scrollHeight);
         var cwidthMax = Math.max(document.body.clientWidth, document.documentElement.clientWidth) - ScrollbarWidth;
         var cwinHeight = window.innerHeight;
         var scrollboxHeight = window.innerHeight - 2 * ScrollbarWidth;
 
-        if (dheightMax > cwinHeight)
-        {
-            if (event.clientX > cwidthMax)
-            {
-                switch (activateCond)
-                {
+        if (dheightMax > cwinHeight) {
+            if (event.clientX > cwidthMax) {
+                switch (activateCond) {
                     case 1:
                         VScrollOn = 1;
                         break;
                     case 2:
                         if (event.ctrlKey)
-							VScrollOn = 1;
+                            VScrollOn = 1;
                         break;
                     case 3:
                         if (event.clientY > cwinHeight / 2 - 50 && event.clientY < cwinHeight / 2 + 50)
-							VScrollOn = 1;
-						break;
+                            VScrollOn = 1;
+                        break;
                 }
             }
 
             if (event.clientX < ((1 - VScrollonWidth / 100) * cwidthMax)) VScrollOn = 0;
         }
 
-        if (VScrollOn)
-        {
+        if (VScrollOn) {
             if (scrollShowIndicator == 1) make_boxes();
 
-            if (scrollStartSWTM != -1)
-            {
+            if (scrollStartSWTM != -1) {
                 factor = (event.ctrlKey) ? dheightMax / scrollboxHeight / 2 : dheightMax / scrollboxHeight;
-                if (b)
-                {
+                if (b) {
                     b.style.top = (event.clientY - IndicBarH / 2) + 'px';
                 }
 
                 var delta = factor * (event.clientY - scrollStartSWTM);
                 document.body.scrollTop += delta;
                 document.documentElement.scrollTop += delta;
-                if (event.clientY + 20 > cwinHeight)
-                {
+                if (event.clientY + 20 > cwinHeight) {
                     document.body.scrollTop += (factor * 10);
                     document.documentElement.scrollTop += (factor * 10);
                 }
-                if (event.clientY > 0 && event.clientY < 20)
-                {
+                if (event.clientY > 0 && event.clientY < 20) {
                     document.body.scrollTop -= (factor * 10);
                     document.documentElement.scrollTop -= (factor * 10);
                 }
             }
             scrollStartSWTM = event.clientY;
         }
-        else
-        {
+        else {
             scrollStartSWTM = -1;
             if (b) setTimeout(function () { b.style.top = -200 + 'px'; }, 200);
         }
@@ -125,10 +113,8 @@ function scrollPlus()
 
     document.addEventListener('click', function () { VScrollOn = 0; }, false);
 
-    function make_boxes()
-    {
-        if (!b)
-        {
+    function make_boxes() {
+        if (!b) {
             b = document.createElement("div");
             b.setAttribute("id", "IndicatorBox");
             b.setAttribute("style", "width:" + VScrollonWidth + "%;background:" + IndicBarBG + ";min-height:" + IndicBarH + "px;text-align:center;position: fixed; top: -40px; right: 0;overflow: hidden; z-index: 102400;font-family:Arial !important;cursor:n-resize;cursor:ns-resize;");
@@ -138,43 +124,45 @@ function scrollPlus()
         }
     }
 
-	function addToTop()
-	{
-		var a = document.createElement('a');
-		a.id = 'scrollUpIco';
-		a.textContent = 'Top';
-		a.addEventListener('click', function(){ window.scrollTo(0, document.body.scrollLeft); }, false);
-		document.body.appendChild(a);
+    function addToTop() {
+        var a = document.createElement('a');
+        a.id = 'scrollUpIco';
+        a.textContent = 'Top';
+        a.addEventListener('click', function () { window.scrollTo(0, document.body.scrollLeft); }, false);
+        document.body.appendChild(a);
 
-		GM_addStyle("\
-			#scrollUpIco {\
-				position: fixed;\
-				z-index: 2147483647;\
-				width: 50px;\
-				height: 50px;\
-				border-radius: 25px;\
-				bottom: 20px;\
-				right: 25px;\
-				line-height: 50px;\
-				text-align: center;\
-				font-weight: bold;\
-				background-color: rgba(0, 0, 0, 0.3);\
-				color: #fff;\
-				text-decoration: none;\
-				-moz-user-select:none;\
-				-webkit-user-select:none;\
-				cursor:default;\
-			}\
-			#scrollUpIco:hover {\
-				background-color: rgba(0, 0, 0, 0.75);\
-				color: #fff !important;\
-			}"
-		);
-	}
+        var st = [
+            "#scrollUpIco {",
+            "position: fixed;",
+            "z-index: 1024000;",
+            "width: 50px;",
+            "height: 50px;",
+            "border-radius: 25px;",
+            "bottom: 20px;",
+            "right: 25px;",
+            "line-height: 50px;",
+            "text-align: center;",
+            "font-weight: bold;",
+            "background-color: rgba(0, 0, 0, 0.3);",
+            "color: #fff;",
+            "text-decoration: none;",
+            "-moz-user-select: none;",
+            "-webkit-user-select: none;",
+            "user-select: none;",
+            "cursor: default;",
+            "}",
+            "#scrollUpIco:hover {",
+            "background-color: rgba(0, 0, 0, 0.75);",
+            "color: #fff !important;",
+            "}"
+        ].join("\n");
 
-	if (goTopButton) addToTop();
+        GM_addStyle(st);
+    }
+
+    if (goTopButton) addToTop();
 }
 
 if (!(window !== window.top || window.document.title === "")) {
-	setTimeout(scrollPlus, 100);
+    setTimeout(scrollPlus, 100);
 }
