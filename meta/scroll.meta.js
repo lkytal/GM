@@ -9,6 +9,7 @@
 // @include					*
 // @exclude					*pan.baidu.com/*
 // @icon					https://github.com/lkytal/GM/raw/master/icons/scroll.png
+// @license					AGPL
 // @grant					GM_getValue
 // @grant					GM_setValue
 // @grant					GM_addStyle

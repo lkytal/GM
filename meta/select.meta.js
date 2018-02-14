@@ -7,7 +7,7 @@
 // @icon					http://lkytal.qiniudn.com/select.png
 // @version					1.2.1
 // @description				Select texts insider links, support firefox and chrome
-// @license					LGPL
+// @license					AGPL
 // @include					*
 // @grant					unsafeWindow
 // @grant					GM_getValue

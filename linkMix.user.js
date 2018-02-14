@@ -7,7 +7,7 @@
 // @version						2.8.5
 // @homepage					https://lkytal.github.io/
 // @homepageURL					https://lkytal.github.io/coldfire/GM
-// @license						LGPL
+// @license						AGPL
 // @include						*
 // @exclude						*pan.baidu.com/*
 // @exclude						*renren.com/*

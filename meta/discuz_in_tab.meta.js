@@ -6,7 +6,7 @@
 // @version					1.3.3
 // @homepage				https://lkytal.github.io/
 // @homepageURL				https://lkytal.github.io/coldfire/GM
-// @license					LGPL
+// @license					AGPL
 // @icon					http://lkytal.qiniudn.com/ic.ico
 // @include					http://*/forum-*-*
 // @include					http://*/forum-*-*.html

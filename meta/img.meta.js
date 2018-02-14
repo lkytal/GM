@@ -6,7 +6,7 @@
 // @version					3.0.6
 // @homepage				https://lkytal.github.io/
 // @homepageURL				https://lkytal.github.io/coldfire/GM
-// @license					LGPL
+// @license					AGPL
 // @include					*
 // @icon					http://lkytal.qiniudn.com/ic.ico
 // @grant					GM_openInTab

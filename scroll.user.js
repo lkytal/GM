@@ -9,6 +9,7 @@
 // @include					*
 // @exclude					*pan.baidu.com/*
 // @icon					https://github.com/lkytal/GM/raw/master/icons/scroll.png
+// @license					AGPL
 // @grant					GM_getValue
 // @grant					GM_setValue
 // @grant					GM_addStyle
@@ -154,7 +155,8 @@ function scrollPlus() {
             "#scrollUpIco:hover {",
             "background-color: rgba(0, 0, 0, 0.75);",
             "color: #fff !important;",
-            "}"
+            "}",
+            "#scrollUpIco:-webkit-full-screen {display: none}"
         ].join("\n");
 
         GM_addStyle(st);

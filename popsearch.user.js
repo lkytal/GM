@@ -8,7 +8,7 @@
 // @homepageURL				https://lkytal.github.io/
 // @description				Popup search box and translate button (etc) for selected texts
 // @description:zh			为选中文字弹出搜索和翻译的快捷按钮
-// @license					LGPL
+// @license					AGPL
 // @include					*
 // @exclude					*/test/*.html*
 // @exclude					http://acid3.acidtests.org/*
