@@ -4,7 +4,7 @@
 // @description:zh				把文字链接转换为可点击链接
 // @author						lkytal
 // @namespace					Lkytal
-// @version						2.8.5
+// @version						2.8.6
 // @homepage					https://lkytal.github.io/
 // @homepageURL					https://lkytal.github.io/coldfire/GM
 // @license						AGPL
@@ -38,9 +38,9 @@ url_regexp = /((https?:\/\/|www\.)[\x21-\x7e]+[\w\/]|(\w[\w._-]+\.(com|cn|org|ne
 urlPrefixes = ['http://', 'https://', 'ftp://', 'thunder://', 'ed2k://'];
 
 clearLink = function (event) {
-  var j, len, link, prefix, ref, url;
+  var j, len, link, prefix, ref, ref1, url;
   link = (ref = event.originalTarget) != null ? ref : event.target;
-  if (!(link != null && link.localName === "a" && link.className.indexOf("textToLink") !== -1)) {
+  if (!(link != null && link.localName === "a" && ((ref1 = link.className) != null ? ref1.indexOf("textToLink") : void 0) !== -1)) {
     return;
   }
   url = link.getAttribute("href");
@@ -57,12 +57,12 @@ clearLink = function (event) {
 document.addEventListener("mouseover", clearLink);
 
 setLink = function (candidate) {
-  var span, text;
-  if (candidate == null || candidate.parentNode.className.indexOf("textToLink") !== -1 || candidate.nodeName === "#cdata-section") {
+  var ref, ref1, ref2, span, text;
+  if (candidate == null || ((ref = candidate.parentNode) != null ? (ref1 = ref.className) != null ? typeof ref1.indexOf === "function" ? ref1.indexOf("textToLink") : void 0 : void 0 : void 0) !== -1 || candidate.nodeName === "#cdata-section") {
     return;
   }
   text = candidate.textContent.replace(url_regexp, '<a href="$1" target="_blank" class="textToLink">$1</a>');
-  if (candidate.textContent.length === text.length) {
+  if (((ref2 = candidate.textContent) != null ? ref2.length : void 0) === text.length) {
     return;
   }
   span = document.createElement("span");
@@ -78,7 +78,7 @@ linkPack = function (result, start) {
   var i, j, k, ref, ref1, ref2, ref3, startTime;
   startTime = Date.now();
   while (start + 10000 < result.snapshotLength) {
-    for (i = j = ref = start, ref1 = start + 10000; undefined !== 0 && (ref <= ref1 ? ref <= j && j <= ref1 : ref >= j && j >= ref1); i = ref <= ref1 ? ++j : --j) {
+    for (i = j = ref = start, ref1 = start + 10000; ref <= ref1 ? j <= ref1 : j >= ref1; i = ref <= ref1 ? ++j : --j) {
       setLink(result.snapshotItem(i));
     }
     start += 10000;
@@ -86,7 +86,7 @@ linkPack = function (result, start) {
       return;
     }
   }
-  for (i = k = ref2 = start, ref3 = result.snapshotLength; undefined !== 0 && (ref2 <= ref3 ? ref2 <= k && k <= ref3 : ref2 >= k && k >= ref3); i = ref2 <= ref3 ? ++k : --k) {
+  for (i = k = ref2 = start, ref3 = result.snapshotLength; ref2 <= ref3 ? k <= ref3 : k >= ref3; i = ref2 <= ref3 ? ++k : --k) {
     setLink(result.snapshotItem(i));
   }
 };

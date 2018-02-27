@@ -4,8 +4,9 @@ All notable changes to all the scripts will be documented in this file.
 
 ## Popup Search
 
+* 4.3.0: Provide 'Copy' button.
 * 4.2.7: Https icons.
-* 4.2.6: Update Jquery
+* 4.2.6: Update Jquery.
 * 4.2.4: Option to hide translator; fix for violentMonkey.
 * 4.2.3: Use data property instead of href.
 * 4.2.2: Exclude `Furk.net`.
