@@ -3,7 +3,7 @@
 // @author						lkytal
 // @namespace					Lkytal
 // @homepage					http://lkytal.github.io/
-// @homepageURL					https://lkytal.github.io/coldfire/GM
+// @homepageURL					https://lkytal.github.io/GM
 // @description					贴吧小尾巴, 坟贴提醒, 去除跳转等功能
 // @include						http://tieba.baidu.com/*
 // @include						https://tieba.baidu.com/*

@@ -5,7 +5,7 @@
 // @namespace				Lkytal
 // @version					3.0.6
 // @homepage				https://lkytal.github.io/
-// @homepageURL				https://lkytal.github.io/coldfire/GM
+// @homepageURL				https://lkytal.github.io/GM
 // @license					AGPL
 // @include					*
 // @icon					http://lkytal.qiniudn.com/ic.ico

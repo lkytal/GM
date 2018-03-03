@@ -3,9 +3,9 @@
 // @description				Scroll pages when mouse hover on srcollbar
 // @author					lkytal
 // @namespace				Lkytal
-// @version					1.4.2
+// @version					1.4.3
 // @homepage				https://lkytal.github.io/
-// @homepageURL				https://lkytal.github.io/coldfire/GM
+// @homepageURL				https://lkytal.github.io/GM
 // @include					*
 // @exclude					*pan.baidu.com/*
 // @icon					https://github.com/lkytal/GM/raw/master/icons/scroll.png
@@ -144,7 +144,8 @@ function scrollPlus() {
             "line-height: 50px;",
             "text-align: center;",
             "font-weight: bold;",
-            "background-color: rgba(0, 0, 0, 0.3);",
+            "background-color: rgba(0, 0, 0, 0.2);",
+            "text-shadow: 0px 0px 5px #000000;",
             "color: #fff;",
             "text-decoration: none;",
             "-moz-user-select: none;",
@@ -153,8 +154,9 @@ function scrollPlus() {
             "cursor: default;",
             "}",
             "#scrollUpIco:hover {",
-            "background-color: rgba(0, 0, 0, 0.75);",
+            "background-color: rgba(0, 0, 0, 0.5);",
             "color: #fff !important;",
+            "cursor: pointer;",
             "}",
             "#scrollUpIco:-webkit-full-screen {display: none}"
         ].join("\n");

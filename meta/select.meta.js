@@ -3,7 +3,7 @@
 // @author					lkytal
 // @namespace				Lkytal
 // @homepage				https://lkytal.github.io/
-// @homepageURL				https://lkytal.github.io/coldfire/GM
+// @homepageURL				https://lkytal.github.io/GM
 // @icon					http://lkytal.qiniudn.com/select.png
 // @version					1.2.1
 // @description				Select texts insider links, support firefox and chrome
