@@ -2,7 +2,7 @@
 // @name					Popup Search
 // @author					lkytal
 // @namespace				Lkytal
-// @version					4.3.0
+// @version					4.3.1
 // @icon					https://github.com/lkytal/GM/raw/master/icons/search.png
 // @homepage				https://lkytal.github.io/
 // @homepageURL				https://lkytal.github.io/GM
@@ -391,7 +391,8 @@ PopupInit = function () {
     $('#transBtn').hide();
   }
   $('#copy_btn').on("click", function () {
-    return CopyText(popData.rawText);
+    CopyText(popData.rawText);
+    return $('#ShowUpBox').fadeOut(200);
   });
   if (!GetOpt('copy_icon_st')) {
     $('#copy_btn').hide();

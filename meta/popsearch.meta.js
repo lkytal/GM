@@ -2,10 +2,10 @@
 // @name					Popup Search
 // @author					lkytal
 // @namespace				Lkytal
-// @version					4.3.0
+// @version					4.3.1
 // @icon					https://github.com/lkytal/GM/raw/master/icons/search.png
 // @homepage				https://lkytal.github.io/
-// @homepageURL				https://lkytal.github.io/
+// @homepageURL				https://lkytal.github.io/GM
 // @description				Popup search box and translate button (etc) for selected texts
 // @description:zh			为选中文字弹出搜索和翻译的快捷按钮
 // @license					AGPL
