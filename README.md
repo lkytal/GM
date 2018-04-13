@@ -79,3 +79,8 @@ __修改小尾巴之后记得点击"保存当前尾巴"按钮!__
 设置窗口
 
 ![Win](http://lkytal.qiniudn.com/win.jpg)
+
+## Support on Beerpay
+Hey dude! Help me out for a couple of :beers:!
+
+[![Beerpay](https://beerpay.io/lkytal/GM/badge.svg?style=beer-square)](https://beerpay.io/lkytal/GM)  [![Beerpay](https://beerpay.io/lkytal/GM/make-wish.svg?style=flat-square)](https://beerpay.io/lkytal/GM?focus=wish)
