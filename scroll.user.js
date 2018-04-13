@@ -3,7 +3,7 @@
 // @description				Scroll pages when mouse hover on srcollbar
 // @author					lkytal
 // @namespace				Lkytal
-// @version					1.4.3
+// @version					1.5.0
 // @homepage				https://lkytal.github.io/
 // @homepageURL				https://lkytal.github.io/GM
 // @include					*
@@ -52,6 +52,7 @@ function scrollPlus() {
     var factor;
     var b = null;
     var VScrollOn = 0;
+    var delayed = 0;
 
     document.addEventListener('mousemove', function (event) {
         if (document.body.contentEditable == "true") {
@@ -83,6 +84,19 @@ function scrollPlus() {
             if (event.clientX < ((1 - VScrollonWidth / 100) * cwidthMax)) VScrollOn = 0;
         }
 
+        if (VScrollOn && ! delayed) {
+            setTimeout(function () {
+                if (VScrollOn) {
+                    delayed = 1;
+                }
+                else {
+                    delayed = 0;
+                }
+            }, 200);
+
+            return;
+        }
+
         if (VScrollOn) {
             if (scrollShowIndicator == 1) make_boxes();
 
@@ -109,6 +123,8 @@ function scrollPlus() {
         else {
             scrollStartSWTM = -1;
             if (b) setTimeout(function () { b.style.top = -200 + 'px'; }, 200);
+
+            delayed = 0;
         }
     }, false);
 
