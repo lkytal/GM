@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name					Scroll with Mouse Plus
-// @description				Scroll pages when mouse hover on srcollbar
+// @description				Scroll pages when mouse hover on scrollbar
 // @author					lkytal
 // @namespace				Lkytal
 // @version					1.5.0

@@ -81,6 +81,7 @@ All notable changes to all the scripts will be documented in this file.
 
 ## Text to Link
 
+* 2.8.7: Linkify mail address
 * 2.8.5: Https icons.
 * 2.8.4: Complier by coffeescript 2
 * 2.8.3: Exclude ali pay.

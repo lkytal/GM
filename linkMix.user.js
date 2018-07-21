@@ -4,7 +4,7 @@
 // @description:zh				把文字链接转换为可点击链接
 // @author						lkytal
 // @namespace					Lkytal
-// @version						2.8.6
+// @version						2.8.7
 // @homepage					https://lkytal.github.io/
 // @homepageURL					https://lkytal.github.io/GM
 // @license						AGPL
@@ -33,9 +33,9 @@
 ;
 var clearLink, excludedTags, linkFilter, linkMixInit, linkPack, linkify, observePage, observer, setLink, urlPrefixes, url_regexp, xPath;
 
-url_regexp = /((https?:\/\/|www\.)[\x21-\x7e]+[\w\/]|(\w[\w._-]+\.(com|cn|org|net|info|tv|cc|gov|edu))(\/[\x21-\x7e]*[\w\/])?|ed2k:\/\/[\x21-\x7e]+\|\/|thunder:\/\/[\x21-\x7e]+=)/gi;
+url_regexp = /((https?:\/\/|www\.)[\x21-\x7e]+[\w\/=]|\w([\w._-])+@\w[\w\._-]+\.(com|cn|org|net|info|tv|cc|gov|edu)|(\w[\w._-]+\.(com|cn|org|net|info|tv|cc|gov|edu))(\/[\x21-\x7e]*[\w\/])?|ed2k:\/\/[\x21-\x7e]+\|\/|thunder:\/\/[\x21-\x7e]+=)/gi;
 
-urlPrefixes = ['http://', 'https://', 'ftp://', 'thunder://', 'ed2k://'];
+urlPrefixes = ['http://', 'https://', 'ftp://', 'thunder://', 'ed2k://', 'mailto://', 'file://'];
 
 clearLink = function (event) {
   var j, len, link, prefix, ref, ref1, url;
@@ -51,7 +51,11 @@ clearLink = function (event) {
       return;
     }
   }
-  return link.setAttribute("href", "http://" + url);
+  if (url.indexOf('@') !== -1) {
+    return link.setAttribute("href", "mailto://" + url);
+  } else {
+    return link.setAttribute("href", "http://" + url);
+  }
 };
 
 document.addEventListener("mouseover", clearLink);
