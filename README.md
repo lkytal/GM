@@ -28,12 +28,12 @@ See [CHANGELOG.md](CHANGELOG.md)
 
 Popup search/translate(etc) button for selected texts
 
-![Function](http://lkytal.qiniudn.com/t.png)
+![Function](assets/t.png)
 
 GM 的"用户脚本设置"下的"Popup Search设置"打开选项选择需要的项目
 
-![Set](http://lkytal.qiniudn.com/pset1.png)
-![Set](http://lkytal.qiniudn.com/pset2.png)
+![Set](assets/pset1.png)
+![Set](assets/pset2.png)
 
 ### linkMix.user.js
 
@@ -67,15 +67,15 @@ Allow you to scroll the page by moving your mouse.
 
 ### Tieba_Enhance.user.js
 
-百度贴吧增强. 贴吧小尾巴+最近表情+坟贴检测功能
+百度贴吧增强. 贴吧小尾巴 + 最近表情 + 坟贴检测功能
 暂时在chrome下工作尚有瑕疵,请等待更新.
 
 设置按钮:
 
-![Set](http://lkytal.qiniudn.com/setbtn.png)
+![Set](assets/setbtn.png)
 
 __修改小尾巴之后记得点击"保存当前尾巴"按钮!__
 
 设置窗口
 
-![Win](http://lkytal.qiniudn.com/win.jpg)
+![Win](assets/win.jpg)

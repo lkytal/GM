@@ -1,5 +1,6 @@
 // ==UserScript==
 // @name					Popup Search
+// @name:zh					Popup Search: 快捷搜索
 // @author					lkytal
 // @namespace				Lkytal
 // @version					4.3.1
