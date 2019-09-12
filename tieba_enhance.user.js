@@ -25,7 +25,6 @@
 // @updateURL					https://git.oschina.net/coldfire/GM/raw/master/meta/tieba_enhance.meta.js
 // @downloadURL					https://git.oschina.net/coldfire/GM/raw/master/tieba_enhance.user.js
 // ==/UserScript==
-
 "use strict";
 
 var AddTail,
@@ -38,9 +37,7 @@ var AddTail,
     open_setting_window,
     tiebaData,
     hasProp = {}.hasOwnProperty;
-
 window.$ = window.jQuery = jQuery.noConflict(true);
-
 tiebaData = {
   StopPost: 0,
   count: 0
@@ -51,27 +48,32 @@ log = function (msg) {
   tiebaData.count += 1;
   text = "hit " + tiebaData.count + " : " + msg;
   return console.log(text);
-};
+}; //setting win
 
-//setting win
+
 open_setting_window = function () {
   var UpdateText, ref, ref1, x;
   $('setting_shadow').remove();
-  $('body').append("<div id=\"setting_shadow\" style=\"display:none\"> <div id=\"setting_window\"> <div id=\"setting_reset\" class=\"setting_btn_inside\">重置</div> <div id=\"setting_save\" class=\"setting_btn_inside\">保存</div> <div id=\"setting_close\" class=\"setting_title setting_btn_inside\">设置</div> <p class=\"setting_hiding_sp\"></p> <div id=\"setting_out_div\"> <div id=\"fentie_open\" class=\"setting_sp_btn\">坟贴检测</div> <div class=\"setting_sp\"> <p class=\"setting_hide\"></p><span>超过</span> <input class=\"setting_input\" type=\"number\" id=\"fentie_date\"></input><span>天的帖子视为坟贴</span> <div id=\"fentie_forbidden\" class=\"setting_sp_btn\">坟贴禁回</div> </div> <p class=\"setting_hide sp\"></p> <div id=\"tail_open\" class=\"setting_sp_btn\">小尾巴</div> <div id=\"tail_select\"> <div id=\"tail_select_text\" contenteditable=\"true\"></div> <div id=\"tail_option_box\"></div> <div id=\"tail_type\"> <div id=\"tail_type_text\"></div> <div id=\"tail_type_box\"> <div class=\"tail_type_option\">html</div> <div class=\"tail_type_option\">javascript</div> </div> </div> <div id=\"tail_save\" class=\"setting_btn_inside\">保存当前尾巴</div> <div id=\"tail_new\" class=\"setting_btn_inside\">新建尾巴</div> <div id=\"tail_delete\" class=\"setting_btn_inside\">删除尾巴</div> </div> <div class=\"setting_sp\"> <textarea class=\"setting_textarea\" id=\"tail_data\"></textarea><span>预览</span> <div class=\"setting_textarea\" id=\"tail_data_show\"></div> <p class=\"hiding_margin\" style=\"width:1px;height:20px;\"></p> </div> </div> </div> </div>");
-  //读取设置
+  $('body').append("<div id=\"setting_shadow\" style=\"display:none\"> <div id=\"setting_window\"> <div id=\"setting_reset\" class=\"setting_btn_inside\">重置</div> <div id=\"setting_save\" class=\"setting_btn_inside\">保存</div> <div id=\"setting_close\" class=\"setting_title setting_btn_inside\">设置</div> <p class=\"setting_hiding_sp\"></p> <div id=\"setting_out_div\"> <div id=\"fentie_open\" class=\"setting_sp_btn\">坟贴检测</div> <div class=\"setting_sp\"> <p class=\"setting_hide\"></p><span>超过</span> <input class=\"setting_input\" type=\"number\" id=\"fentie_date\"></input><span>天的帖子视为坟贴</span> <div id=\"fentie_forbidden\" class=\"setting_sp_btn\">坟贴禁回</div> </div> <p class=\"setting_hide sp\"></p> <div id=\"tail_open\" class=\"setting_sp_btn\">小尾巴</div> <div id=\"tail_select\"> <div id=\"tail_select_text\" contenteditable=\"true\"></div> <div id=\"tail_option_box\"></div> <div id=\"tail_type\"> <div id=\"tail_type_text\"></div> <div id=\"tail_type_box\"> <div class=\"tail_type_option\">html</div> <div class=\"tail_type_option\">javascript</div> </div> </div> <div id=\"tail_save\" class=\"setting_btn_inside\">保存当前尾巴</div> <div id=\"tail_new\" class=\"setting_btn_inside\">新建尾巴</div> <div id=\"tail_delete\" class=\"setting_btn_inside\">删除尾巴</div> </div> <div class=\"setting_sp\"> <textarea class=\"setting_textarea\" id=\"tail_data\"></textarea><span>预览</span> <div class=\"setting_textarea\" id=\"tail_data_show\"></div> <p class=\"hiding_margin\" style=\"width:1px;height:20px;\"></p> </div> </div> </div> </div>"); //读取设置
+
   $("#fentie_date")[0].value = tiebaData.fentie_date;
+
   if (!tiebaData.fentie_open) {
     $("#fentie_open").attr("class", "setting_sp_btn close");
     $("#fentie_open + div").css("display", "none");
   }
+
   if (!tiebaData.fentie_forbidden) {
     $("#fentie_forbidden").attr("class", "setting_sp_btn close");
   }
+
   if (!tiebaData.tail_open) {
     $("#tail_open").attr("class", "setting_sp_btn close");
     $("#tail_select,#tail_select + div").css("display", "none");
   }
+
   ref = tiebaData.tail_data;
+
   for (x in ref) {
     if (!hasProp.call(ref, x)) continue;
     $("#tail_select_text")[0].innerHTML = x;
@@ -81,13 +83,17 @@ open_setting_window = function () {
     $("#tail_type_text")[0].innerHTML = tiebaData.tail_data[x].split("!分隔!")[1];
     break;
   }
+
   ref1 = tiebaData.tail_data;
+
   for (x in ref1) {
     if (!hasProp.call(ref1, x)) continue;
     $("#tail_option_box").append("<div class=\"tail_option\">" + x + "</div>");
   }
+
   UpdateText = function () {
     var e;
+
     if ($("#tail_type_text")[0].innerHTML === "javascript") {
       try {
         $("#tail_data_show")[0].innerHTML = eval($("#tail_data")[0].value);
@@ -101,6 +107,7 @@ open_setting_window = function () {
       }
     }
   };
+
   UpdateText();
   $(".tail_option").click(function () {
     $("#tail_select_text")[0].innerHTML = this.innerHTML;
@@ -117,15 +124,15 @@ open_setting_window = function () {
   $("#tail_data").keyup(function () {
     return UpdateText();
   });
-  $("#setting_shadow").fadeIn(400);
-  //按钮
+  $("#setting_shadow").fadeIn(400); //按钮
+
   $("#setting_close").mouseenter(function () {
     return this.innerHTML = "关闭";
   });
   $("#setting_close").mouseleave(function () {
     return this.innerHTML = "设置";
-  });
-  //$("#setting_window").click (e) -> e.stopPropagation()
+  }); //$("#setting_window").click (e) -> e.stopPropagation()
+
   $("#setting_close").click(function () {
     return $("#setting_shadow").fadeOut(400, function () {
       return $("#setting_shadow").remove();
@@ -133,17 +140,21 @@ open_setting_window = function () {
   });
   $("#setting_reset").click(function () {
     var j, key, len, ref2;
+
     if (confirm("确定重置设置吗(会刷新页面)")) {
       ref2 = GM_listValues();
+
       for (j = 0, len = ref2.length; j < len; j++) {
         key = ref2[j];
         GM_deleteValue(key);
       }
+
       window.location.reload();
     }
   });
   $("#fentie_open").click(function () {
     $("#fentie_open + div").slideToggle("slow");
+
     if (tiebaData.fentie_open) {
       tiebaData.fentie_open = 0;
       return $("#fentie_open").attr("class", "setting_sp_btn close");
@@ -206,10 +217,13 @@ open_setting_window = function () {
   $("#tail_delete").click(function () {
     var oname, ref2, ref3;
     oname = $("#tail_select_text")[0].getAttribute("oname");
+
     if ($("#tail_select_text")[0].getAttribute("new") !== 1) {
       delete tiebaData.tail_data[oname];
     }
+
     ref2 = tiebaData.tail_data;
+
     for (x in ref2) {
       if (!hasProp.call(ref2, x)) continue;
       $("#tail_select_text")[0].innerHTML = x;
@@ -218,23 +232,27 @@ open_setting_window = function () {
       $("#tail_data")[0].value = tiebaData.tail_data[x].split("!分隔!")[0];
       $("#tail_type_text")[0].innerHTML = tiebaData.tail_data[x].split("!分隔!")[1];
       break;
-    }
-    //save
-    GM_setValue("tail_data", JSON.stringify(tiebaData.tail_data));
-    //reload
+    } //save
+
+
+    GM_setValue("tail_data", JSON.stringify(tiebaData.tail_data)); //reload
+
     $("#tail_option_box").empty();
     ref3 = tiebaData.tail_data;
+
     for (x in ref3) {
       if (!hasProp.call(ref3, x)) continue;
       tiebaData.tail_data[x] = tiebaData.tail_data[x].replace(/!逗号!/g, ",").replace(/!引号!/g, "\"");
       $("#tail_option_box").append("<div class=\"tail_option\">" + x + "</div>");
     }
+
     UpdateText();
   });
   $("#tail_save").click(function () {
     var name, oname, ref2, ref3;
     name = $("#tail_select_text")[0].innerHTML;
     oname = $("#tail_select_text")[0].getAttribute("oname");
+
     if ($("#tail_select_text")[0].getAttribute("new") === 1) {
       if (tiebaData.tail_data[name] != null) {
         return alert("该尾巴已存在！");
@@ -249,23 +267,28 @@ open_setting_window = function () {
         tiebaData.tail_data[name] = $("#tail_data")[0].value + "!分隔!" + $("#tail_type_text")[0].textContent;
       }
     }
+
     ref2 = tiebaData.tail_data;
+
     for (x in ref2) {
       if (!hasProp.call(ref2, x)) continue;
       tiebaData.tail_data[x] = tiebaData.tail_data[x].replace(/,/g, "!逗号!").replace(/"/g, "!引号!");
     }
-    GM_setValue("tail_data", JSON.stringify(tiebaData.tail_data));
-    //reload
+
+    GM_setValue("tail_data", JSON.stringify(tiebaData.tail_data)); //reload
+
     $("#tail_option_box").empty();
     ref3 = tiebaData.tail_data;
+
     for (x in ref3) {
       if (!hasProp.call(ref3, x)) continue;
       tiebaData.tail_data[x] = tiebaData.tail_data[x].replace(/!逗号!/g, ",").replace(/!引号!/g, "\"");
       $("#tail_option_box").append("<div class=\"tail_option\">" + x + "</div>");
     }
+
     UpdateText();
-  });
-  //保存部分
+  }); //保存部分
+
   $("#setting_save").click(function () {
     tiebaData.fentie_date = $("#fentie_date")[0].value;
     GM_setValue("fentie_open", tiebaData.fentie_open);
@@ -276,57 +299,71 @@ open_setting_window = function () {
       return $("#setting_shadow").remove();
     });
   });
-};
+}; //坟贴检测函数
 
-//坟贴检测函数
+
 CheckPost = function () {
   var date_str, date_time, days, years;
+
   if ($("#j_core_title_wrap").length && tiebaData.fentie_open) {
     date_str = $("#j_p_postlist ul.p_tail > li:nth-child(2) > span")[0].textContent;
+
     if (date_str === "1970-01-01 07:00") {
       return setTimeout(CheckPost, 500);
     }
+
     date_str = date_str.replace(" ", "-").replace(":", "-").split("-");
     date_time = new Date(date_str[0], date_str[1] - 1, date_str[2], date_str[3], date_str[4]);
     days = Math.round((new Date() - date_time) / 86400000);
+
     if (days >= tiebaData.fentie_date) {
       if (days >= 365) {
         years = Math.round(days / 365);
         days = years + "\u5E74" + (days - years * 365);
       }
+
       $("#tb_nav").after("<div id='NotifyTide'><p>\u8FD9\u662F\u4E00\u4E2A " + days + " \u5929\u7684\u575F\u8D34\u54E6~</p></div>");
+
       if (tiebaData.fentie_forbidden) {
         return tiebaData.StopPost = 1;
       }
     }
   }
-};
+}; //Tail
 
-//Tail
+
 AddTail = function (e) {
   var currentTail, key, tailList;
+
   if (tiebaData.StopPost === 1) {
     if (!confirm("这可能是一个坟贴, 确认要回复么?")) {
       return $("#ueditor_replace").empty();
     }
   }
+
   if (tiebaData.tail_cur === "不使用小尾巴") {
     return;
   }
+
   if (tiebaData.tail_cur === "随机小尾巴") {
     tailList = function () {
       var ref, results;
       ref = tiebaData.tail_data;
       results = [];
+
       for (key in ref) {
         if (!hasProp.call(ref, key)) continue;
         results.push(key);
       }
+
       return results;
     }();
+
     tiebaData.tail_cur = tailList[Math.round(Math.random() * tailList.length)];
   }
+
   currentTail = tiebaData.tail_data[tiebaData.tail_cur].split("!分隔!");
+
   if (currentTail[1] === "html") {
     $("#ueditor_replace").append("<br>" + currentTail[0]);
   } else if (currentTail[1] === "javascript") {
@@ -336,9 +373,11 @@ AddTail = function (e) {
 
 TailInit = function () {
   var SendBt, i, ref, ref1, x;
+
   if (!tiebaData.tail_open) {
     return;
   }
+
   if (document.querySelector(".ui_btn.ui_btn_m.j_submit.poster_submit")) {
     $("a.j_submit.poster_submit").before("<span id=\"tail_use\"> <span class=\"ui_btn ui_btn_m\"> <span id=\"tail_use_text\"></span> </span> <div id=\"tail_use_box_out\"> <div id=\"tail_use_box\" style=\"display:none;\"></div> </div> </span>");
     $("#tail_use_text").click(function () {
@@ -349,30 +388,38 @@ TailInit = function () {
         $("#tail_use_box").slideUp(400);
       }
     });
+
     if (tiebaData.tail_cur === "不使用小尾巴" || tiebaData.tail_cur === "随机小尾巴") {
       $("#tail_use_text")[0].innerHTML = tiebaData.tail_cur;
     } else if (typeof tiebaData.tail_data[tiebaData.tail_cur] === "undefined") {
       ref = tiebaData.tail_data;
+
       for (i in ref) {
         if (!hasProp.call(ref, i)) continue;
+
         if (!(i != null)) {
           continue;
         }
+
         tiebaData.tail_cur = i;
         break;
       }
+
       GM_setValue("tail_cur", tiebaData.tail_cur);
       $("#tail_use_text")[0].innerHTML = tiebaData.tail_cur;
     } else {
       $("#tail_use_text")[0].innerHTML = tiebaData.tail_cur;
     }
+
     $("#tail_use_box").append("<div class=\"tail_use_option\">不使用小尾巴</div>");
     $("#tail_use_box").append("<div class=\"tail_use_option\">随机小尾巴</div>");
     ref1 = tiebaData.tail_data;
+
     for (x in ref1) {
       if (!hasProp.call(ref1, x)) continue;
       $("#tail_use_box").append("<div class='tail_use_option'>" + x + "</div>");
     }
+
     $(".tail_use_option").click(function () {
       tiebaData.tail_cur = this.innerHTML;
       $("#tail_use_text")[0].innerHTML = tiebaData.tail_cur;
@@ -380,6 +427,7 @@ TailInit = function () {
     });
     SendBt = document.querySelector("a.j_submit.poster_submit[title=\"Ctrl+Enter快捷发表\"]");
     SendBt.addEventListener("click", AddTail, true);
+
     document.onkeydown = function (event) {
       if (event.ctrlKey && event.keyCode === 13) {
         return AddTail();
@@ -393,11 +441,14 @@ TailInit = function () {
 clearLink = function (event) {
   var link, ref, url;
   link = event.target;
+
   if (((ref = link.href) != null ? ref.indexOf("http://jump.bdimg.com/safecheck") : void 0) === 0) {
     url = link.textContent;
+
     if (url.indexOf("http") !== 0) {
       url = "http://" + url;
     }
+
     return link.href = url;
   }
 };

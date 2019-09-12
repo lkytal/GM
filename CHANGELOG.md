@@ -4,6 +4,7 @@ All notable changes to all the scripts will be documented in this file.
 
 ## Popup Search
 
+* 4.3.2: Fixed translate target language.
 * 4.3.0: Provide 'Copy' button.
 * 4.2.7: Https icons.
 * 4.2.6: Update Jquery.
