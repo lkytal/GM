@@ -8,7 +8,7 @@
 // @include						http://tieba.baidu.com/*
 // @include						https://tieba.baidu.com/*
 // @version						6.2.3
-// @require						https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.3.1.min.js
+// @require						https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.4.1.min.js
 // @icon						https://github.com/lkytal/GM/raw/master/icons/tieba.png
 // @noframes
 // @license						AGPL
