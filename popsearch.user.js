@@ -3,7 +3,7 @@
 // @name:zh					Popup Search: 快捷搜索
 // @author					lkytal
 // @namespace				Lkytal
-// @version					4.3.3
+// @version					4.3.4
 // @icon					https://github.com/lkytal/GM/raw/master/icons/search.png
 // @homepage				https://lkytal.github.io/
 // @homepageURL				https://lkytal.github.io/GM
@@ -655,7 +655,8 @@ ShowBar = function (event) {
 
 needPrefix = function (url) {
   var j, len, prefix, urlPrefixes;
-  urlPrefixes = ['http://', 'https://', 'ftp://', 'file://', 'thunder://', 'ed2k://'];
+  url = url.trim();
+  urlPrefixes = ['http://', 'https://', 'ftp://', 'file://', 'thunder://', 'ed2k://', 'chrome://'];
 
   for (j = 0, len = urlPrefixes.length; j < len; j++) {
     prefix = urlPrefixes[j];
