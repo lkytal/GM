@@ -3,7 +3,7 @@
 // @name:zh					Popup Search: 快捷搜索
 // @author					lkytal
 // @namespace				Lkytal
-// @version					4.3.4
+// @version					4.4.0
 // @icon					https://github.com/lkytal/GM/raw/master/icons/search.png
 // @homepage				https://lkytal.github.io/
 // @homepageURL				https://lkytal.github.io/GM
@@ -28,6 +28,7 @@
 // @grant					GM_registerMenuCommand
 // @grant					GM_info
 // @run-at					document-end
+// @inject-into				auto
 // @require					https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.4.1.min.js
 // @connect					google.com
 // @connect					translate.google.cn
@@ -171,6 +172,13 @@ popData.engines = [{
   src: popData.icons.inSiteIcon,
   href: 'https://www.google.com/search?newwindow=1&safe=off&q=${text}%20site:${domain}'
 }, {
+  id: "amazon_st",
+  title: "Search with Amazon",
+  description: "搜索亚马逊/ Search with Amazon",
+  defaultState: 0,
+  src: popData.icons.amazonIcon,
+  href: 'https://www.amazon.com/s?k=${text}'
+}, {
   id: "Bing_st",
   title: "Search with Bing",
   description: "必应搜索 / Search with Bing",
@@ -181,16 +189,9 @@ popData.engines = [{
   id: "Baidu_st",
   title: "Search with Baidu",
   description: "百度搜索 / Search with Baidu",
-  defaultState: 1,
+  defaultState: 0,
   src: popData.icons.baiduIcon,
   href: 'https://www.baidu.com/s?wd=${text}&ie=utf-8'
-}, {
-  id: "Google_st",
-  title: "Search with Google",
-  description: "谷歌搜索 / Search with Google",
-  defaultState: 1,
-  src: popData.icons.googleIcon,
-  href: 'https://www.google.com/search?newwindow=1&safe=off&q=${text}'
 }, {
   id: "Yahoo_st",
   title: "Search with Yahoo",
@@ -202,7 +203,7 @@ popData.engines = [{
   id: "Taobao_st",
   title: "Search with Taobao",
   description: "搜索淘宝 / Search with Taobao",
-  defaultState: 1,
+  defaultState: 0,
   src: popData.icons.taobaoIcon,
   href: 'https://s.taobao.com/search?q=${text}'
 }, {
@@ -227,13 +228,6 @@ popData.engines = [{
   src: popData.icons.youkuIcon,
   href: 'http://www.soku.com/search_video/q_${text}'
 }, {
-  id: "amazon_st",
-  title: "Search with Amazon",
-  description: "搜索亚马逊/ Search with Amazon",
-  defaultState: 1,
-  src: popData.icons.amazonIcon,
-  href: 'https://www.amazon.com/s/field-keywords=${text}'
-}, {
   id: "eBay_st",
   title: "Search with eBay",
   description: "搜索eBay / Search with eBay",
@@ -255,12 +249,19 @@ popData.engines = [{
   src: popData.icons.jdIcon,
   href: 'https://search.jd.com/Search?keyword=${text}&enc=utf-8'
 }, {
+  id: "Google_st",
+  title: "Search with Google",
+  description: "谷歌搜索 / Search with Google",
+  defaultState: 1,
+  src: popData.icons.googleIcon,
+  href: 'https://www.google.com/search?newwindow=1&safe=off&q=${text}'
+}, {
   id: "Wiki_st",
   title: "Search with Wiki",
   description: "搜索维基百科 / Search with Wikipedia",
-  defaultState: 0,
+  defaultState: 1,
   src: popData.icons.wikiIcon,
-  href: 'https://wikipedia.org/wiki/${text}'
+  href: 'https://wikipedia.org/w/index.php?search=${text}'
 }];
 
 log = function (msg) {
