@@ -11,7 +11,6 @@
 * [Popup Search](https://git.oschina.net/coldfire/GM/raw/master/popsearch.user.js)
 * [Text to link](https://git.oschina.net/coldfire/GM/raw/master/linkMix.user.js)
 * [Tieba enhance](https://git.oschina.net/coldfire/GM/raw/master/tieba_enhance.user.js)
-* [Scroll with mouse plus](https://git.oschina.net/coldfire/GM/raw/master/scroll.user.js)
 * [Select like Opera](https://git.oschina.net/coldfire/GM/raw/master/select.user.js)
 * [Search Image with Google & Baidu](https://git.oschina.net/coldfire/GM/raw/master/img.user.js)
 * [Discuz in new tab](https://git.oschina.net/coldfire/GM/raw/master/discuz_in_tab.user.js)

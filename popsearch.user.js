@@ -3,7 +3,7 @@
 // @name:zh					Popup Search: 快捷搜索
 // @author					lkytal
 // @namespace				Lkytal
-// @version					4.4.0
+// @version					4.4.1
 // @icon					https://github.com/lkytal/GM/raw/master/icons/search.png
 // @homepage				https://lkytal.github.io/
 // @homepageURL				https://lkytal.github.io/GM
@@ -37,11 +37,12 @@
 // @updateURL				https://git.oschina.net/coldfire/GM/raw/master/meta/popsearch.meta.js
 // @downloadURL				https://git.oschina.net/coldfire/GM/raw/master/popsearch.user.js
 // ==/UserScript==
-"use strict";
 
+"use strict";
 ;
 var CopyText,
     GetOpt,
+    GetTextboxSelection,
     InTextBox,
     OnEngine,
     OpenSet,
@@ -69,7 +70,9 @@ var CopyText,
     parseTranslationGoogle,
     popData,
     hasProp = {}.hasOwnProperty;
+
 window.$ = window.jQuery = jQuery.noConflict(true);
+
 popData = {
   count: 0,
   mouseIn: 0,
@@ -128,7 +131,7 @@ popData = {
   }, {
     id: "Iframe_st",
     text: "在Iframe中显示/ Activate in iframes",
-    defaultValue: 0
+    defaultValue: 1
   }, {
     id: "Dis_st",
     text: "显示于文字上方 / Display above selection",
@@ -136,6 +139,10 @@ popData = {
   }, {
     id: "Ctrl_st",
     text: "仅按下Ctrl时显示 / Only when ctrl pressed",
+    defaultValue: 0
+  }, {
+    id: "Textbox_st",
+    text: "不在文本框内显示 / Ignore selections in textboxes",
     defaultValue: 0
   }, {
     id: "userEngine_st",
@@ -157,6 +164,7 @@ popData = {
     href: "https://www.google.com/search?q=${text}%20site:${domain}"
   }]
 };
+
 popData.engines = [{
   id: "Open_st",
   title: "Open As Url",
@@ -266,7 +274,7 @@ popData.engines = [{
 
 log = function (msg) {
   popData.count += 1;
-  return console.log("Popup Msg " + popData.count + " : " + msg);
+  return console.log(`Popup Msg ${popData.count} : ${msg}`);
 };
 
 isChrome = function () {
@@ -275,19 +283,16 @@ isChrome = function () {
 
 fixPos = function (sel, e) {
   var eventLeft, eventTop, fix, m_left, offsetLeft, offsetTop, offsets;
-  offsets = get_selection_offsets(sel);
+  offsets = get_selection_offsets(sel, e);
   offsetTop = offsets[0];
   offsetLeft = offsets[1];
-
   if (e != null) {
     eventTop = e.pageY;
     eventLeft = e.pageX;
-
     if (Math.abs(offsetTop - eventTop) > 50) {
       //log offsetTop + " : " + offsetLeft + " <==> " + eventTop + " : " + eventLeft
       offsetTop = eventTop - 8;
     }
-
     if (Math.abs(offsetLeft - eventLeft) > 50) {
       //translate
       offsetLeft = eventLeft + 10;
@@ -295,25 +300,20 @@ fixPos = function (sel, e) {
   } else {
     $('#showUpBody').css('margin-left', '60px');
   }
-
   if (GetOpt('Dis_st')) {
     //UpSide
     offsetTop = offsetTop - 2 - $('#ShowUpBox').height();
-
     if (offsetTop - document.documentElement.scrollTop < 40) {
       offsetTop = document.documentElement.scrollTop + 40;
     }
   } else {
     offsetTop += 1.1 * offsets[2];
   }
-
   m_left = $('#ShowUpBox').width();
   fix = 0;
-
   if (offsetLeft - m_left < 4) {
     fix = 4 - offsetLeft + m_left;
   }
-
   $('#ShowUpBox').css("top", offsetTop + "px").css("left", offsetLeft - m_left + fix + "px");
   return $('#popupTip').css('margin-left', m_left - 20 - fix);
 };
@@ -333,7 +333,6 @@ OnEngine = function (e) {
   } else {
     GM_openInTab($(this).data('link'), !GetOpt("Focus_st"));
   }
-
   $('#ShowUpBox').fadeOut(200);
   return false;
 };
@@ -341,24 +340,20 @@ OnEngine = function (e) {
 PopupInit = function () {
   var $DivBox, $icon, EngineList, engine, j, k, l, len, len1, len2, ref, ref1, ref2;
   $('#ShowUpBox').remove();
-  EngineList = "<a id='transBtn'> <img title='Translate' src='" + popData.icons.translateIcon + "' /> </a> <a id='copy_btn'> <img title='Copy' src='" + popData.icons.copyIcon + "' /> </a>";
+  EngineList = `<a id='transBtn'> <img title='Translate' src='${popData.icons.translateIcon}' /> </a> <a id='copy_btn'> <img title='Copy' src='${popData.icons.copyIcon}' /> </a>`;
   ref = popData.engines;
-
   for (j = 0, len = ref.length; j < len; j++) {
     engine = ref[j];
-    EngineList += "<a id='" + engine.id + "Icon' class='engine'><img title='" + engine.title + "' src='" + engine.src + "' /></a>";
+    EngineList += `<a id='${engine.id}Icon' class='engine'><img title='${engine.title}' src='${engine.src}' /></a>`;
   }
-
   if (GetOpt("userEngine_st")) {
     ref1 = popData.userEngines;
-
     for (k = 0, len1 = ref1.length; k < len1; k++) {
       engine = ref1[k];
-      EngineList += "<a id='" + engine.id + "Icon' class='userEngine'><img title='" + engine.title + "' src='" + engine.src + "' /></a>";
+      EngineList += `<a id='${engine.id}Icon' class='userEngine'><img title='${engine.title}' src='${engine.src}' /></a>`;
     }
   }
-
-  $('body').append("<span id=\"ShowUpBox\"> <span id=\"showUpBody\"> <span id=\"popupWrapper\"> " + EngineList + " </span> <span id=\"transPanel\" /> </span> </span>");
+  $('body').append(`<span id=\"ShowUpBox\"> <span id=\"showUpBody\"> <span id=\"popupWrapper\"> ${EngineList} </span> <span id=\"transPanel\" /> </span> </span>`);
   $DivBox = $('#ShowUpBox');
   $DivBox.hide();
   $DivBox.hover(function () {
@@ -370,7 +365,6 @@ PopupInit = function () {
       clearTimeout(popData.timer);
       popData.timer = setTimeout(TimeOutHide, 6000);
     }
-
     return popData.mouseIn = 0;
   });
   $('#showUpBody').on("mouseup", function (event) {
@@ -393,38 +387,30 @@ PopupInit = function () {
     return event.stopPropagation();
   });
   ref2 = popData.engines;
-
   for (l = 0, len2 = ref2.length; l < len2; l++) {
     engine = ref2[l];
     $icon = $("#" + engine.id + "Icon");
-
     if (!GetOpt(engine.id)) {
       $icon.hide();
     }
   }
-
   $DivBox.find('.engine, .userEngine').on('click', OnEngine);
   $('#transBtn').on("click", onTranslate);
-
   if (!GetOpt('Trans_st')) {
     $('#transBtn').hide();
   }
-
   $('#copy_btn').on("click", function () {
     CopyText(popData.rawText);
     return $('#ShowUpBox').fadeOut(200);
   });
-
   if (!GetOpt('copy_icon_st')) {
     $('#copy_btn').hide();
   }
-
   if (GetOpt('Tab_st')) {
     $DivBox.find('a').attr('target', '_blank');
   } else {
     $DivBox.find('a').attr('target', '_self');
   }
-
   if (GetOpt('Dis_st')) {
     popData.tip = popData.tipUp;
     return $DivBox.append('<span id="popupTip" class="tipUp"></span>');
@@ -435,13 +421,13 @@ PopupInit = function () {
 };
 
 ajaxError = function (res) {
-  return $('#transPanel').empty().append("<p>Translate Error:<br /> " + res.statusText + " </p>").show();
+  return $('#transPanel').empty().append(`<p>Translate Error:<br /> ${res.statusText} </p>`).show();
 };
 
 onTranslate = function (event) {
   event.preventDefault();
   popData.bTrans = 1;
-  $("#transPanel").empty().append("<div style='padding:10px;'><img src='" + popData.icons.pending + "' /></div>").show();
+  $("#transPanel").empty().append(`<div style='padding:10px;'><img src='${popData.icons.pending}' /></div>`).show();
   $('#popupWrapper').hide();
   fixPos(document.defaultView.getSelection());
   return doRequest(0, 2000);
@@ -449,20 +435,17 @@ onTranslate = function (event) {
 
 doRequest = function (i, wait) {
   var ErrHandle, lang;
-
   ErrHandle = function () {
     return doRequest(i + 1, wait + 2000);
   };
-
   if (i >= 2) {
     ErrHandle = ajaxError;
   }
-
   lang = navigator.language || navigator.userLanguage || "zh-CN";
   return GM_xmlhttpRequest({
     method: 'POST',
     url: 'https://translate.google.cn/translate_a/single',
-    data: "client=gtx&dj=1&q=" + popData.text + "&sl=auto&tl=" + lang + "&hl=" + lang + "&ie=UTF-8&oe=UTF-8&source=icon&dt=t&dt=bd",
+    data: `client=gtx&dj=1&q=${popData.text}&sl=auto&tl=${lang}&hl=${lang}&ie=UTF-8&oe=UTF-8&source=icon&dt=t&dt=bd`,
     headers: {
       'Content-Type': 'application/x-www-form-urlencoded'
     },
@@ -475,86 +458,69 @@ doRequest = function (i, wait) {
 
 parseTranslationGoogle = function (responseDetails) {
   var PickMeaning, RLine, RTxt, Result, j, len, line, ref, sentence;
-
   if (!popData.bTrans) {
     return;
   }
-
   try {
     RTxt = JSON.parse(responseDetails.responseText);
   } catch (error) {
     return ajaxError(responseDetails);
   }
-
   RLine = function () {
     var j, len, ref, results;
     ref = RTxt.sentences;
     results = [];
-
     for (j = 0, len = ref.length; j < len; j++) {
       sentence = ref[j];
       results.push(sentence.trans);
     }
-
     return results;
   }().toString();
-
   PickMeaning = function (list) {
     var i, item, j, len, results;
     results = [];
-
     for (i = j = 0, len = list.length; j < len; i = ++j) {
       item = list[i];
-
       if (item.score > 0.005 || i < 3) {
         results.push(item.word);
       }
     }
-
     return results;
   };
-
   if (RTxt.dict != null) {
     ref = RTxt.dict;
-
     for (j = 0, len = ref.length; j < len; j++) {
       line = ref[j];
-      RLine += "<br>" + (line.pos + " : " + PickMeaning(line.entry));
+      RLine += "<br>" + `${line.pos} : ${PickMeaning(line.entry)}`;
     }
   }
-
-  Result = "<div id=\"tranRst\" style=\"font-size:13px;overflow:auto;padding:5px 12px;\"> <div style=\"line-height:200%;font-size:13px;\"> " + RLine + " </div> </div>";
+  Result = `<div id=\"tranRst\" style=\"font-size:13px;overflow:auto;padding:5px 12px;\"> <div style=\"line-height:200%;font-size:13px;\"> ${RLine} </div> </div>`;
   $('#transPanel').empty().append(Result).show();
   fixPos(document.defaultView.getSelection());
 };
 
 $(document).on("mousedown", function (event) {
   popData.mousedownEvent = event;
-
   if (popData.bTrans === 1) {
     PopupInit();
   }
-
   return $('#ShowUpBox').fadeOut(200);
 });
+
 $(document).on("mouseup", function (event) {
   if (event.which !== 1) {
     return;
   }
-
   if (GetOpt('Ctrl_st') && !event.ctrlKey) {
     return;
   }
-
   return ShowBar(event);
 });
 
 eventFromTextbox = function (eventList) {
   var event, j, len;
-
   for (j = 0, len = eventList.length; j < len; j++) {
     event = eventList[j];
-
     if (event != null) {
       if ($(event.target).is('textarea, input, *[contenteditable="true"]')) {
         //console.log $(event.target)
@@ -562,49 +528,51 @@ eventFromTextbox = function (eventList) {
       }
     }
   }
-
   return false;
 };
 
 InTextBox = function (selection) {
   var area, j, len, ref;
-
   if (isChrome()) {
     return false;
   }
-
   ref = $('textarea, input, *[contenteditable="true"]', document);
-
   for (j = 0, len = ref.length; j < len; j++) {
     area = ref[j];
-
     if (selection.containsNode(area, true)) {
       return true;
     }
   }
-
   return false;
+};
+
+GetTextboxSelection = function () {
+  var textbox;
+  textbox = document.activeElement;
+  if (textbox.selectionEnd - textbox.selectionStart > 0) {
+    return textbox.value.substring(textbox.selectionStart, textbox.selectionEnd);
+  }
+  return "";
 };
 
 ShowBar = function (event) {
   var engine, j, k, len, len1, paraList, ref, ref1, sel, setHref;
   sel = document.defaultView.getSelection();
-
   if (InTextBox(sel) || eventFromTextbox([event, popData.mousedownEvent])) {
-    return;
+    if (GetOpt("Textbox_st")) {
+      return;
+    }
+    popData.rawText = GetTextboxSelection();
+  } else {
+    popData.rawText = sel.toString();
   }
-
-  popData.rawText = sel.toString();
   popData.text = encodeURIComponent(popData.rawText.trim());
-
   if (popData.rawText === '') {
     return;
   }
-
   if (GetOpt("AutoCopy_st")) {
     CopyText(popData.rawText);
   }
-
   $('#transPanel').empty().hide();
   paraList = {
     "\\${rawText}": popData.rawText,
@@ -612,40 +580,31 @@ ShowBar = function (event) {
     "\\${domain}": document.domain,
     "\\${url}": location.href
   };
-
   setHref = function (engine) {
-    var $engine, href, para, value; //log engine.id + " : " + engine.href
-
+    var $engine, href, para, value;
+    //log engine.id + " : " + engine.href
     href = engine.href;
-
     for (para in paraList) {
       if (!hasProp.call(paraList, para)) continue;
       value = paraList[para];
-      href = href.replace(RegExp("" + para, "g"), value);
+      href = href.replace(RegExp(`${para}`, "g"), value);
     }
-
     $engine = $("#" + engine.id + "Icon");
     return $engine.data('link', href);
   };
-
   ref = popData.engines;
-
   for (j = 0, len = ref.length; j < len; j++) {
     engine = ref[j];
     setHref(engine);
   }
-
   ref1 = popData.userEngines;
-
   for (k = 0, len1 = ref1.length; k < len1; k++) {
     engine = ref1[k];
     setHref(engine);
   }
-
   if (needPrefix(popData.rawText)) {
-    $('#Open_stIcon').data('link', "http://" + popData.rawText.trim());
+    $('#Open_stIcon').data('link', `http://${popData.rawText.trim()}`);
   }
-
   popData.mouseIn = 0;
   popData.bTrans = 0;
   clearTimeout(popData.timer);
@@ -658,15 +617,12 @@ needPrefix = function (url) {
   var j, len, prefix, urlPrefixes;
   url = url.trim();
   urlPrefixes = ['http://', 'https://', 'ftp://', 'file://', 'thunder://', 'ed2k://', 'chrome://'];
-
   for (j = 0, len = urlPrefixes.length; j < len; j++) {
     prefix = urlPrefixes[j];
-
     if (url.indexOf(prefix) === 0) {
       return 0;
     }
   }
-
   return 1;
 };
 
@@ -674,11 +630,9 @@ CopyText = function (selText) {
   if (selText == null) {
     selText = document.defaultView.getSelection().toString();
   }
-
   if ((typeof GM_info !== "undefined" && GM_info !== null ? GM_info.scriptHandler : void 0) === "Violentmonkey") {
     return document.execCommand('copy');
   }
-
   try {
     return GM_setClipboard(selText, "text");
   } catch (error) {
@@ -705,7 +659,6 @@ OpenSet = function () {
   if ($('#popup_setting_bg').length === 0) {
     SettingWin();
   }
-
   return $('#popup_setting_bg').fadeIn(400);
 };
 
@@ -713,44 +666,51 @@ SettingWin = function () {
   var chsJSON, engJSON, engine, engineOptionList, generateEngineOption, generateOption, item, j, len, option, optionList, ref;
   addAdditionalCSS();
   $('#popup_setting_bg').remove();
-
   generateOption = function (option) {
-    return "<span id='" + option.id + "' class='setting_item'> <img src=" + popData.icons.settingIcon + " /> <span class='text'>" + option.text + "</span> <input class='tgl tgl-flat' id='" + option.id + "_checkbox' type='checkbox'> <label class='tgl-btn' for='" + option.id + "_checkbox'></label> </span>";
+    return `<span id='${option.id}' class='setting_item'> <img src=${popData.icons.settingIcon} /> <span class='text'>${option.text}</span> <input class='tgl tgl-flat' id='${option.id}_checkbox' type='checkbox'> <label class='tgl-btn' for='${option.id}_checkbox'></label> </span>`;
   };
-
   optionList = function () {
     var j, len, ref, results;
     ref = popData.optionList;
     results = [];
-
     for (j = 0, len = ref.length; j < len; j++) {
       option = ref[j];
       results.push(generateOption(option));
     }
-
     return results;
   }().join(' ');
-
   generateEngineOption = function (engine) {
-    return "<span id='" + engine.id + "' class='setting_item'> <img src=" + engine.src + " /> <span class='text'>" + engine.description + "</span> <input class='tgl tgl-flat' id='" + engine.id + "_checkbox' type='checkbox'> <label class='tgl-btn' for='" + engine.id + "_checkbox'></label> </span>";
+    return `<span id='${engine.id}' class='setting_item'> <img src=${engine.src} /> <span class='text'>${engine.description}</span> <input class='tgl tgl-flat' id='${engine.id}_checkbox' type='checkbox'> <label class='tgl-btn' for='${engine.id}_checkbox'></label> </span>`;
   };
-
   engineOptionList = function () {
     var j, len, ref, results;
     ref = popData.engines;
     results = [];
-
     for (j = 0, len = ref.length; j < len; j++) {
       engine = ref[j];
       results.push(generateEngineOption(engine));
     }
-
     return results;
   }().join(' ');
-
-  engJSON = '[\n    {\n        id: "UserEngine",\n        title: "Example Engine",\n        description: "Example of user-defined engine",\n        src: "http://lkytal.qiniudn.com/ic.ico",\n        href: "https://www.google.com/search?q=${text}"\n    }\n]';
-  chsJSON = '[\n    {\n        id: "UserEngine",\n        title: "Example Engine",\n        description: "自定义引擎示例",\n        src: "http://lkytal.qiniudn.com/ic.ico",\n        href: "https://www.google.com/search?q=${text}"\n    }\n]';
-  $("body").append("<div id='popup_setting_bg'> <div id='popup_setting_win'> <div id='popup_title'>PopUp Search Setting</div> <div id='popup_content'> <div id='tabs_box'> <div id='popup_tab1' class='popup_tab popup_selected'>\u9009\u9879 / General</div> <div id='popup_tab2' class='popup_tab'>\u641C\u7D22\u5F15\u64CE / Engines</div> <div id='popup_tab3' class='popup_tab'>\u81EA\u5B9A\u4E49 / Customize</div> <div id='popup_tab4' class='popup_tab'>\u5173\u4E8E / About</div> </div> <div id='page_box'> <div id='option_box'> <div id='popup_tab1Page'> " + optionList + " </div> <div id='popup_tab2Page'> " + engineOptionList + " </div> <div id='popup_tab3Page'> <div id='editTitle'> <div><b>\u8BF7\u9605\u8BFB\u5E2E\u52A9 / Read HELP first</b></div> <span id='popHelp'><u>Help</u></span> <span id='popReset'><u>Reset</u></span> </div> <textarea id='popup_engines'></textarea> </div> <div id='popup_tab4Page'> <h3>Authored by Lkytal</h3> <p> You can redistribute it under <a href='http://creativecommons.org/licenses/by-nc-sa/4.0/'> Creative Commons Attribution-NonCommercial-ShareAlike Licence </a> </p> <p class='contact-line'> Source Code at<br> Git OSChina <a class='tab-text' href='https://git.oschina.net/coldfire/GM'> https://git.oschina.net/coldfire/GM </a> <br /> Github <a class='tab-text' href='https://github.com/lkytal/GM'> https://github.com/lkytal/GM </a> </p> <p> Contact:<br> Github <a class='tab-text' href='https://github.com/lkytal'> https://github.com/lkytal/ </a> <br> Greasy fork <a class='tab-text' href='https://greasyfork.org/en/users/152-lkytal'> https://greasyfork.org/en/users/152-lkytal </a> </p> </div> </div> <div id='btnArea'> <div id='popup_save' class='setting_btn'>Save</div> <div id='popup_close' class='setting_btn'>Close</div> </div> </div> </div> </div> <div id='popup_help_bg'> <div id='popup_help_win'> <div id='popup_help_content'> <div id='helpLang'> <span id='engHead' class='popup_head_selected'>English</span> <span id='chsHead'>\u4E2D\u6587</span> </div> <div id='help_box'> <div id='engContent'> The content of custom engine should be in standard JSON format, in forms of following: <pre> " + engJSON + " </pre> The 'id' should be unique for every entry and must NOT contain any space character, the 'title' and the 'description' can be any text you like, the 'src' indicates the icon of every item, should be the URL to an image or be a <a href='http://dataurl.net/#about'>DataURL</a>. The 'href' is the link to be open upon click, you may have noticed the '${text}' variable, which will be replaced by selected text. Available variables are listed below: <ul> <li>${text} : will be replaced by the selected text (Url encoded, should use this by default)</li> <li>${rawText} : will be replaced by the original selected text</li> <li>${domain} : will be replaced by the domain of current URL</li> <li>${url} : will be replaced by the current web page's URL</li> </ul> Note: You can't modify built-in engines directly, however, you can disable them and add your own. </div> <div id='chsContent'> \u81EA\u5B9A\u4E49\u5F15\u64CE\u5185\u5BB9\u5E94\u5F53\u662F\u5408\u6CD5\u7684JSON\u683C\u5F0F, \u5982\u4E0B <pre> " + chsJSON + " </pre> \u6BCF\u4E00\u9879\u7684 id \u5FC5\u987B\u5404\u4E0D\u76F8\u540C\u4E14\u4E0D\u80FD\u542B\u6709\u7A7A\u683C, title \u548C description \u53EF\u4EE5\u968F\u610F\u586B\u5199, src \u662F\u8BE5\u9879\u7684\u56FE\u6807, \u53EF\u4EE5\u662F\u6307\u5411\u56FE\u6807\u7684 url \u6216\u8005\u662F\u4E00\u4E2A <a href='http://dataurl.net/#about'>DataURL</a>. href \u662F\u5F15\u64CE\u7684 url \u94FE\u63A5, \u5176\u4E2D\u53EF\u4EE5\u5305\u542B\u8BF8\u5982 ${text} \u8FD9\u6837\u7684\u53D8\u91CF, \u53D8\u91CF\u7684\u5927\u5C0F\u5199\u5FC5\u987B\u6B63\u786E, \u53EF\u7528\u7684\u53D8\u91CF\u6709: <ul> <li>${text} : \u4EE3\u8868\u9009\u4E2D\u6587\u5B57, \u7ECF\u8FC7 url encoding, \u4E00\u822C\u5E94\u5F53\u4F7F\u7528\u6B64\u9879</li> <li>${rawText} : \u4EE3\u8868\u672A\u7ECF encoding \u7684\u539F\u59CB\u9009\u4E2D\u6587\u5B57</li> <li>${domain} : \u4EE3\u8868\u5F53\u524D\u9875\u9762\u7684\u57DF\u540D</li> <li>${url} : \u4EE3\u8868\u5F53\u524D\u9875\u9762\u7684 url \u5730\u5740</li> </ul> \u6CE8\u610F: \u5185\u7F6E\u5F15\u64CE\u65E0\u6CD5\u76F4\u63A5\u4FEE\u6539, \u4F60\u53EF\u4EE5\u7981\u7528\u5B83\u4EEC\u7136\u540E\u6DFB\u52A0\u4F60\u81EA\u5B9A\u4E49\u7684\u5F15\u64CE </div> </div> <div id='help_btnArea'> <div id='popup_help_close' class='setting_btn'>Close</div> </div> </div> </div> </div> </div>");
+  engJSON = `[
+    {
+        id: "UserEngine",
+        title: "Example Engine",
+        description: "Example of user-defined engine",
+        src: "http://lkytal.qiniudn.com/ic.ico",
+        href: "https://www.google.com/search?q=\${text}"
+    }
+]`;
+  chsJSON = `[
+    {
+        id: "UserEngine",
+        title: "Example Engine",
+        description: "自定义引擎示例",
+        src: "http://lkytal.qiniudn.com/ic.ico",
+        href: "https://www.google.com/search?q=\${text}"
+    }
+]`;
+  $("body").append(`<div id='popup_setting_bg'> <div id='popup_setting_win'> <div id='popup_title'>PopUp Search Setting</div> <div id='popup_content'> <div id='tabs_box'> <div id='popup_tab1' class='popup_tab popup_selected'>选项 / General</div> <div id='popup_tab2' class='popup_tab'>搜索引擎 / Engines</div> <div id='popup_tab3' class='popup_tab'>自定义 / Customize</div> <div id='popup_tab4' class='popup_tab'>关于 / About</div> </div> <div id='page_box'> <div id='option_box'> <div id='popup_tab1Page'> ${optionList} </div> <div id='popup_tab2Page'> ${engineOptionList} </div> <div id='popup_tab3Page'> <div id='editTitle'> <div><b>请阅读帮助 / Read HELP first</b></div> <span id='popHelp'><u>Help</u></span> <span id='popReset'><u>Reset</u></span> </div> <textarea id='popup_engines'></textarea> </div> <div id='popup_tab4Page'> <h3>Authored by Lkytal</h3> <p> You can redistribute it under <a href='http://creativecommons.org/licenses/by-nc-sa/4.0/'> Creative Commons Attribution-NonCommercial-ShareAlike Licence </a> </p> <p class='contact-line'> Source Code at<br> Git OSChina <a class='tab-text' href='https://git.oschina.net/coldfire/GM'> https://git.oschina.net/coldfire/GM </a> <br /> Github <a class='tab-text' href='https://github.com/lkytal/GM'> https://github.com/lkytal/GM </a> </p> <p> Contact:<br> Github <a class='tab-text' href='https://github.com/lkytal'> https://github.com/lkytal/ </a> <br> Greasy fork <a class='tab-text' href='https://greasyfork.org/en/users/152-lkytal'> https://greasyfork.org/en/users/152-lkytal </a> </p> </div> </div> <div id='btnArea'> <div id='popup_save' class='setting_btn'>Save</div> <div id='popup_close' class='setting_btn'>Close</div> </div> </div> </div> </div> <div id='popup_help_bg'> <div id='popup_help_win'> <div id='popup_help_content'> <div id='helpLang'> <span id='engHead' class='popup_head_selected'>English</span> <span id='chsHead'>中文</span> </div> <div id='help_box'> <div id='engContent'> The content of custom engine should be in standard JSON format, in forms of following: <pre> ${engJSON} </pre> The 'id' should be unique for every entry and must NOT contain any space character, the 'title' and the 'description' can be any text you like, the 'src' indicates the icon of every item, should be the URL to an image or be a <a href='http://dataurl.net/#about'>DataURL</a>. The 'href' is the link to be open upon click, you may have noticed the '\${text}' variable, which will be replaced by selected text. Available variables are listed below: <ul> <li>\${text} : will be replaced by the selected text (Url encoded, should use this by default)</li> <li>\${rawText} : will be replaced by the original selected text</li> <li>\${domain} : will be replaced by the domain of current URL</li> <li>\${url} : will be replaced by the current web page's URL</li> </ul> Note: You can't modify built-in engines directly, however, you can disable them and add your own. </div> <div id='chsContent'> 自定义引擎内容应当是合法的JSON格式, 如下 <pre> ${chsJSON} </pre> 每一项的 id 必须各不相同且不能含有空格, title 和 description 可以随意填写, src 是该项的图标, 可以是指向图标的 url 或者是一个 <a href='http://dataurl.net/#about'>DataURL</a>. href 是引擎的 url 链接, 其中可以包含诸如 \${text} 这样的变量, 变量的大小写必须正确, 可用的变量有: <ul> <li>\${text} : 代表选中文字, 经过 url encoding, 一般应当使用此项</li> <li>\${rawText} : 代表未经 encoding 的原始选中文字</li> <li>\${domain} : 代表当前页面的域名</li> <li>\${url} : 代表当前页面的 url 地址</li> </ul> 注意: 内置引擎无法直接修改, 你可以禁用它们然后添加你自定义的引擎 </div> </div> <div id='help_btnArea'> <div id='popup_help_close' class='setting_btn'>Close</div> </div> </div> </div> </div> </div>`);
   $("#popup_setting_bg, #popup_help_bg").hide();
   $("#tabs_box > .popup_tab").on("click", function (e) {
     $("#tabs_box > .popup_tab").removeClass("popup_selected");
@@ -774,15 +734,12 @@ SettingWin = function () {
     return $("#chsContent").show();
   });
   ref = $("#popup_setting_win .setting_item");
-
   for (j = 0, len = ref.length; j < len; j++) {
     item = ref[j];
-
     if (item != null) {
       ReadOpt(item.id);
     }
   }
-
   $("#popup_engines").val(GM_getValue("engineString", popData.defaultEngineString));
   $("#popReset").click(function () {
     if (confirm("Reset?")) {
@@ -792,25 +749,19 @@ SettingWin = function () {
   $("#popHelp").click(function () {
     return $("#popup_help_bg").fadeIn();
   });
-
   if (!GetOpt("userEngine_st")) {
     $("#popup_tab3").hide();
   }
-
   $("#popup_save").click(function () {
     var k, len1, ref1, userEngineString;
     ref1 = $("#popup_setting_win .setting_item");
-
     for (k = 0, len1 = ref1.length; k < len1; k++) {
       item = ref1[k];
-
       if (item != null) {
         SaveOpt(item.id);
       }
     }
-
     userEngineString = $("#popup_engines").val();
-
     if (userEngineString !== "") {
       try {
         popData.userEngines = JSON.parse(userEngineString);
@@ -820,10 +771,8 @@ SettingWin = function () {
         log(userEngineString);
       }
     }
-
     return $("#popup_setting_bg").fadeOut(300, function () {
       $("#popup_setting_bg").remove(); //force rebuild setting window
-
       return PopupInit(); //rebuild toolbar
     });
   });
@@ -860,42 +809,31 @@ UpdateNotified = function () {
 
 PopupLoad = function () {
   var engine, j, k, len, len1, option, popupMenu, ref, ref1, setDefault, userEngineString;
-
   if (window.self !== window.top || window.frameElement) {
     if (!GM_getValue("Iframe_st", 0)) {
       return;
     }
   }
-
   addCSS();
-
   if (GM_getValue("UpdateAlert", 0) < popData.codeVersion) {
     setDefault = function (key, defaultValue) {
       return GM_setValue(key, GM_getValue(key, defaultValue));
     };
-
     ref = popData.optionList;
-
     for (j = 0, len = ref.length; j < len; j++) {
       option = ref[j];
       setDefault(option.id, option.defaultValue);
     }
-
     ref1 = popData.engines;
-
     for (k = 0, len1 = ref1.length; k < len1; k++) {
       engine = ref1[k];
       setDefault(engine.id, engine.defaultState);
     }
-
     UpdateLog();
   }
-
   popData.defaultEngineString = JSON.stringify(popData.defaultEngines, null, 4);
-
   if (GetOpt("userEngine_st")) {
     userEngineString = GM_getValue("engineString", popData.defaultEngineString);
-
     try {
       popData.userEngines = JSON.parse(userEngineString);
     } catch (error) {
@@ -903,10 +841,8 @@ PopupLoad = function () {
       console.error(userEngineString);
     }
   }
-
   PopupInit();
   GM_registerMenuCommand("Popup Search Setting / 设置", OpenSet, 'p');
-
   if (GM_getValue("PopupMenu", 0)) {
     popupMenu = document.body.appendChild(document.createElement("menu"));
     popupMenu.outerHTML = '<menu id="userscript-popup" type="context"><menuitem id="PopupSet" label="Popup Search设置"></menuitem></menu>';
@@ -920,39 +856,40 @@ PopupLoad = function () {
 setTimeout(PopupLoad, 100);
 
 addCSS = function () {
-  return GM_addStyle("#ShowUpBox { all: unset; width: auto; height: auto; position: absolute; z-index: 10240; color: black; display: inline-block; line-height: 0; vertical-align: baseline; box-sizing: content-box; } #showUpBody { min-width: 20px; max-width: 750px; min-height: 20px; max-height: 500px; display: block; border:solid 2px rgb(144,144,144); border-radius:1px; background:rgba(252, 252, 252, 1); } #popupWrapper { all: unset; margin: 3px 2px 3.8px 2px; display:block; line-height: 0; font-size:0; } #transPanel { line-height: normal; width: auto; font-size: 16px; overflow: auto; display: none; } #popupWrapper > a { all: unset; margin: 0px 2px; } #popupWrapper img { all: unset; margin: 0px; height: 24px; width: 24px; border-radius: 0px; padding: 0px; display: inline-block; transition-duration: 0.1s; -moz-transition-duration: 0.1s; -webkit-transition-duration: 0.1s; } #popupWrapper img:hover { margin: -1px -1px; height: 26px; width: 26px; } #popupTip { display: inline-block; clear: both; height: 9px; width: 9px; } .tipUp { background: url(" + popData.icons.tipUp + ") 0px 0px no-repeat transparent; margin-top: -2px; margin-bottom: 0px; } .tipDown { background: url(" + popData.icons.tipDown + ") 0px 0px no-repeat transparent; margin-top: 0px; margin-bottom: -2px; } #ShowUpBox a { text-decoration: none; display: inline-block; }");
+  return GM_addStyle(`#ShowUpBox { all: unset; width: auto; height: auto; position: absolute; z-index: 10240; color: black; display: inline-block; line-height: 0; vertical-align: baseline; box-sizing: content-box; } #showUpBody { min-width: 20px; max-width: 750px; min-height: 20px; max-height: 500px; display: block; border:solid 2px rgb(144,144,144); border-radius:1px; background:rgba(252, 252, 252, 1); } #popupWrapper { all: unset; margin: 3px 2px 3.8px 2px; display:block; line-height: 0; font-size:0; } #transPanel { line-height: normal; width: auto; font-size: 16px; overflow: auto; display: none; } #popupWrapper > a { all: unset; margin: 0px 2px; } #popupWrapper img { all: unset; margin: 0px; height: 24px; width: 24px; border-radius: 0px; padding: 0px; display: inline-block; transition-duration: 0.1s; -moz-transition-duration: 0.1s; -webkit-transition-duration: 0.1s; } #popupWrapper img:hover { margin: -1px -1px; height: 26px; width: 26px; } #popupTip { display: inline-block; clear: both; height: 9px; width: 9px; } .tipUp { background: url(${popData.icons.tipUp}) 0px 0px no-repeat transparent; margin-top: -2px; margin-bottom: 0px; } .tipDown { background: url(${popData.icons.tipDown}) 0px 0px no-repeat transparent; margin-top: 0px; margin-bottom: -2px; } #ShowUpBox a { text-decoration: none; display: inline-block; }`);
 };
 
 addAdditionalCSS = function () {
   if (popData.additionalCSSLoaded === 1) {
     return;
   }
-
   popData.additionalCSSLoaded = 1;
   return GM_addStyle("#popup_setting_bg { all: unset; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.2); position: fixed; left: 0px; top: 0px; z-index:102400; font-family: \"Hiragino Sans GB\", \"Microsoft Yahei\", Arial, sans-serif; display: -webkit-flex; display: flex; justify-content: center; align-items: center; } #popup_setting_win { all: unset; width: 760px; height: 90%; box-shadow: 0 0 10px #222; box-sizing: content-box !important; background: rgba(255, 255, 255, 0.98); overflow: hidden; display: -webkit-flex; display: -moz-flex; display: flex; flex-direction: column; } #popup_title { font-size:24px; font-weight: bold; text-align: center; padding: 15px; background: #16A085; color: white; flex-shrink: 0; height: 40px; } #popup_content { flex-grow: 1; flex-shrink: 1; height: calc(100% - 70px); padding: 0px; display: -webkit-flex; display: -moz-flex; display: flex; justify-content: space-between; align-items: stretch; } #tabs_box { display: -webkit-flex; display: -moz-flex; display: flex; flex-direction: column; flex-basis: 25%; flex-shrink: 0; background: #EEE; } .popup_tab { width: 100%; background: #EEE; padding: 15px; font-weight: bold; text-align: center; box-sizing: border-box; cursor: pointer; user-select: none; -moz-user-select: none; -webkit-user-select: none; } .popup_tab:hover { background: #ccc; } .popup_selected { border-right: none; background: #FFF; } .popup_selected:hover { background: #FFF; } #page_box { padding: 20px 30px; flex-grow: 1; flex-shrink: 1; max-height: 100%; display: -webkit-flex; display: -moz-flex; display: flex; flex-direction: column; } #option_box { display: -webkit-flex; display: -moz-flex; display: flex; flex-direction: column; align-items: stretch; flex-grow: 1; flex-shrink: 1; overflow-y: auto; } #option_box > div { scroll-behavior: smooth; flex-grow: 1; display: -webkit-flex; display: -moz-flex; display: flex; flex-direction: column; align-items: stretch; } #popup_engines { flex-grow: 1; border: solid 2px #ddd; text-overflow: clip; white-space: pre; overflow-x: auto; overflow-y: auto; word-wrap: break-word; resize: none; } #editTitle { padding: 0px 0px 15px 0px; display: -webkit-flex; display: -moz-flex; display: flex; justify-content: space-between; } #editTitle div { flex-grow: 1; } #editTitle span { margin-left: 20px; color : #1ABC9C; cursor: pointer; } #btnArea { display: -webkit-flex; display: -moz-flex; display: flex; justify-content: flex-end; margin-top: 20px; flex-shrink: 0; } .setting_btn { display: inline-block; font-size: 16px; text-align: center; mix-width: 50px; padding: 4px 10px 4px 10px; border-radius: 2px; margin: 0px 0px 0px 20px; background: #1ABC9C; color: #fff; cursor: pointer; user-select: none; -moz-user-select: none; -webkit-user-select: none; } .setting_btn:hover { text-shadow: 0px 0px 2px #FFF; } .setting_item { min-height: 28px; font-size: 14px; margin: 5px 0px 10px 0px; display: -webkit-flex; display: -moz-flex; display: flex; align-items: center; } .setting_item > img { width: 24px; height: auto; margin-right: 7px; } .setting_item .text{ flex-grow: 1; font-size: 16px; } #popup_help_bg { all: unset; width: 100%; height: 100%; position: fixed; top: 0; left: 0; background: transparent; display: -webkit-flex; display: flex; justify-content: center; align-items: center; z-index: 10240000; } #popup_help_win { all: unset; width: 650px; height: 80%; box-shadow: 0 0 10px #222; box-sizing: content-box !important; background: rgba(255, 255, 255, 0.98); padding: 20px; display: -webkit-flex; display: flex; flex-direction: column; align-items: stretch; /*overflow: hidden;*/ } #popup_help_content { max-height: 100%; flex-grow: 1; display: -webkit-flex; display: flex; flex-direction: column; align-items: stretch; } #helpLang { flex-grow: 0; flex-shrink: 0; display: -webkit-flex; display: flex; border-bottom: solid 1px #ccc; } #helpLang span { padding: 8px 30px; margin-bottom: -1px; cursor: pointer; user-select: none; -moz-user-select: none; -webkit-user-select: none; } #helpLang span.popup_head_selected { border-top: solid 1px #ccc; border-left: solid 1px #ccc; border-right: solid 1px #ccc; border-bottom: solid 3px #FFF; } #help_box { overflow-y: auto; flex-grow: 1; flex-shrink: 1; margin-top: 15px; } #help_box > div { word-wrap: break-word; } #help_btnArea { flex-grow: 0; flex-shrink: 0; display: -webkit-flex; display: flex; justify-content: flex-end; margin-top: 20px; } #popup_update_bg { all: unset; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.2); position: fixed; left: 0px; top: 0px; z-index: 1024000; font-family: \"Hiragino Sans GB\", \"Microsoft Yahei\", Arial, sans-serif; display: -webkit-flex; display: flex; justify-content: center; align-items: center; } #popup_update_win { all: unset; width: 50%; height: 80%; box-shadow:0 0 10px #222; box-sizing: content-box !important; background: rgba(255, 255, 255, 0.98); overflow: hidden; font-size: 16px; display: -webkit-flex; display: -moz-flex; display: flex; flex-direction: column; } #update_header { font-size: 24px; font-weight: bold; text-align: center; padding: 15px; background: #16A085; color: white; flex-shrink: 0; height: 40px; } #popup_update_content { flex-grow: 1; flex-shrink: 1; height: calc(100% - 70px); overflow: auto; padding: 15px; display: -webkit-flex; display: -moz-flex; display: flex; flex-direction: column; justify-content: space-between; align-items: stretch; } #update_texts{ flex-grow: 1; flex-shrink: 1; } #update_btnArea { flex-grow: 0; flex-shrink: 0; display: -webkit-flex; display: flex; justify-content: flex-end; margin-top: 20px; } .hidden { display: none; } .tgl { display: none; } .tgl, .tgl:after, .tgl:before, .tgl *, .tgl *:after, .tgl *:before, .tgl+.tgl-btn { -webkit-box-sizing: border-box; -moz-box-sizing: border-box; box-sizing: border-box; } .tgl::-moz-selection, .tgl:after::-moz-selection, .tgl:before::-moz-selection, .tgl *::-moz-selection, .tgl *:after::-moz-selection, .tgl *:before::-moz-selection, .tgl+.tgl-btn::-moz-selection { background: none; } .tgl::selection, .tgl:after::selection, .tgl:before::selection, .tgl *::selection, .tgl *:after::selection, .tgl *:before::selection, .tgl+.tgl-btn::selection { background: none; } .tgl+.tgl-btn { outline: 0; display: inline-block; width: 4em; height: 2em; position: relative; cursor: pointer; } .tgl+.tgl-btn:after, .tgl+.tgl-btn:before { position: relative; display: inline-block; content: \"\"; width: 50%; height: 100%; } .tgl+.tgl-btn:after { left: 0; } .tgl+.tgl-btn:before { display: none; } .tgl:checked+.tgl-btn:after { left: 50%; } .tgl-flat+.tgl-btn { padding: 2px; -webkit-transition: all .2s ease; transition: all .2s ease; background: #fff; border: 4px solid #f2f2f2; border-radius: 2em; } .tgl-flat+.tgl-btn:after { -webkit-transition: all .2s ease; transition: all .2s ease; background: #f2f2f2; content: \"\"; border-radius: 1em; } .tgl-flat:checked+.tgl-btn { border: 4px solid #1ABC9C; } .tgl-flat:checked+.tgl-btn:after { left: 50%; background: #1ABC9C; }");
 };
 
 getLastRange = function (selection) {
   var j, rangeNum, ref;
-
   for (rangeNum = j = ref = selection.rangeCount - 1; ref <= 0 ? j <= 0 : j >= 0; rangeNum = ref <= 0 ? ++j : --j) {
     if (!selection.getRangeAt(rangeNum).collapsed) {
       return selection.getRangeAt(rangeNum);
     }
   }
-
   return selection.getRangeAt(selection.rangeCount - 1);
 };
 
-get_selection_offsets = function (selection) {
+get_selection_offsets = function (selection, e) {
   var $test_span, Rect, lastRange, newRange;
-  $test_span = $('<span style="display:inline;">x</span>'); // "x" because it must have a height
-
-  lastRange = getLastRange(selection);
-  newRange = document.createRange();
-  newRange.setStart(lastRange.endContainer, lastRange.endOffset);
-  newRange.insertNode($test_span[0]);
-  Rect = $test_span[0].getBoundingClientRect();
-  $test_span.remove();
-  return [Rect.top + window.scrollY, Rect.left + window.scrollX, 0, 0];
+  try {
+    $test_span = $('<span style="display:inline;">x</span>');
+    // "x" because it must have a height
+    lastRange = getLastRange(selection);
+    newRange = document.createRange();
+    newRange.setStart(lastRange.endContainer, lastRange.endOffset);
+    newRange.insertNode($test_span[0]);
+    Rect = $test_span[0].getBoundingClientRect();
+    $test_span.remove();
+    return [Rect.top + window.scrollY, Rect.left + window.scrollX, 0, 0];
+  } catch (error) {
+    return [e.pageY, e.pageX, 0, 0];
+  }
 };
