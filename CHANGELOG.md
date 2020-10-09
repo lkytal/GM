@@ -4,6 +4,7 @@ All notable changes to all the scripts will be documented in this file.
 
 ## Popup Search
 
+* 4.4.2: Optimized hiding logic
 * 4.4.1: Support display in textboxes
 * 4.3.2: Fixed translate target language.
 * 4.3.0: Provide 'Copy' button.

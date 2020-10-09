@@ -3,7 +3,7 @@
 // @name:zh					Popup Search: 快捷搜索
 // @author					lkytal
 // @namespace				Lkytal
-// @version					4.4.1
+// @version					4.4.2
 // @icon					https://github.com/lkytal/GM/raw/master/icons/search.png
 // @homepage				https://lkytal.github.io/
 // @homepageURL				https://lkytal.github.io/GM
@@ -52,17 +52,18 @@ var CopyText,
     SaveOpt,
     SettingWin,
     ShowBar,
-    TimeOutHide,
     UpdateLog,
     UpdateNotified,
     addAdditionalCSS,
     addCSS,
     ajaxError,
+    doHideBar,
     doRequest,
     eventFromTextbox,
     fixPos,
     getLastRange,
     get_selection_offsets,
+    hideBar,
     isChrome,
     log,
     needPrefix,
@@ -81,6 +82,7 @@ popData = {
   codeVersion: 8,
   text: "",
   mousedownEvent: null,
+  fadeEvent: [],
   icons: {
     baiduIcon: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAAFiUAABYlAUlSJPAAAASzSURBVFhH7ZZNbBtFFMf//ljbtZ2149hp4zgkKamSNNDykapQKEH5QCKiBYGgIkpVQasegiok1CIOHCpRDkjcQIhbJUo5waUSB8SHBAWJCCRQgJRQmjaNEyd2nMTfG9u7y5v1prbT9doBRb3wk9aembc78595b96M4b4xWcYdxKj+3zH+F7ApAQZD4QMz/RipzOr/lc0JgIzulhTGnozjmX0xWMzF+DUZZdQ7ZbjsMomTaxa3KQGt3gTOjQp4aZjHGyN2HNozo1qAod1hXDydxoXX0ni4I662VmdTAg50SWhpqlfKHMfhyIBbKd/TBowdNqDJ5yC7A8cHY2huUExVqVmAkd50SldhMhU/8dWbYOWAx+6+joDfp7YCu9q98Fmm1Zo+VQWw8VjAsXSVkX2QJEm1ALFEDjkRaPaayedFpyeSAkRzUZAeFQUYyLK3NYFTfT/i2MEbaK5PYnK+DkvRmGIXRRFf/xQlQcBcJFcm7PfpDILLdWpNH9OOfWfPquUyfLyEt0YSGHq0E73dPJyGBXz3lxfB4E1wchzjv87jk/FWJAUOiTUbmvkw7QoRv0yGcPGyGwnBAD9PYmn5hBz5qcKu0DwL2LvDDwo497Kt0EDEE2m8eT6P8Ws8XA5AyNJSZwo25qLtFJu8ZRmrAo8mdx4nBpbQ01GPP69F8N4XfkzOkggNFZouYO7cuaP8ZYfdhgYXkM0DEZpYJivB48hhO5+jwJQRWgGmFjwkyoyB7jk88kAAbt6Bh+5vw+vPZWG3qh1tQDsGaE0WVoo+ZeTyIuJJaiNdvF3CC/sXceFMHh+dEXFyMAKfU1ASlc0CtPuLK8fobHXATu1aaApgPvn2NxNWVlOFBmLiShB/BC3KTI71RXF6pAl+3zY0emw4cagRb4/G4XGSXwjmko3c5meVigKWkhac+pDDZ9+EcP7zJbxzKYDltB2DXTN4caDutlTb2+PD0ceT4EzAjbnCTlnn5mKOXKZWNlDxQsIGYBaO/CvSv4ka+vdm8cpwCoEd7rJ9v04qLeD9T6O4Msfh1adF7GzxIEzb9t1LPvw8BUgaQVjTjYgt+1DXNJ0BTgSavGXZsBRRlDC/uIqPv1rDD1cbYONkpAQgnLAqk9EaSbunEljwHNk/i+NP8WgNNFYcnMFsLX4Pnj0goX93BOG4FQsxq5KsKk1TVwBb5cGeEI4+wVPHXrW1Op0dzTh52IPRg4vKWaGHrgCPExjpN8Lt5tWW2nE6tuH5Pjv2tFPi0EFXwF2NgL+R0t6/xO1yosP1t1rTRldAmrZOnhKQVsTXCmfIqSVtdAVMh2gPzxf2dOlpVyupdAYzmXvVmja6AnLkvg++9OP67BJdSIwUyTKWV9MILiYRiqSQWctDoGclLiht7AlHU8p7TPD3EwLGaf/rUTUPsHtBe0MSve0JuJwmuoDIiKyICIaziGXpSmaqg1WeQ08bh10tNrgsMayJNkzMmHF5qgHRBJ0QOiPUlIhYCJjoYf8yPYo36Ctp/UvVrlzVQctGqvMirRiZqvWu64J1WCd5GpRdv/LUPxNwa3AGlSkJKvasaKYj26jYq0+tRIDWCbZVlI51S0DZjLaY0rFqcsHWAfwDnVStvcSt8MwAAAAASUVORK5CYII=",
     bingIcon: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAACeklEQVRYhe2Wy2sTURTGu1fapOZRTKj2kaag1VaTNA9NjHkWLS3diC5q6wNc+A+EIkVw40ZRFBeuirgQF1JfuFBboYiIzb2TmdimCA0YWyupqalBTRo/F4M3KE0mhrR2kQsfDHPvOfOb794zZ6qErlb8T1VVACoAFYANDcD7dKAWFahFBd7TvL4AvE8HobsNqSmK1FuC6WP71gQiP4C3GeGe3fg9Zk54EHI35ub9evBenSi/fm0AhJ5dDCAy4Abn0ILa1CCGGlCrCsLhnRAO7QAxK0CMMlBb3R+QZQUId7ch0u9EYuwBVhs/s1l8fnIX00dtIEY5eF9LeQG+RWfYdeLZKGaHTiLS70TkuAvR4TP48vIpm19+MwFqURZ1ZooGAIAf8+/B2TWgZgVCzm0IuRtFHagH6awF72vBytek6EgmDWpVSTpRNEA2k0awYxN4T1PeZCFXA6hZwWKWxh+CWtXlAYhdHgK3f6ukpdSqxqfb11kcMckLVknhMuxtZ4lmA4MIOeslATiHFrFLARbH2TUFtyE/gF8PYpKzRIuP7oAYZZIAwY7NWJ6cEM/BSgbEIINQigNCVys4uwZz187nPkan/CCdW1Z9I96rAzHIMBsYZOuj505Lula4F/j1CO6tRnz0Fku6MHIF1KIEMclBrSpQqwrEKANn1yJ+b4Stm795EcRUW3oZ/r0V7872IZOI50ryYwzJV2NIvh5HenGB3f8eiyIy4AK1KCUfXhQAK7GD2xHcU42pI2bM3biApRePkQoHkQpPIvH8Pj5cHUa4tx3EUIOQq6GonP8EIEoP3tPEegK1KEXZ6sA5tCV1y439Q1IBqABUANZDvwDe9YuA3jr3dgAAAABJRU5ErkJggg==",
@@ -318,12 +320,6 @@ fixPos = function (sel, e) {
   return $('#popupTip').css('margin-left', m_left - 20 - fix);
 };
 
-TimeOutHide = function () {
-  if (popData.mouseIn === 0 && GetOpt("Fade_st") && !popData.bTrans) {
-    return $('#ShowUpBox').fadeOut(600);
-  }
-};
-
 OnEngine = function (e) {
   if (isChrome()) {
     //log "chrome"
@@ -333,7 +329,7 @@ OnEngine = function (e) {
   } else {
     GM_openInTab($(this).data('link'), !GetOpt("Focus_st"));
   }
-  $('#ShowUpBox').fadeOut(200);
+  hideBar(100);
   return false;
 };
 
@@ -356,6 +352,12 @@ PopupInit = function () {
   $('body').append(`<span id=\"ShowUpBox\"> <span id=\"showUpBody\"> <span id=\"popupWrapper\"> ${EngineList} </span> <span id=\"transPanel\" /> </span> </span>`);
   $DivBox = $('#ShowUpBox');
   $DivBox.hide();
+  $DivBox.on("click dblclick mousedown mouseup contextmenu", function (event) {
+    return event.stopPropagation();
+  });
+  $('#transPanel').on("mouseup contextmenu", function (event) {
+    return event.stopPropagation();
+  });
   $DivBox.hover(function () {
     $(this).fadeTo(150, 1);
     return popData.mouseIn = 1;
@@ -370,7 +372,7 @@ PopupInit = function () {
   $('#showUpBody').on("mouseup", function (event) {
     if (event.which === 3) {
       CopyText();
-      $('#ShowUpBox').fadeOut(200);
+      hideBar(100);
       return false;
     } else if (event.which === 2) {
       GM_openInTab(document.defaultView.getSelection().toString());
@@ -379,12 +381,6 @@ PopupInit = function () {
   });
   $('#showUpBody').on("contextmenu", function (event) {
     return false;
-  });
-  $('#transPanel').on("mouseup contextmenu", function (event) {
-    return event.stopPropagation();
-  });
-  $DivBox.on("click dblclick mousedown mouseup contextmenu", function (event) {
-    return event.stopPropagation();
   });
   ref2 = popData.engines;
   for (l = 0, len2 = ref2.length; l < len2; l++) {
@@ -401,7 +397,7 @@ PopupInit = function () {
   }
   $('#copy_btn').on("click", function () {
     CopyText(popData.rawText);
-    return $('#ShowUpBox').fadeOut(200);
+    return hideBar();
   });
   if (!GetOpt('copy_icon_st')) {
     $('#copy_btn').hide();
@@ -499,12 +495,20 @@ parseTranslationGoogle = function (responseDetails) {
   fixPos(document.defaultView.getSelection());
 };
 
+doHideBar = function () {
+  return $('#ShowUpBox').fadeOut(150);
+};
+
+hideBar = function (time = 0) {
+  return popData.fadeEvent.push(setTimeout(doHideBar, time));
+};
+
 $(document).on("mousedown", function (event) {
   popData.mousedownEvent = event;
   if (popData.bTrans === 1) {
     PopupInit();
   }
-  return $('#ShowUpBox').fadeOut(200);
+  return hideBar();
 });
 
 $(document).on("mouseup", function (event) {
@@ -556,7 +560,7 @@ GetTextboxSelection = function () {
 };
 
 ShowBar = function (event) {
-  var engine, j, k, len, len1, paraList, ref, ref1, sel, setHref;
+  var do_timeout_hide, e, engine, j, k, l, len, len1, len2, paraList, ref, ref1, ref2, sel, setHref;
   sel = document.defaultView.getSelection();
   if (InTextBox(sel) || eventFromTextbox([event, popData.mousedownEvent])) {
     if (GetOpt("Textbox_st")) {
@@ -569,6 +573,12 @@ ShowBar = function (event) {
   popData.text = encodeURIComponent(popData.rawText.trim());
   if (popData.rawText === '') {
     return;
+  }
+  ref = popData.fadeEvent;
+  // we have hide event for every mousedown
+  for (j = 0, len = ref.length; j < len; j++) {
+    e = ref[j];
+    clearTimeout(e);
   }
   if (GetOpt("AutoCopy_st")) {
     CopyText(popData.rawText);
@@ -592,14 +602,14 @@ ShowBar = function (event) {
     $engine = $("#" + engine.id + "Icon");
     return $engine.data('link', href);
   };
-  ref = popData.engines;
-  for (j = 0, len = ref.length; j < len; j++) {
-    engine = ref[j];
-    setHref(engine);
-  }
-  ref1 = popData.userEngines;
+  ref1 = popData.engines;
   for (k = 0, len1 = ref1.length; k < len1; k++) {
     engine = ref1[k];
+    setHref(engine);
+  }
+  ref2 = popData.userEngines;
+  for (l = 0, len2 = ref2.length; l < len2; l++) {
+    engine = ref2[l];
     setHref(engine);
   }
   if (needPrefix(popData.rawText)) {
@@ -607,8 +617,14 @@ ShowBar = function (event) {
   }
   popData.mouseIn = 0;
   popData.bTrans = 0;
-  clearTimeout(popData.timer);
-  popData.timer = setTimeout(TimeOutHide, 6000);
+  do_timeout_hide = function () {
+    if (popData.mouseIn === 0 && !popData.bTrans) {
+      return $('#ShowUpBox').fadeOut(250);
+    }
+  };
+  if (GetOpt("Fade_st")) {
+    popData.fadeEvent.push(setTimeout(do_timeout_hide, 5000));
+  }
   fixPos(sel, event);
   return $('#ShowUpBox').css('opacity', 0.9).fadeIn(200);
 };
