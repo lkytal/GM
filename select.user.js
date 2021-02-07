@@ -5,7 +5,7 @@
 // @homepage				https://lkytal.github.io/
 // @homepageURL				https://lkytal.github.io/GM
 // @icon					https://github.com/lkytal/GM/raw/master/icons/def.ico
-// @version					1.2.1
+// @version					1.2.2
 // @description				Select texts insider links, support firefox and chrome
 // @license					AGPL
 // @include					*

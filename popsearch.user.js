@@ -3,7 +3,7 @@
 // @name:zh					Popup Search: 快捷搜索
 // @author					lkytal
 // @namespace				Lkytal
-// @version					4.4.2
+// @version					5.0.0
 // @icon					https://github.com/lkytal/GM/raw/master/icons/search.png
 // @homepage				https://lkytal.github.io/
 // @homepageURL				https://lkytal.github.io/GM
@@ -29,7 +29,7 @@
 // @grant					GM_info
 // @run-at					document-end
 // @inject-into				auto
-// @require					https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.4.1.min.js
+// @require					https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.5.1.min.js
 // @connect					google.com
 // @connect					translate.google.cn
 // @charset					UTF-8
@@ -67,6 +67,7 @@ var CopyText,
     isChrome,
     log,
     needPrefix,
+    onCopy,
     onTranslate,
     parseTranslationGoogle,
     popData,
@@ -107,14 +108,6 @@ popData = {
     copyIcon: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAAAA3NCSVQICAjb4U/gAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAAFiUAABYlAUlSJPAAAAAZdEVYdFNvZnR3YXJlAHd3dy5pbmtzY2FwZS5vcmeb7jwaAAAD/klEQVR4Xu2bS2gUWRSG/6puK+lokEBQGIniA4RZKW5UGJAwqxGEIOpKREXwgQ6ICgPqMCqzUHDhwgFlEFEQCaj4Ahe+UHChIrhSweBrRnwQR2M6bXV31dS5ObdTKe1K3e6K3Z1bH5zcqtOdTp3//vcRqtqwt3S58KAfBh0o4H+/+JAaU0kNJrdDBwrQH5RRD1Dxqtci6q6nIqpFVQQhQCW9X8+oiDDWalfGHEv29xOcoMvVmThAddloRKhGGUEXlPYBcfNlXifc+T/zWQw4RZhXz8B68oATlUMFy44fNQFym/6E2TED7kA/Z6rANGE0ZYQIOH4Q1uP7/EL1jKoARvtk9G/s4kzlmFNnouWPvwZPYhahoSbB4sO7nqMGgFVbYc+ex9nKkL3eWAK86sHAgR3DRJChitocYBjI/bQEaG3jxMgYcxfCaG5B/vYVzgzH/dgL++IpoFDgTHnkELAvn4bd/TfMabOQ2b4fRsabFyQVDgvt9wGRHFBo/wHOtoN8Fh+FB3eQO7x3RBcEHSBy7AKJcEMFLogmwKQOOFsPIH/9IvLeRVSLtXQ10vM7xXEUEb4lAEEiSEpDQlEEpSFAa7rz/k3V4ea8Scyj2PMI6bkL0LxxF5BOi1wYRmY8TG9plYH+vlJ8OeY51HGUVwglBwR7oFKaVv2KcYsWI/vbGljL1wkRwpxgTpmGln1H+SwCtFfYswFW7hMnypP8M8RtbSjkRa9T7w8bCjIY598XsM+dQP7GpRHDefHUqyqFrJuCnbP5E8pT2yGwfaWYE6hYKl4OBUmUFSKItWwtrF9WIPv7BiHGhIkTYDVb/OrX1McQ8Ir0O0FG1MkxjM8fP4c6QYs5IEyE+hHA5wIZcbmAIBF633jb74AQtRHAHZx2MnuPYPzhs0NxqBupH+eUgiARmlZuFsdxEHRDTQQo3LsN59kTuO9ew6WNkT/eejkO52WPECs1fTb/Zjz4RajJKqACOYOEye5ez5lwgqtAGLRCaDEJloOcoLUARCIAt9qSCMCttiQCcKstiQDcaksiALfakgjArbYkAnCrLYkA3GpLIgC32pIIwG19k0oPey4gLOgZAhW0d0BD3BdQ7VUiu3MdnH+e81l5GkIAFIso3LvFmZFx/+uFff5k6RZcGGPuzpAKpI+2c4Ao3tBUAFk8WX9wCHzrmwQ+5BCgZ3rcfPmnLUYDmgDpJifd7IwDf/FEpDkA6XEYWL4ZRls7J74j3hXnb15G/toFTsRLsg+I5AAPx3HQ96EPxUKRM40D2V5iyOfkPehQeweI7w1GwTRNtLa1etvyFGcag9Jyx+GHahe5sSiCtD1Zng5lSKQWYgiEihBQrSRCqj5F8BdejqF6gf8BYV09k0RLz2IAAAAASUVORK5CYII="
   },
   optionList: [{
-    id: "Trans_st",
-    text: "显示翻译按钮 / Display 'Translate' button",
-    defaultValue: 1
-  }, {
-    id: "copy_icon_st",
-    text: "显示复制按钮 / Display 'Copy' button",
-    defaultValue: 1
-  }, {
     id: "AutoCopy_st",
     text: "自动复制选中文字 / Auto copy selections",
     defaultValue: 0
@@ -153,7 +146,7 @@ popData = {
   }, {
     id: "userEngine_st",
     text: "自定义引擎 / Enable Customize",
-    defaultValue: 1
+    defaultValue: 0
   }],
   userEngines: [],
   defaultEngines: [{
@@ -172,6 +165,20 @@ popData = {
 };
 
 popData.engines = [{
+  id: "Trans_st",
+  title: "Translate",
+  description: "翻译文本 / Translate selection",
+  defaultState: 1,
+  src: popData.icons.translateIcon,
+  href: 'javascript:onTranslate();'
+}, {
+  id: "Copy_st",
+  title: "Copy",
+  description: "复制文本 / Copy selection",
+  defaultState: 1,
+  src: popData.icons.copyIcon,
+  href: 'javascript:onCopy();'
+}, {
   id: "Setting_st",
   title: "Open Setting",
   description: "Popup search 选项 / Open Setting",
@@ -332,13 +339,19 @@ fixPos = function (sel, e) {
 };
 
 OnEngine = function (e) {
+  var link;
+  link = $(this).data('link');
+  if (link.indexOf('javascript:') === 0) {
+    eval(link.slice('javascript:'.length));
+    return false;
+  }
   if (isChrome()) {
     //log "chrome"
-    GM_openInTab($(this).data('link'), {
+    GM_openInTab(link, {
       active: GetOpt("Focus_st") === 1
     });
   } else {
-    GM_openInTab($(this).data('link'), !GetOpt("Focus_st"));
+    GM_openInTab(link, !GetOpt("Focus_st"));
   }
   hideBar(100);
   return false;
@@ -347,7 +360,7 @@ OnEngine = function (e) {
 PopupInit = function () {
   var $DivBox, $icon, EngineList, engine, j, k, l, len, len1, len2, ref, ref1, ref2;
   $('#ShowUpBox').remove();
-  EngineList = `<a id='transBtn'> <img title='Translate' src='${popData.icons.translateIcon}' /> </a> <a id='copy_btn'> <img title='Copy' src='${popData.icons.copyIcon}' /> </a>`;
+  EngineList = "";
   ref = popData.engines;
   for (j = 0, len = ref.length; j < len; j++) {
     engine = ref[j];
@@ -402,17 +415,6 @@ PopupInit = function () {
     }
   }
   $DivBox.find('.engine, .userEngine').on('click', OnEngine);
-  $('#transBtn').on("click", onTranslate);
-  if (!GetOpt('Trans_st')) {
-    $('#transBtn').hide();
-  }
-  $('#copy_btn').on("click", function () {
-    CopyText(popData.rawText);
-    return hideBar();
-  });
-  if (!GetOpt('copy_icon_st')) {
-    $('#copy_btn').hide();
-  }
   if (GetOpt('Tab_st')) {
     $DivBox.find('a').attr('target', '_blank');
   } else {
@@ -431,8 +433,12 @@ ajaxError = function (res) {
   return $('#transPanel').empty().append(`<p>Translate Error:<br /> ${res.statusText} </p>`).show();
 };
 
-onTranslate = function (event) {
-  event.preventDefault();
+onCopy = function () {
+  CopyText(popData.rawText);
+  return hideBar();
+};
+
+onTranslate = function () {
   popData.bTrans = 1;
   $("#transPanel").empty().append(`<div style='padding:10px;'><img src='${popData.icons.pending}' /></div>`).show();
   $('#popupWrapper').hide();
@@ -524,7 +530,7 @@ $(document).on("mouseup", function (event) {
   if (popData.bTrans === 1) {
     PopupInit();
   }
-  if (GetOpt('Click_st')) {
+  if (!GetOpt('Click_st')) {
     hideBar();
   }
   if (event.which !== 1) {
@@ -576,6 +582,7 @@ GetTextboxSelection = function () {
 
 ShowBar = function (event) {
   var do_timeout_hide, e, engine, j, k, l, len, len1, len2, paraList, ref, ref1, ref2, sel, setHref;
+  hideBar();
   sel = document.defaultView.getSelection();
   if (InTextBox(sel) || eventFromTextbox([event, popData.mousedownEvent])) {
     if (GetOpt("Textbox_st")) {
@@ -741,7 +748,7 @@ SettingWin = function () {
         href: "https://www.google.com/search?q=\${text}"
     }
 ]`;
-  $("body").append(`<div id='popup_setting_bg'> <div id='popup_setting_win'> <div id='popup_title'>PopUp Search Setting</div> <div id='popup_content'> <div id='tabs_box'> <div id='popup_tab1' class='popup_tab popup_selected'>选项 / General</div> <div id='popup_tab2' class='popup_tab'>搜索引擎 / Engines</div> <div id='popup_tab3' class='popup_tab'>自定义 / Customize</div> <div id='popup_tab4' class='popup_tab'>关于 / About</div> </div> <div id='page_box'> <div id='option_box'> <div id='popup_tab1Page'> ${optionList} </div> <div id='popup_tab2Page'> ${engineOptionList} </div> <div id='popup_tab3Page'> <div id='editTitle'> <div><b>请阅读帮助 / Read HELP first</b></div> <span id='popHelp'><u>Help</u></span> <span id='popReset'><u>Reset</u></span> </div> <textarea id='popup_engines'></textarea> </div> <div id='popup_tab4Page'> <h3>Authored by Lkytal</h3> <p> You can redistribute it under <a href='http://creativecommons.org/licenses/by-nc-sa/4.0/'> Creative Commons Attribution-NonCommercial-ShareAlike Licence </a> </p> <p class='contact-line'> Source Code at<br> Git OSChina <a class='tab-text' href='https://git.oschina.net/coldfire/GM'> https://git.oschina.net/coldfire/GM </a> <br /> Github <a class='tab-text' href='https://github.com/lkytal/GM'> https://github.com/lkytal/GM </a> </p> <p> Contact:<br> Github <a class='tab-text' href='https://github.com/lkytal'> https://github.com/lkytal/ </a> <br> Greasy fork <a class='tab-text' href='https://greasyfork.org/en/users/152-lkytal'> https://greasyfork.org/en/users/152-lkytal </a> </p> </div> </div> <div id='btnArea'> <div id='popup_save' class='setting_btn'>Save</div> <div id='popup_close' class='setting_btn'>Close</div> </div> </div> </div> </div> <div id='popup_help_bg'> <div id='popup_help_win'> <div id='popup_help_content'> <div id='helpLang'> <span id='engHead' class='popup_head_selected'>English</span> <span id='chsHead'>中文</span> </div> <div id='help_box'> <div id='engContent'> The content of custom engine should be in standard JSON format, in forms of following: <pre> ${engJSON} </pre> The 'id' should be unique for every entry and must NOT contain any space character, the 'title' and the 'description' can be any text you like, the 'src' indicates the icon of every item, should be the URL to an image or be a <a href='http://dataurl.net/#about'>DataURL</a>. The 'href' is the link to be open upon click, you may have noticed the '\${text}' variable, which will be replaced by selected text. Available variables are listed below: <ul> <li>\${text} : will be replaced by the selected text (Url encoded, should use this by default)</li> <li>\${rawText} : will be replaced by the original selected text</li> <li>\${domain} : will be replaced by the domain of current URL</li> <li>\${url} : will be replaced by the current web page's URL</li> </ul> Note: You can't modify built-in engines directly, however, you can disable them and add your own. </div> <div id='chsContent'> 自定义引擎内容应当是合法的JSON格式, 如下 <pre> ${chsJSON} </pre> 每一项的 id 必须各不相同且不能含有空格, title 和 description 可以随意填写, src 是该项的图标, 可以是指向图标的 url 或者是一个 <a href='http://dataurl.net/#about'>DataURL</a>. href 是引擎的 url 链接, 其中可以包含诸如 \${text} 这样的变量, 变量的大小写必须正确, 可用的变量有: <ul> <li>\${text} : 代表选中文字, 经过 url encoding, 一般应当使用此项</li> <li>\${rawText} : 代表未经 encoding 的原始选中文字</li> <li>\${domain} : 代表当前页面的域名</li> <li>\${url} : 代表当前页面的 url 地址</li> </ul> 注意: 内置引擎无法直接修改, 你可以禁用它们然后添加你自定义的引擎 </div> </div> <div id='help_btnArea'> <div id='popup_help_close' class='setting_btn'>Close</div> </div> </div> </div> </div> </div>`);
+  $("body").append(`<div id='popup_setting_bg'> <div id='popup_setting_win'> <div id='popup_title'>PopUp Search Setting</div> <div id='popup_content'> <div id='tabs_box'> <div id='popup_tab1' class='popup_tab popup_selected'>选项 / General</div> <div id='popup_tab2' class='popup_tab'>搜索引擎 / Engines</div> <div id='popup_tab3' class='popup_tab'>自定义 / Customize</div> <div id='popup_tab4' class='popup_tab'>关于 / About</div> </div> <div id='page_box'> <div id='option_box'> <div id='popup_tab1Page'> ${optionList} </div> <div id='popup_tab2Page'> ${engineOptionList} </div> <div id='popup_tab3Page'> <div id='editTitle'> <div><b>请阅读帮助! / Read help FRIST !</b></div> <span id='popHelp'><u>Help</u></span> <span id='popReset'><u>Reset</u></span> </div> <textarea id='popup_engines'></textarea> </div> <div id='popup_tab4Page'> <h3>Authored by Lkytal</h3> <p> You can redistribute it under <a href='http://creativecommons.org/licenses/by-nc-sa/4.0/'> Creative Commons Attribution-NonCommercial-ShareAlike Licence </a> </p> <p class='contact-line'> Source Code at<br> Git OSChina <a class='tab-text' href='https://git.oschina.net/coldfire/GM'> https://git.oschina.net/coldfire/GM </a> <br /> Github <a class='tab-text' href='https://github.com/lkytal/GM'> https://github.com/lkytal/GM </a> </p> <p> Contact:<br> Github <a class='tab-text' href='https://github.com/lkytal'> https://github.com/lkytal/ </a> <br> Greasy fork <a class='tab-text' href='https://greasyfork.org/en/users/152-lkytal'> https://greasyfork.org/en/users/152-lkytal </a> </p> </div> </div> <div id='btnArea'> <div id='popup_save' class='setting_btn'>Save</div> <div id='popup_close' class='setting_btn'>Close</div> </div> </div> </div> </div> <div id='popup_help_bg'> <div id='popup_help_win'> <div id='popup_help_content'> <div id='helpLang'> <span id='engHead' class='popup_head_selected'>English</span> <span id='chsHead'>中文</span> </div> <div id='help_box'> <div id='engContent'> The content of custom engine should be in standard JSON format, in forms of following: <pre> ${engJSON} </pre> The 'id' should be unique for every entry and must NOT contain any space character, the 'title' and the 'description' can be any text you like, the 'src' indicates the icon of every item, should be the URL to an image or be a <a href='http://dataurl.net/#about'>DataURL</a>. The 'href' is the link to be open upon click, you may have noticed the '\${text}' variable, which will be replaced by selected text. Available variables are listed below: <ul> <li>\${text} : will be replaced by the selected text (Url encoded, should use this by default)</li> <li>\${rawText} : will be replaced by the original selected text</li> <li>\${domain} : will be replaced by the domain of current URL</li> <li>\${url} : will be replaced by the current web page's URL</li> </ul> Note: You can't modify built-in engines directly, however, you can disable them and add your own. </div> <div id='chsContent'> 自定义引擎内容应当是合法的JSON格式, 如下 <pre> ${chsJSON} </pre> 每一项的 id 必须各不相同且不能含有空格, title 和 description 可以随意填写, src 是该项的图标, 可以是指向图标的 url 或者是一个 <a href='http://dataurl.net/#about'>DataURL</a>. href 是引擎的 url 链接, 其中可以包含诸如 \${text} 这样的变量, 变量的大小写必须正确, 可用的变量有: <ul> <li>\${text} : 代表选中文字, 经过 url encoding, 一般应当使用此项</li> <li>\${rawText} : 代表未经 encoding 的原始选中文字</li> <li>\${domain} : 代表当前页面的域名</li> <li>\${url} : 代表当前页面的 url 地址</li> </ul> 注意: 内置引擎无法直接修改, 你可以禁用它们然后添加你自定义的引擎 </div> </div> <div id='help_btnArea'> <div id='popup_help_close' class='setting_btn'>Close</div> </div> </div> </div> </div> </div>`);
   $("#popup_setting_bg, #popup_help_bg").hide();
   $("#tabs_box > .popup_tab").on("click", function (e) {
     $("#tabs_box > .popup_tab").removeClass("popup_selected");
@@ -781,7 +788,10 @@ SettingWin = function () {
     return $("#popup_help_bg").fadeIn();
   });
   if (!GetOpt("userEngine_st")) {
-    $("#popup_tab3").hide();
+    $("#popup_engines").val(`Disabled, please enable custom engines in setting,
+then save and re-open this setting page\n
+已禁用, 请在设置启用自定义引擎, 保存并重新打开此界面`);
+    $("#popup_engines").attr('disabled', true);
   }
   $("#popup_save").click(function () {
     var k, len1, ref1, userEngineString;
@@ -792,14 +802,16 @@ SettingWin = function () {
         SaveOpt(item.id);
       }
     }
-    userEngineString = $("#popup_engines").val();
-    if (userEngineString !== "") {
-      try {
-        popData.userEngines = JSON.parse(userEngineString);
-        GM_setValue("engineString", userEngineString);
-      } catch (error) {
-        alert("搜索列表错误!请检查\nEngine config Error!");
-        log(userEngineString);
+    if (GetOpt("userEngine_st")) {
+      userEngineString = $("#popup_engines").val();
+      if (userEngineString !== "") {
+        try {
+          popData.userEngines = JSON.parse(userEngineString);
+          GM_setValue("engineString", userEngineString);
+        } catch (error) {
+          alert("自定义引擎错误!请检查\nEngine config Error!");
+          log(userEngineString);
+        }
       }
     }
     return $("#popup_setting_bg").fadeOut(300, function () {
@@ -887,7 +899,7 @@ PopupLoad = function () {
 setTimeout(PopupLoad, 100);
 
 addCSS = function () {
-  return GM_addStyle(`#ShowUpBox { all: unset; width: auto; height: auto; position: absolute; z-index: 10240; color: black; display: inline-block; line-height: 0; vertical-align: baseline; box-sizing: content-box; } #showUpBody { min-width: 20px; max-width: 750px; min-height: 20px; max-height: 500px; display: block; border:solid 2px rgb(144,144,144); border-radius:1px; background:rgba(252, 252, 252, 1); } #popupWrapper { all: unset; margin: 3px 2px 3.8px 2px; display:block; line-height: 0; font-size:0; } #transPanel { line-height: normal; width: auto; font-size: 16px; overflow: auto; display: none; } #popupWrapper > a { all: unset; margin: 0px 2px; } #popupWrapper img { all: unset; margin: 0px; height: 24px; width: 24px; border-radius: 0px; padding: 0px; display: inline-block; transition-duration: 0.1s; -moz-transition-duration: 0.1s; -webkit-transition-duration: 0.1s; } #popupWrapper img:hover { margin: -1px -1px; height: 26px; width: 26px; } #popupTip { display: inline-block; clear: both; height: 9px; width: 9px; } .tipUp { background: url(${popData.icons.tipUp}) 0px 0px no-repeat transparent; margin-top: -2px; margin-bottom: 0px; } .tipDown { background: url(${popData.icons.tipDown}) 0px 0px no-repeat transparent; margin-top: 0px; margin-bottom: -2px; } #ShowUpBox a { text-decoration: none; display: inline-block; }`);
+  return GM_addStyle(`#ShowUpBox { width: auto; height: auto; position: absolute; z-index: 10240; color: black; display: inline-block; line-height: 0; vertical-align: baseline; box-sizing: content-box; font-size: 16px; } #showUpBody { min-width: 20px; max-width: 750px; min-height: 20px; max-height: 500px; display: block; border: solid 2px rgb(144,144,144); border-radius: 1px; background: rgba(252, 252, 252, 1); } #popupWrapper { margin: 3px 2px 3.8px 2px; display:block; line-height: 0; font-size:0; } #transPanel { line-height: normal; width: auto; font-size: 16px; overflow: auto; display: none; } #popupWrapper > a { margin: 0px 2px; } #popupWrapper img { margin: 0px; height: 24px; width: 24px; border-radius: 0px; padding: 0px; display: inline-block; transition-duration: 0.1s; -moz-transition-duration: 0.1s; -webkit-transition-duration: 0.1s; } #popupWrapper img:hover { margin: -1px -1px; height: 26px; width: 26px; } #popupTip { display: inline-block; clear: both; height: 9px; width: 9px; } .tipUp { background: url(${popData.icons.tipUp}) 0px 0px no-repeat transparent; margin-top: -2px; margin-bottom: 0px; } .tipDown { background: url(${popData.icons.tipDown}) 0px 0px no-repeat transparent; margin-top: 0px; margin-bottom: -2px; } #ShowUpBox a { text-decoration: none; display: inline-block; }`);
 };
 
 addAdditionalCSS = function () {
@@ -895,7 +907,7 @@ addAdditionalCSS = function () {
     return;
   }
   popData.additionalCSSLoaded = 1;
-  return GM_addStyle("#popup_setting_bg { all: unset; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.2); position: fixed; left: 0px; top: 0px; z-index:102400; font-family: \"Hiragino Sans GB\", \"Microsoft Yahei\", Arial, sans-serif; display: -webkit-flex; display: flex; justify-content: center; align-items: center; } #popup_setting_win { all: unset; width: 760px; height: 90%; box-shadow: 0 0 10px #222; box-sizing: content-box !important; background: rgba(255, 255, 255, 0.98); overflow: hidden; display: -webkit-flex; display: -moz-flex; display: flex; flex-direction: column; } #popup_title { font-size:24px; font-weight: bold; text-align: center; padding: 15px; background: #16A085; color: white; flex-shrink: 0; height: 40px; } #popup_content { flex-grow: 1; flex-shrink: 1; height: calc(100% - 70px); padding: 0px; display: -webkit-flex; display: -moz-flex; display: flex; justify-content: space-between; align-items: stretch; } #tabs_box { display: -webkit-flex; display: -moz-flex; display: flex; flex-direction: column; flex-basis: 25%; flex-shrink: 0; background: #EEE; } .popup_tab { width: 100%; background: #EEE; padding: 15px; font-weight: bold; text-align: center; box-sizing: border-box; cursor: pointer; user-select: none; -moz-user-select: none; -webkit-user-select: none; } .popup_tab:hover { background: #ccc; } .popup_selected { border-right: none; background: #FFF; } .popup_selected:hover { background: #FFF; } #page_box { padding: 20px 30px; flex-grow: 1; flex-shrink: 1; max-height: 100%; display: -webkit-flex; display: -moz-flex; display: flex; flex-direction: column; } #option_box { display: -webkit-flex; display: -moz-flex; display: flex; flex-direction: column; align-items: stretch; flex-grow: 1; flex-shrink: 1; overflow-y: auto; } #option_box > div { scroll-behavior: smooth; flex-grow: 1; display: -webkit-flex; display: -moz-flex; display: flex; flex-direction: column; align-items: stretch; } #popup_engines { flex-grow: 1; border: solid 2px #ddd; text-overflow: clip; white-space: pre; overflow-x: auto; overflow-y: auto; word-wrap: break-word; resize: none; } #editTitle { padding: 0px 0px 15px 0px; display: -webkit-flex; display: -moz-flex; display: flex; justify-content: space-between; } #editTitle div { flex-grow: 1; } #editTitle span { margin-left: 20px; color : #1ABC9C; cursor: pointer; } #btnArea { display: -webkit-flex; display: -moz-flex; display: flex; justify-content: flex-end; margin-top: 20px; flex-shrink: 0; } .setting_btn { display: inline-block; font-size: 16px; text-align: center; mix-width: 50px; padding: 4px 10px 4px 10px; border-radius: 2px; margin: 0px 0px 0px 20px; background: #1ABC9C; color: #fff; cursor: pointer; user-select: none; -moz-user-select: none; -webkit-user-select: none; } .setting_btn:hover { text-shadow: 0px 0px 2px #FFF; } .setting_item { min-height: 28px; font-size: 14px; margin: 5px 0px 10px 0px; display: -webkit-flex; display: -moz-flex; display: flex; align-items: center; } .setting_item > img { width: 24px; height: auto; margin-right: 7px; } .setting_item .text{ flex-grow: 1; font-size: 16px; } #popup_help_bg { all: unset; width: 100%; height: 100%; position: fixed; top: 0; left: 0; background: transparent; display: -webkit-flex; display: flex; justify-content: center; align-items: center; z-index: 10240000; } #popup_help_win { all: unset; width: 650px; height: 80%; box-shadow: 0 0 10px #222; box-sizing: content-box !important; background: rgba(255, 255, 255, 0.98); padding: 20px; display: -webkit-flex; display: flex; flex-direction: column; align-items: stretch; /*overflow: hidden;*/ } #popup_help_content { max-height: 100%; flex-grow: 1; display: -webkit-flex; display: flex; flex-direction: column; align-items: stretch; } #helpLang { flex-grow: 0; flex-shrink: 0; display: -webkit-flex; display: flex; border-bottom: solid 1px #ccc; } #helpLang span { padding: 8px 30px; margin-bottom: -1px; cursor: pointer; user-select: none; -moz-user-select: none; -webkit-user-select: none; } #helpLang span.popup_head_selected { border-top: solid 1px #ccc; border-left: solid 1px #ccc; border-right: solid 1px #ccc; border-bottom: solid 3px #FFF; } #help_box { overflow-y: auto; flex-grow: 1; flex-shrink: 1; margin-top: 15px; } #help_box > div { word-wrap: break-word; } #help_btnArea { flex-grow: 0; flex-shrink: 0; display: -webkit-flex; display: flex; justify-content: flex-end; margin-top: 20px; } #popup_update_bg { all: unset; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.2); position: fixed; left: 0px; top: 0px; z-index: 1024000; font-family: \"Hiragino Sans GB\", \"Microsoft Yahei\", Arial, sans-serif; display: -webkit-flex; display: flex; justify-content: center; align-items: center; } #popup_update_win { all: unset; width: 50%; height: 80%; box-shadow:0 0 10px #222; box-sizing: content-box !important; background: rgba(255, 255, 255, 0.98); overflow: hidden; font-size: 16px; display: -webkit-flex; display: -moz-flex; display: flex; flex-direction: column; } #update_header { font-size: 24px; font-weight: bold; text-align: center; padding: 15px; background: #16A085; color: white; flex-shrink: 0; height: 40px; } #popup_update_content { flex-grow: 1; flex-shrink: 1; height: calc(100% - 70px); overflow: auto; padding: 15px; display: -webkit-flex; display: -moz-flex; display: flex; flex-direction: column; justify-content: space-between; align-items: stretch; } #update_texts{ flex-grow: 1; flex-shrink: 1; } #update_btnArea { flex-grow: 0; flex-shrink: 0; display: -webkit-flex; display: flex; justify-content: flex-end; margin-top: 20px; } .hidden { display: none; } .tgl { display: none; } .tgl, .tgl:after, .tgl:before, .tgl *, .tgl *:after, .tgl *:before, .tgl+.tgl-btn { -webkit-box-sizing: border-box; -moz-box-sizing: border-box; box-sizing: border-box; } .tgl::-moz-selection, .tgl:after::-moz-selection, .tgl:before::-moz-selection, .tgl *::-moz-selection, .tgl *:after::-moz-selection, .tgl *:before::-moz-selection, .tgl+.tgl-btn::-moz-selection { background: none; } .tgl::selection, .tgl:after::selection, .tgl:before::selection, .tgl *::selection, .tgl *:after::selection, .tgl *:before::selection, .tgl+.tgl-btn::selection { background: none; } .tgl+.tgl-btn { outline: 0; display: inline-block; width: 4em; height: 2em; position: relative; cursor: pointer; } .tgl+.tgl-btn:after, .tgl+.tgl-btn:before { position: relative; display: inline-block; content: \"\"; width: 50%; height: 100%; } .tgl+.tgl-btn:after { left: 0; } .tgl+.tgl-btn:before { display: none; } .tgl:checked+.tgl-btn:after { left: 50%; } .tgl-flat+.tgl-btn { padding: 2px; -webkit-transition: all .2s ease; transition: all .2s ease; background: #fff; border: 4px solid #f2f2f2; border-radius: 2em; } .tgl-flat+.tgl-btn:after { -webkit-transition: all .2s ease; transition: all .2s ease; background: #f2f2f2; content: \"\"; border-radius: 1em; } .tgl-flat:checked+.tgl-btn { border: 4px solid #1ABC9C; } .tgl-flat:checked+.tgl-btn:after { left: 50%; background: #1ABC9C; }");
+  return GM_addStyle("#popup_setting_bg { width: 100%; height: 100%; background: rgba(0, 0, 0, 0.2); position: fixed; left: 0px; top: 0px; z-index:102400; font-family: \"Hiragino Sans GB\", \"Microsoft Yahei\", Arial, sans-serif; display: -webkit-flex; display: flex; justify-content: center; align-items: center; } #popup_setting_win { font-size: 16px; width: 760px; height: 90%; box-shadow: 0 0 10px #222; box-sizing: content-box !important; background: rgba(255, 255, 255, 0.98); overflow: hidden; display: -webkit-flex; display: -moz-flex; display: flex; flex-direction: column; } #popup_title { font-size: 22px; font-weight: bold; text-align: center; padding: 12px; background: #16A085; color: white; flex-shrink: 0; } #popup_content { flex-grow: 1; flex-shrink: 1; height: calc(100% - 70px); padding: 0px; display: -webkit-flex; display: -moz-flex; display: flex; justify-content: space-between; align-items: stretch; } #tabs_box { display: -webkit-flex; display: -moz-flex; display: flex; flex-direction: column; flex-basis: 25%; flex-shrink: 0; background: #EEE; } .popup_tab { width: 100%; background: #EEE; padding: 15px; font-weight: bold; text-align: center; box-sizing: border-box; cursor: pointer; user-select: none; -moz-user-select: none; -webkit-user-select: none; } .popup_tab:hover { background: #ccc; } .popup_selected { border-right: none; background: #FFF; } .popup_selected:hover { background: #FFF; } #page_box { padding: 20px 30px; flex-grow: 1; flex-shrink: 1; max-height: 100%; display: -webkit-flex; display: -moz-flex; display: flex; flex-direction: column; } #option_box { display: -webkit-flex; display: -moz-flex; display: flex; flex-direction: column; align-items: stretch; flex-grow: 1; flex-shrink: 1; overflow-y: auto; } #option_box > div { scroll-behavior: smooth; flex-grow: 1; display: -webkit-flex; display: -moz-flex; display: flex; flex-direction: column; align-items: stretch; } #popup_engines { flex-grow: 1; border: solid 2px #ddd; text-overflow: clip; white-space: pre; overflow-x: auto; overflow-y: auto; word-wrap: break-word; resize: none; } #editTitle { padding: 0px 0px 15px 0px; display: -webkit-flex; display: -moz-flex; display: flex; justify-content: space-between; } #editTitle div { flex-grow: 1; } #editTitle span { margin-left: 20px; color : #1ABC9C; cursor: pointer; } #btnArea { display: -webkit-flex; display: -moz-flex; display: flex; justify-content: flex-end; margin-top: 20px; flex-shrink: 0; } .setting_btn { display: inline-block; font-size: 16px; text-align: center; mix-width: 50px; padding: 4px 10px 4px 10px; border-radius: 2px; margin: 0px 0px 0px 20px; background: #1ABC9C; color: #fff; cursor: pointer; user-select: none; -moz-user-select: none; -webkit-user-select: none; } .setting_btn:hover { text-shadow: 0px 0px 2px #FFF; } .setting_item { min-height: 24px; font-size: 14px; margin: 5px 0px 10px 0px; display: -webkit-flex; display: -moz-flex; display: flex; align-items: center; } .setting_item > img { width: 24px; height: auto; margin-right: 7px; } .setting_item .text{ flex-grow: 1; font-size: 14px; } #popup_help_bg { all: unset; width: 100%; height: 100%; position: fixed; top: 0; left: 0; background: transparent; display: -webkit-flex; display: flex; justify-content: center; align-items: center; z-index: 10240000; } #popup_help_win { font-size: 16px; all: unset; width: 650px; height: 80%; box-shadow: 0 0 10px #222; box-sizing: content-box !important; background: rgba(255, 255, 255, 0.98); padding: 20px; display: -webkit-flex; display: flex; flex-direction: column; align-items: stretch; /*overflow: hidden;*/ } #popup_help_content { max-height: 100%; flex-grow: 1; display: -webkit-flex; display: flex; flex-direction: column; align-items: stretch; } #helpLang { flex-grow: 0; flex-shrink: 0; display: -webkit-flex; display: flex; border-bottom: solid 1px #ccc; } #helpLang span { padding: 8px 30px; margin-bottom: -1px; cursor: pointer; user-select: none; -moz-user-select: none; -webkit-user-select: none; } #helpLang span.popup_head_selected { border-top: solid 1px #ccc; border-left: solid 1px #ccc; border-right: solid 1px #ccc; border-bottom: solid 3px #FFF; } #help_box { overflow-y: auto; flex-grow: 1; flex-shrink: 1; margin-top: 15px; } #help_box > div { word-wrap: break-word; } #help_btnArea { flex-grow: 0; flex-shrink: 0; display: -webkit-flex; display: flex; justify-content: flex-end; margin-top: 20px; } #popup_update_bg { all: unset; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.2); position: fixed; left: 0px; top: 0px; z-index: 1024000; font-family: \"Hiragino Sans GB\", \"Microsoft Yahei\", Arial, sans-serif; display: -webkit-flex; display: flex; justify-content: center; align-items: center; } #popup_update_win { all: unset; width: 50%; height: 80%; box-shadow:0 0 10px #222; box-sizing: content-box !important; background: rgba(255, 255, 255, 0.98); overflow: hidden; font-size: 16px; display: -webkit-flex; display: -moz-flex; display: flex; flex-direction: column; } #update_header { font-size: 24px; font-weight: bold; text-align: center; padding: 15px; background: #16A085; color: white; flex-shrink: 0; height: 40px; } #popup_update_content { flex-grow: 1; flex-shrink: 1; height: calc(100% - 70px); overflow: auto; padding: 15px; display: -webkit-flex; display: -moz-flex; display: flex; flex-direction: column; justify-content: space-between; align-items: stretch; } #update_texts{ flex-grow: 1; flex-shrink: 1; } #update_btnArea { flex-grow: 0; flex-shrink: 0; display: -webkit-flex; display: flex; justify-content: flex-end; margin-top: 20px; } .hidden { display: none; } .tgl { display: none; } .tgl, .tgl:after, .tgl:before, .tgl *, .tgl *:after, .tgl *:before, .tgl+.tgl-btn { -webkit-box-sizing: border-box; -moz-box-sizing: border-box; box-sizing: border-box; } .tgl::-moz-selection, .tgl:after::-moz-selection, .tgl:before::-moz-selection, .tgl *::-moz-selection, .tgl *:after::-moz-selection, .tgl *:before::-moz-selection, .tgl+.tgl-btn::-moz-selection { background: none; } .tgl::selection, .tgl:after::selection, .tgl:before::selection, .tgl *::selection, .tgl *:after::selection, .tgl *:before::selection, .tgl+.tgl-btn::selection { background: none; } .tgl+.tgl-btn { outline: 0; display: inline-block; width: 4em; height: 2em; position: relative; cursor: pointer; } .tgl+.tgl-btn:after, .tgl+.tgl-btn:before { position: relative; display: inline-block; content: \"\"; width: 50%; height: 100%; } .tgl+.tgl-btn:after { left: 0; } .tgl+.tgl-btn:before { display: none; } .tgl:checked+.tgl-btn:after { left: 50%; } .tgl-flat+.tgl-btn { padding: 2px; -webkit-transition: all .2s ease; transition: all .2s ease; background: #fff; border: 3px solid #f2f2f2; border-radius: 0.5em; } .tgl-flat+.tgl-btn:after { -webkit-transition: all .2s ease; transition: all .2s ease; background: #f2f2f2; content: \"\"; border-radius: 0.25em; } .tgl-flat:checked+.tgl-btn { border: 3px solid #1ABC9C; } .tgl-flat:checked+.tgl-btn:after { left: 50%; background: #1ABC9C; }");
 };
 
 getLastRange = function (selection) {

@@ -3,7 +3,7 @@
 // @description				Discuz论坛链接默认新标签页打开
 // @author					lkytal
 // @namespace				Lkytal
-// @version					1.3.3
+// @version					1.3.4
 // @homepage				https://lkytal.github.io/
 // @homepageURL				https://lkytal.github.io/GM
 // @license					AGPL

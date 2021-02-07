@@ -3,7 +3,7 @@
 // @description				Add Search Image context menu
 // @author					lkytal
 // @namespace				Lkytal
-// @version					3.0.6
+// @version					3.0.7
 // @homepage				https://lkytal.github.io/
 // @homepageURL				https://lkytal.github.io/GM
 // @license					AGPL
