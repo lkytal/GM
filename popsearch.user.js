@@ -3,7 +3,7 @@
 // @name:zh					Popup Search: 快捷搜索
 // @author					lkytal
 // @namespace				Lkytal
-// @version					5.0.0
+// @version					5.0.1
 // @icon					https://github.com/lkytal/GM/raw/master/icons/search.png
 // @homepage				https://lkytal.github.io/
 // @homepageURL				https://lkytal.github.io/GM
@@ -591,6 +591,10 @@ ShowBar = function (event) {
     popData.rawText = GetTextboxSelection();
   } else {
     popData.rawText = sel.toString();
+    if (GetOpt("AutoCopy_st")) {
+      //only for none text area
+      CopyText(popData.rawText);
+    }
   }
   popData.text = encodeURIComponent(popData.rawText.trim());
   if (popData.rawText === '') {
@@ -601,9 +605,6 @@ ShowBar = function (event) {
   for (j = 0, len = ref.length; j < len; j++) {
     e = ref[j];
     clearTimeout(e);
-  }
-  if (GetOpt("AutoCopy_st")) {
-    CopyText(popData.rawText);
   }
   $('#transPanel').empty().hide();
   paraList = {
