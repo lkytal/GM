@@ -8,7 +8,7 @@
 // @homepageURL				https://lkytal.github.io/GM
 // @license					AGPL
 // @include					*
-// @icon					http://lkytal.qiniudn.com/ic.ico
+// @icon					https://github.com/lkytal/GM/raw/master/icons/def.ico
 // @grant					GM_openInTab
 // @run-at					document-end
 // @charset					UTF-8

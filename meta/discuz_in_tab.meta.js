@@ -7,7 +7,7 @@
 // @homepage				https://lkytal.github.io/
 // @homepageURL				https://lkytal.github.io/GM
 // @license					AGPL
-// @icon					http://lkytal.qiniudn.com/ic.ico
+// @icon					https://github.com/lkytal/GM/raw/master/icons/def.ico
 // @include					http://*/forum-*-*
 // @include					http://*/forum-*-*.html
 // @include					http://*/showforum-*.html

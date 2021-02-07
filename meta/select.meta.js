@@ -4,7 +4,7 @@
 // @namespace				Lkytal
 // @homepage				https://lkytal.github.io/
 // @homepageURL				https://lkytal.github.io/GM
-// @icon					http://lkytal.qiniudn.com/select.png
+// @icon					https://github.com/lkytal/GM/raw/master/icons/def.ico
 // @version					1.2.1
 // @description				Select texts insider links, support firefox and chrome
 // @license					AGPL

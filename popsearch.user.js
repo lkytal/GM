@@ -123,6 +123,10 @@ popData = {
     text: "超时自动隐藏 / Hide after timeout",
     defaultValue: 1
   }, {
+    id: "Click_st",
+    text: "点击页面不隐藏 / Don't Hide on click",
+    defaultValue: 0
+  }, {
     id: "Tab_st",
     text: "新标签页打开 / Open in new tabs",
     defaultValue: 1
@@ -149,7 +153,7 @@ popData = {
   }, {
     id: "userEngine_st",
     text: "自定义引擎 / Enable Customize",
-    defaultValue: 0
+    defaultValue: 1
   }],
   userEngines: [],
   defaultEngines: [{
@@ -168,6 +172,13 @@ popData = {
 };
 
 popData.engines = [{
+  id: "Setting_st",
+  title: "Open Setting",
+  description: "Popup search 选项 / Open Setting",
+  defaultState: 1,
+  src: popData.icons.settingIcon,
+  href: 'javascript:OpenSet();'
+}, {
   id: "Open_st",
   title: "Open As Url",
   description: "选中文本视作链接打开 / Open selection as url",
@@ -504,14 +515,18 @@ hideBar = function (time = 0) {
 };
 
 $(document).on("mousedown", function (event) {
-  popData.mousedownEvent = event;
+  return popData.mousedownEvent = event;
+});
+
+// PopupInit() if popData.bTrans == 1
+// hideBar()
+$(document).on("mouseup", function (event) {
   if (popData.bTrans === 1) {
     PopupInit();
   }
-  return hideBar();
-});
-
-$(document).on("mouseup", function (event) {
+  if (GetOpt('Click_st')) {
+    hideBar();
+  }
   if (event.which !== 1) {
     return;
   }

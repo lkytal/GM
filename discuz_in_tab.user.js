@@ -7,7 +7,7 @@
 // @homepage				https://lkytal.github.io/
 // @homepageURL				https://lkytal.github.io/GM
 // @license					AGPL
-// @icon					http://lkytal.qiniudn.com/ic.ico
+// @icon					https://github.com/lkytal/GM/raw/master/icons/def.ico
 // @include					http://*/forum-*-*
 // @include					http://*/forum-*-*.html
 // @include					http://*/showforum-*.html
@@ -32,17 +32,14 @@
 
 var x = document.getElementById("atarget");
 
-if (x)
-{
+if (x) {
 	//x.click();
 	unsafeWindow.setatarget(1);
 }
-else
-{
+else {
 	var AFile = document.querySelectorAll('#threadlist tbody a, #threadslist tbody a');
 
-	for (var i = AFile.length - 1; i > -1; i--)
-	{
+	for (var i = AFile.length - 1; i > -1; i--) {
 		AFile[i].setAttribute("target", "_blank");
 	}
 }
