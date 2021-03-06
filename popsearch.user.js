@@ -3,7 +3,7 @@
 // @name:zh					Popup Search: 快捷搜索
 // @author					lkytal
 // @namespace				Lkytal
-// @version					5.0.1
+// @version					5.0.2
 // @icon					https://github.com/lkytal/GM/raw/master/icons/search.png
 // @homepage				https://lkytal.github.io/
 // @homepageURL				https://lkytal.github.io/GM
@@ -170,21 +170,27 @@ popData.engines = [{
   description: "翻译文本 / Translate selection",
   defaultState: 1,
   src: popData.icons.translateIcon,
-  href: 'javascript:onTranslate();'
+  action: function () {
+    return onTranslate();
+  }
 }, {
   id: "Copy_st",
   title: "Copy",
   description: "复制文本 / Copy selection",
   defaultState: 1,
   src: popData.icons.copyIcon,
-  href: 'javascript:onCopy();'
+  action: function () {
+    return onCopy();
+  }
 }, {
   id: "Setting_st",
   title: "Open Setting",
   description: "Popup search 选项 / Open Setting",
   defaultState: 1,
   src: popData.icons.settingIcon,
-  href: 'javascript:OpenSet();'
+  action: function () {
+    return OpenSet();
+  }
 }, {
   id: "Open_st",
   title: "Open As Url",
@@ -414,7 +420,7 @@ PopupInit = function () {
       $icon.hide();
     }
   }
-  $DivBox.find('.engine, .userEngine').on('click', OnEngine);
+  $DivBox.find('.userEngine').on('click', OnEngine); // handle user engine!
   if (GetOpt('Tab_st')) {
     $DivBox.find('a').attr('target', '_blank');
   } else {
@@ -615,15 +621,22 @@ ShowBar = function (event) {
   };
   setHref = function (engine) {
     var $engine, href, para, value;
-    //log engine.id + " : " + engine.href
-    href = engine.href;
-    for (para in paraList) {
-      if (!hasProp.call(paraList, para)) continue;
-      value = paraList[para];
-      href = href.replace(RegExp(`${para}`, "g"), value);
-    }
     $engine = $("#" + engine.id + "Icon");
-    return $engine.data('link', href);
+    if (engine.href != null) {
+      //log engine.id + " : " + engine.href
+      href = engine.href;
+      for (para in paraList) {
+        if (!hasProp.call(paraList, para)) continue;
+        value = paraList[para];
+        href = href.replace(RegExp(`${para}`, "g"), value);
+      }
+      $engine.data('link', href);
+      return $engine.on('click', OnEngine);
+    } else if (engine.action != null) {
+      return $engine.on('click', engine.action);
+    } else {
+      return console.log('empty engine', engine);
+    }
   };
   ref1 = popData.engines;
   for (k = 0, len1 = ref1.length; k < len1; k++) {
