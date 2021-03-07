@@ -3,7 +3,7 @@
 // @name:zh					Popup Search: 快捷搜索
 // @author					lkytal
 // @namespace				Lkytal
-// @version					5.0.2
+// @version					5.0.3
 // @icon					https://github.com/lkytal/GM/raw/master/icons/search.png
 // @homepage				https://lkytal.github.io/
 // @homepageURL				https://lkytal.github.io/GM
@@ -631,8 +631,10 @@ ShowBar = function (event) {
         href = href.replace(RegExp(`${para}`, "g"), value);
       }
       $engine.data('link', href);
+      $engine.off('click');
       return $engine.on('click', OnEngine);
     } else if (engine.action != null) {
+      $engine.off('click');
       return $engine.on('click', engine.action);
     } else {
       return console.log('empty engine', engine);
