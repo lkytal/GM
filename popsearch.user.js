@@ -3,7 +3,7 @@
 // @name:zh					Popup Search: 快捷搜索
 // @author					lkytal
 // @namespace				Lkytal
-// @version					5.0.3
+// @version					5.1.0
 // @icon					https://github.com/lkytal/GM/raw/master/icons/search.png
 // @homepage				https://lkytal.github.io/
 // @homepageURL				https://lkytal.github.io/GM
@@ -463,8 +463,7 @@ doRequest = function (i, wait) {
   lang = navigator.language || navigator.userLanguage || "zh-CN";
   return GM_xmlhttpRequest({
     method: 'POST',
-    url: 'https://translate.google.cn/translate_a/single',
-    data: `client=gtx&dj=1&q=${popData.text}&sl=auto&tl=${lang}&hl=${lang}&ie=UTF-8&oe=UTF-8&source=icon&dt=t&dt=bd`,
+    url: `https://translate.google.cn/translate_a/single?client=gtx&dj=1&q=${popData.text}&sl=auto&tl=${lang}&hl=${lang}&ie=UTF-8&oe=UTF-8&source=icon&dt=t&dt=bd`,
     headers: {
       'Content-Type': 'application/x-www-form-urlencoded'
     },
