@@ -8,12 +8,12 @@
 
 点击下面的链接安装GM脚本 / Click links below to install
 
-* [Popup Search](https://git.oschina.net/coldfire/GM/raw/master/popsearch.user.js)
-* [Text to link](https://git.oschina.net/coldfire/GM/raw/master/linkMix.user.js)
-* [Tieba enhance](https://git.oschina.net/coldfire/GM/raw/master/tieba_enhance.user.js)
-* [Select like Opera](https://git.oschina.net/coldfire/GM/raw/master/select.user.js)
-* [Search Image with Google & Baidu](https://git.oschina.net/coldfire/GM/raw/master/img.user.js)
-* [Discuz in new tab](https://git.oschina.net/coldfire/GM/raw/master/discuz_in_tab.user.js)
+* [Popup Search](https://github.com/lkytal/GM/raw/master/popsearch.user.js)
+* [Text to link](https://github.com/lkytal/GM/raw/master/linkMix.user.js)
+* [Tieba enhance](https://github.com/lkytal/GM/raw/master/tieba_enhance.user.js)
+* [Select like Opera](https://github.com/lkytal/GM/raw/master/select.user.js)
+* [Search Image with Google & Baidu](https://github.com/lkytal/GM/raw/master/img.user.js)
+* [Discuz in new tab](https://github.com/lkytal/GM/raw/master/discuz_in_tab.user.js)
 
 ## 更新日志 / ChangeLog
 
