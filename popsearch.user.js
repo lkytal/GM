@@ -3,7 +3,7 @@
 // @name:zh					Popup Search: 快捷搜索
 // @author					lkytal
 // @namespace				Lkytal
-// @version					5.1.0
+// @version					5.1.1
 // @icon					https://github.com/lkytal/GM/raw/master/icons/search.png
 // @homepage				https://lkytal.github.io/
 // @homepageURL				https://lkytal.github.io/GM
@@ -29,7 +29,7 @@
 // @grant					GM_info
 // @run-at					document-end
 // @inject-into				auto
-// @require					https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.5.1.min.js
+// @require					https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.6.0.min.js
 // @connect					google.com
 // @connect					translate.google.cn
 // @charset					UTF-8
@@ -463,9 +463,10 @@ doRequest = function (i, wait) {
   lang = navigator.language || navigator.userLanguage || "zh-CN";
   return GM_xmlhttpRequest({
     method: 'POST',
-    url: `https://translate.google.cn/translate_a/single?client=gtx&dj=1&q=${popData.text}&sl=auto&tl=${lang}&hl=${lang}&ie=UTF-8&oe=UTF-8&source=icon&dt=t&dt=bd`,
+    url: `https://translate.google.com/translate_a/single?client=gtx&dj=1&q=${popData.text}&sl=auto&tl=${lang}&hl=${lang}&ie=UTF-8&oe=UTF-8&source=icon&dt=t&dt=bd`,
     headers: {
-      'Content-Type': 'application/x-www-form-urlencoded'
+      'Content-Type': 'application/x-www-form-urlencoded',
+      "Accept-Encoding": "gzip, deflate"
     },
     timeout: wait,
     onload: parseTranslationGoogle,
@@ -598,7 +599,7 @@ ShowBar = function (event) {
     popData.rawText = sel.toString();
     if (GetOpt("AutoCopy_st")) {
       //only for none text area
-      CopyText(popData.rawText);
+      CopyText(popData.rawText.trim());
     }
   }
   popData.text = encodeURIComponent(popData.rawText.trim());
@@ -680,8 +681,9 @@ needPrefix = function (url) {
 };
 
 CopyText = function (selText) {
-  if (selText == null) {
-    selText = document.defaultView.getSelection().toString();
+  if (selText === '') {
+    // selText ?= document.defaultView.getSelection().toString()
+    reurn;
   }
   if ((typeof GM_info !== "undefined" && GM_info !== null ? GM_info.scriptHandler : void 0) === "Violentmonkey") {
     return document.execCommand('copy');

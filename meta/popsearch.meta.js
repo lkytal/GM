@@ -3,7 +3,7 @@
 // @name:zh					Popup Search: 快捷搜索
 // @author					lkytal
 // @namespace				Lkytal
-// @version					5.1.0
+// @version					5.1.1
 // @icon					https://github.com/lkytal/GM/raw/master/icons/search.png
 // @homepage				https://lkytal.github.io/
 // @homepageURL				https://lkytal.github.io/GM
@@ -29,7 +29,7 @@
 // @grant					GM_info
 // @run-at					document-end
 // @inject-into				auto
-// @require					https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.5.1.min.js
+// @require					https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.6.0.min.js
 // @connect					google.com
 // @connect					translate.google.cn
 // @charset					UTF-8
