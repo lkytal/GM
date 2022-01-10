@@ -3,7 +3,7 @@
 // @name:zh					Popup Search: 快捷搜索
 // @author					lkytal
 // @namespace				Lkytal
-// @version					5.1.1
+// @version					5.1.2
 // @icon					https://github.com/lkytal/GM/raw/master/icons/search.png
 // @homepage				https://lkytal.github.io/
 // @homepageURL				https://lkytal.github.io/GM
@@ -594,15 +594,15 @@ ShowBar = function (event) {
     if (GetOpt("Textbox_st")) {
       return;
     }
-    popData.rawText = GetTextboxSelection();
+    popData.rawText = GetTextboxSelection().trim();
   } else {
-    popData.rawText = sel.toString();
+    popData.rawText = document.defaultView.getSelection().toString().trim();
     if (GetOpt("AutoCopy_st")) {
       //only for none text area
-      CopyText(popData.rawText.trim());
+      CopyText(popData.rawText);
     }
   }
-  popData.text = encodeURIComponent(popData.rawText.trim());
+  popData.text = encodeURIComponent(popData.rawText);
   if (popData.rawText === '') {
     return;
   }
@@ -651,7 +651,7 @@ ShowBar = function (event) {
     setHref(engine);
   }
   if (needPrefix(popData.rawText)) {
-    $('#Open_stIcon').data('link', `http://${popData.rawText.trim()}`);
+    $('#Open_stIcon').data('link', `http://${popData.rawText}`);
   }
   popData.mouseIn = 0;
   popData.bTrans = 0;
@@ -681,9 +681,11 @@ needPrefix = function (url) {
 };
 
 CopyText = function (selText) {
+  if (selText == null) {
+    selText = document.defaultView.getSelection().toString();
+  }
   if (selText === '') {
-    // selText ?= document.defaultView.getSelection().toString()
-    reurn;
+    return;
   }
   if ((typeof GM_info !== "undefined" && GM_info !== null ? GM_info.scriptHandler : void 0) === "Violentmonkey") {
     return document.execCommand('copy');
