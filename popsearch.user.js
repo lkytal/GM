@@ -3,7 +3,7 @@
 // @name:zh					Popup Search: 快捷搜索
 // @author					lkytal
 // @namespace				Lkytal
-// @version					5.1.2
+// @version					5.1.3
 // @icon					https://github.com/lkytal/GM/raw/master/icons/search.png
 // @homepage				https://lkytal.github.io/
 // @homepageURL				https://lkytal.github.io/GM
@@ -379,7 +379,7 @@ PopupInit = function () {
       EngineList += `<a id='${engine.id}Icon' class='userEngine'><img title='${engine.title}' src='${engine.src}' /></a>`;
     }
   }
-  $('body').append(`<span id=\"ShowUpBox\"> <span id=\"showUpBody\"> <span id=\"popupWrapper\"> ${EngineList} </span> <span id=\"transPanel\" /> </span> </span>`);
+  $('html').append(`<span id=\"ShowUpBox\"> <span id=\"showUpBody\"> <span id=\"popupWrapper\"> ${EngineList} </span> <span id=\"transPanel\" /> </span> </span>`);
   $DivBox = $('#ShowUpBox');
   $DivBox.hide();
   $DivBox.on("click dblclick mousedown mouseup contextmenu", function (event) {
@@ -681,6 +681,7 @@ needPrefix = function (url) {
 };
 
 CopyText = function (selText) {
+  var e;
   if (selText == null) {
     selText = document.defaultView.getSelection().toString();
   }
@@ -693,6 +694,8 @@ CopyText = function (selText) {
   try {
     return GM_setClipboard(selText, "text");
   } catch (error) {
+    e = error;
+    console.log(e);
     return document.execCommand('copy');
   }
 };
