@@ -3,7 +3,7 @@
 // @name:zh					Popup Search: 快捷搜索
 // @author					lkytal
 // @namespace				Lkytal
-// @version					5.2.0
+// @version					5.2.1
 // @icon					https://github.com/lkytal/GM/raw/master/icons/search.png
 // @homepage				https://lkytal.github.io/
 // @homepageURL				https://lkytal.github.io/GM
@@ -90,6 +90,7 @@ popData = {
   mousedownEvent: null,
   fadeEvent: [],
   icons: {
+    handianIcon: "https://www.zdic.net/favicon.ico",
     baiduIcon: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAAFiUAABYlAUlSJPAAAASzSURBVFhH7ZZNbBtFFMf//ljbtZ2149hp4zgkKamSNNDykapQKEH5QCKiBYGgIkpVQasegiok1CIOHCpRDkjcQIhbJUo5waUSB8SHBAWJCCRQgJRQmjaNEyd2nMTfG9u7y5v1prbT9doBRb3wk9aembc78595b96M4b4xWcYdxKj+3zH+F7ApAQZD4QMz/RipzOr/lc0JgIzulhTGnozjmX0xWMzF+DUZZdQ7ZbjsMomTaxa3KQGt3gTOjQp4aZjHGyN2HNozo1qAod1hXDydxoXX0ni4I662VmdTAg50SWhpqlfKHMfhyIBbKd/TBowdNqDJ5yC7A8cHY2huUExVqVmAkd50SldhMhU/8dWbYOWAx+6+joDfp7YCu9q98Fmm1Zo+VQWw8VjAsXSVkX2QJEm1ALFEDjkRaPaayedFpyeSAkRzUZAeFQUYyLK3NYFTfT/i2MEbaK5PYnK+DkvRmGIXRRFf/xQlQcBcJFcm7PfpDILLdWpNH9OOfWfPquUyfLyEt0YSGHq0E73dPJyGBXz3lxfB4E1wchzjv87jk/FWJAUOiTUbmvkw7QoRv0yGcPGyGwnBAD9PYmn5hBz5qcKu0DwL2LvDDwo497Kt0EDEE2m8eT6P8Ws8XA5AyNJSZwo25qLtFJu8ZRmrAo8mdx4nBpbQ01GPP69F8N4XfkzOkggNFZouYO7cuaP8ZYfdhgYXkM0DEZpYJivB48hhO5+jwJQRWgGmFjwkyoyB7jk88kAAbt6Bh+5vw+vPZWG3qh1tQDsGaE0WVoo+ZeTyIuJJaiNdvF3CC/sXceFMHh+dEXFyMAKfU1ASlc0CtPuLK8fobHXATu1aaApgPvn2NxNWVlOFBmLiShB/BC3KTI71RXF6pAl+3zY0emw4cagRb4/G4XGSXwjmko3c5meVigKWkhac+pDDZ9+EcP7zJbxzKYDltB2DXTN4caDutlTb2+PD0ceT4EzAjbnCTlnn5mKOXKZWNlDxQsIGYBaO/CvSv4ka+vdm8cpwCoEd7rJ9v04qLeD9T6O4Msfh1adF7GzxIEzb9t1LPvw8BUgaQVjTjYgt+1DXNJ0BTgSavGXZsBRRlDC/uIqPv1rDD1cbYONkpAQgnLAqk9EaSbunEljwHNk/i+NP8WgNNFYcnMFsLX4Pnj0goX93BOG4FQsxq5KsKk1TVwBb5cGeEI4+wVPHXrW1Op0dzTh52IPRg4vKWaGHrgCPExjpN8Lt5tWW2nE6tuH5Pjv2tFPi0EFXwF2NgL+R0t6/xO1yosP1t1rTRldAmrZOnhKQVsTXCmfIqSVtdAVMh2gPzxf2dOlpVyupdAYzmXvVmja6AnLkvg++9OP67BJdSIwUyTKWV9MILiYRiqSQWctDoGclLiht7AlHU8p7TPD3EwLGaf/rUTUPsHtBe0MSve0JuJwmuoDIiKyICIaziGXpSmaqg1WeQ08bh10tNrgsMayJNkzMmHF5qgHRBJ0QOiPUlIhYCJjoYf8yPYo36Ctp/UvVrlzVQctGqvMirRiZqvWu64J1WCd5GpRdv/LUPxNwa3AGlSkJKvasaKYj26jYq0+tRIDWCbZVlI51S0DZjLaY0rFqcsHWAfwDnVStvcSt8MwAAAAASUVORK5CYII=",
     bingIcon: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAACeklEQVRYhe2Wy2sTURTGu1fapOZRTKj2kaag1VaTNA9NjHkWLS3diC5q6wNc+A+EIkVw40ZRFBeuirgQF1JfuFBboYiIzb2TmdimCA0YWyupqalBTRo/F4M3KE0mhrR2kQsfDHPvOfOb794zZ6qErlb8T1VVACoAFYANDcD7dKAWFahFBd7TvL4AvE8HobsNqSmK1FuC6WP71gQiP4C3GeGe3fg9Zk54EHI35ub9evBenSi/fm0AhJ5dDCAy4Abn0ILa1CCGGlCrCsLhnRAO7QAxK0CMMlBb3R+QZQUId7ch0u9EYuwBVhs/s1l8fnIX00dtIEY5eF9LeQG+RWfYdeLZKGaHTiLS70TkuAvR4TP48vIpm19+MwFqURZ1ZooGAIAf8+/B2TWgZgVCzm0IuRtFHagH6awF72vBytek6EgmDWpVSTpRNEA2k0awYxN4T1PeZCFXA6hZwWKWxh+CWtXlAYhdHgK3f6ukpdSqxqfb11kcMckLVknhMuxtZ4lmA4MIOeslATiHFrFLARbH2TUFtyE/gF8PYpKzRIuP7oAYZZIAwY7NWJ6cEM/BSgbEIINQigNCVys4uwZz187nPkan/CCdW1Z9I96rAzHIMBsYZOuj505Lula4F/j1CO6tRnz0Fku6MHIF1KIEMclBrSpQqwrEKANn1yJ+b4Stm795EcRUW3oZ/r0V7872IZOI50ryYwzJV2NIvh5HenGB3f8eiyIy4AK1KCUfXhQAK7GD2xHcU42pI2bM3biApRePkQoHkQpPIvH8Pj5cHUa4tx3EUIOQq6GonP8EIEoP3tPEegK1KEXZ6sA5tCV1y439Q1IBqABUANZDvwDe9YuA3jr3dgAAAABJRU5ErkJggg==",
     translateIcon: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAIAAAAlC+aJAAAACXBIWXMAAAsTAAALEwEAmpwYAAAExklEQVRoge2Y+08UVxTH/dNmtYRHwNKHDW1tIWl/sK1QbFoSitXa9i642wWxKIK0ysOCLBSwBSWQslpboD54SGVNbAkB0cqjIIic+5jTH2b2gczM7o7DzpLsyfeHzeydmfM5994z555dEoEdrV22e5AEsNuDJIDdHiQB7PYgCRBpRJoLDtazggbzym9g+fX0je+oDQCfXGDL62iJCRlbhnhcAdLdsPzUGu+D9uVPLH4A+Q00Gp/WNnBhFRfXogLoGRUJB1DZyyUC+05GNbjvThLANEDPmChqYVuVU0UlAqnHoaiZBfVZQO5unigAtQNmckhuDU0UgJ9HxKEmFlShjjLcIBHI9EBhEytsZKWXEmYGojEuMKucSgTc3Szh9kA0dmdGVu69fk8kNMBXHSzDDVkeeLQsh193dzOJwMsVFLQnIGEARqfVSJdfDnm6sIppLpAInOrnejcmCgAiHmpiEoGXSuHvf9VJIF1MIpBSBg83T0uCAvjn5D2lIBH44BxlHPsnhIOARKCyVzf8iQWAgW+wRKDEy1KPg0TgtUq6Yli9xhWgIBLAM4q5NaEqf7cThu5rJx97AAobdVJJwGaX5APnQgBpLuif0AaQA5qal1sGeTRqHuTFFyPX3iYBGMeLwyLdHYq98iOlDB6vGFPHZq3DEeqXmAG4wF//EuErp7iVPViSm37naS4gXREmLVaTEd85Y3QWjQFgbQM7b25yfW857R0XwZQ5syiPTOsmUNNW2Gi0kGIAuOYXjsBScTiBdLEoT2GJAoCI3/v4nlIo8TL/nPWRjgeAkHFhFSnHF2lVzD/BsWl5bFqemJE3oigXzQN8rLWJKccSL3v3DJ1fNTkJ4Y2JlkGjz/aLAmz9EiveK//ur6bzT2JmWFzDlLLQK/JqI0+BeYC3TtNwB8O9N81w4Q81r795Ss1mE7MRnmAeQCLQfoPreW+CQZbx7dNUIpBdQe8+kJXiT+/sZg2Ag8DRdtY7Lr5oYxKBTI/GmP3V1Dcprk6Kq5NidskI5taUWghV93NE/PA8lQhkuOEpbBvAc+qbEAUNRo9r+9NoU37dySQCDidML8iI+MuIytM9alQCWglw/Z5YBzRgMABYWUel5D5Yr27ctQ31BPfReaNVZCXANb9AxHXAombth3qHdQHab6jbtycs3sohzuGEqXndtWclwG9+9d2M42GtPf3KCfrPY21X3q+jEoH0zSv+9pR6tq7q0yXfFgCFQYnfVoa5/55n8M+pju47Sb/t4UG5urlyLs2uoFQHwUqADDfdWx5Slke70M2pog83M1RcjtyWHLirvZWtBIheOVU02Jt4RlFBdRA4cYWf9fE6H6/z8doBXjvAP29V/fv0R+2tbA+AwvBoRUbEK+Nqujzwg0bhsLKOqS6QCOx2wta1ZydAbg1VDgz5gbTbdUt7mX/TqQ6o82kMsAcgt4YuriIizizKWeWQ6YHsCtDruAzdF5keyPRAXi0VW+bABoC8QOwtsXgDBGO/IwHyauiCpd7HG8C4mNsBAMWtFveFgOGrlWb7QibkINBxM0J7NCbvnZcidBe3JQu9d5Ye62DhOtqurcNtrMTLSrzsyObrxzrYkXb2umHstxEgnkoC2K0kgN1KAtitJIDd+h//4oa1H68RnAAAAABJRU5ErkJggg==",
@@ -162,7 +163,7 @@ popData = {
     id: "UserEngine",
     title: "Example of User Engine",
     description: "自定义引擎示例 / Example of user engine",
-    src: "https://github.com/lkytal/GM/raw/master/icon/atom.png",
+    src: "https://github.com/lkytal/GM/raw/master/icons/atom.png",
     href: "https://www.google.com/search?newwindow=1&safe=off&q=${text}"
   }, {
     id: "UserEngine_dataURL",
@@ -174,7 +175,7 @@ popData = {
     id: "UserEngine_function",
     title: "Example of User Engine use function",
     description: "function自定义引擎示例 / Example of user engine use function",
-    src: "https://github.com/lkytal/GM/raw/master/icon/atom.png",
+    src: "https://github.com/lkytal/GM/raw/master/icons/atom.png",
     function: "alert('action on ' + domain); OpenUrl(text);"
   }]
 };
@@ -258,6 +259,12 @@ popData.engines = [{
   src: popData.icons.baiduIcon,
   href: 'https://www.baidu.com/s?wd=${text}&ie=utf-8'
 }, {
+  "id": "Baidu_fy_st",
+  "title": "Baidu Page Translation",
+  "description": "百度页面翻译 / Baidu Page Translation",
+  "src": "https://fanyi.baidu.com/favicon.ico",
+  "href": "http://fanyi.baidu.com/transpage?query=${url}&source=url&ie=utf8&from=auto&to=zh&render=1"
+}, {
   id: "Yahoo_st",
   title: "Search with Yahoo",
   description: "雅虎搜索 / Search with Yahoo",
@@ -313,6 +320,13 @@ popData.engines = [{
   defaultState: 0,
   src: popData.icons.jdIcon,
   href: 'https://search.jd.com/Search?keyword=${text}&enc=utf-8'
+}, {
+  id: "handian_st",
+  title: "Search with Handian",
+  description: "汉典搜索 / Search with Handian",
+  defaultState: 0,
+  src: popData.icons.handianIcon,
+  href: 'https://www.zdic.net/hans/${text}'
 }, {
   id: "Google_st",
   title: "Search with Google",
@@ -605,18 +619,16 @@ hideBar = function (time = 0) {
 };
 
 $(document).on("mousedown", function (event) {
-  return popData.mousedownEvent = event;
+  popData.mousedownEvent = event;
+  hideBar();
+  if (popData.bTrans === 1) {
+    return PopupInit();
+  }
 });
 
-// PopupInit() if popData.bTrans == 1
-// hideBar()
 $(document).on("mouseup", function (event) {
-  if (popData.bTrans === 1) {
-    PopupInit();
-  }
-  if (!GetOpt('Click_st')) {
-    hideBar();
-  }
+  // PopupInit() if popData.bTrans == 1
+  // hideBar() if not GetOpt('Click_st')
   if (event.which !== 1) {
     return;
   }
@@ -723,8 +735,10 @@ ShowBar = function (event) {
   if (popData.rawText === '') {
     return;
   }
-  if (GetOpt("Textbox_st")) {
-    return;
+  if (InTextBox(sel) || eventFromTextbox([event, popData.mousedownEvent])) {
+    if (GetOpt("Textbox_st")) {
+      return;
+    }
   }
   ref = popData.fadeEvent;
   // we have hide event for every mousedown
