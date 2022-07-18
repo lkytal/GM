@@ -3,7 +3,7 @@
 // @name:zh					Popup Search: 快捷搜索
 // @author					lkytal
 // @namespace				Lkytal
-// @version					5.2.1
+// @version					5.2.2
 // @icon					https://github.com/lkytal/GM/raw/master/icons/search.png
 // @homepage				https://lkytal.github.io/
 // @homepageURL				https://lkytal.github.io/GM
@@ -360,9 +360,11 @@ fixPos = function (sel, e) {
   if (e != null) {
     eventTop = e.pageY;
     eventLeft = e.pageX;
+    //log offsetTop + " : " + offsetLeft + " <==> " + eventTop + " : " + eventLeft
     if (Math.abs(offsetTop - eventTop) > 50) {
-      //log offsetTop + " : " + offsetLeft + " <==> " + eventTop + " : " + eventLeft
-      offsetTop = eventTop - 8;
+      offsetTop = eventTop - 10;
+    } else {
+      offsetTop = Math.min(eventTop - 10, offsetTop);
     }
     if (Math.abs(offsetLeft - eventLeft) > 50) {
       //translate
@@ -373,7 +375,7 @@ fixPos = function (sel, e) {
   }
   if (GetOpt('Dis_st')) {
     //UpSide
-    offsetTop = offsetTop - 2 - $('#ShowUpBox').height();
+    offsetTop = offsetTop - 4 - $('#ShowUpBox').height();
     if (offsetTop - document.documentElement.scrollTop < 40) {
       offsetTop = document.documentElement.scrollTop + 40;
     }

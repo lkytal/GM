@@ -4,6 +4,7 @@ All notable changes to all the scripts will be documented in this file.
 
 ## Popup Search
 
+* 5.2.2: Better position logic
 * 5.2.1: Add handian engine and baidu page translate
 * 5.2.0: Support function in user engines
 * 5.1.4: Press Esc to hide popup
