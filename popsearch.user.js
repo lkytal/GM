@@ -3,7 +3,7 @@
 // @name:zh					Popup Search: 快捷搜索
 // @author					lkytal
 // @namespace				Lkytal
-// @version					5.1.3
+// @version					5.1.4
 // @icon					https://github.com/lkytal/GM/raw/master/icons/search.png
 // @homepage				https://lkytal.github.io/
 // @homepageURL				https://lkytal.github.io/GM
@@ -546,6 +546,16 @@ $(document).on("mouseup", function (event) {
     return;
   }
   return ShowBar(event);
+});
+
+$(document).on("keydown", function (event) {
+  if (event.key === "Escape") {
+    if ($('#ShowUpBox').is(":visible")) {
+      hideBar();
+      event.stopPropagation();
+      return False;
+    }
+  }
 });
 
 eventFromTextbox = function (eventList) {
