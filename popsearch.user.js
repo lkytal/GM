@@ -3,7 +3,7 @@
 // @name:zh					Popup Search: 快捷搜索
 // @author					lkytal
 // @namespace				Lkytal
-// @version					5.1.5
+// @version					5.2.0
 // @icon					https://github.com/lkytal/GM/raw/master/icons/search.png
 // @homepage				https://lkytal.github.io/
 // @homepageURL				https://lkytal.github.io/GM
@@ -48,6 +48,7 @@ var CopyText,
     InTextBox,
     OnEngine,
     OpenSet,
+    OpenUrl,
     PopupInit,
     PopupLoad,
     ReadOpt,
@@ -161,14 +162,20 @@ popData = {
     id: "UserEngine",
     title: "Example of User Engine",
     description: "自定义引擎示例 / Example of user engine",
-    src: "http://lkytal.qiniudn.com/ic.ico",
+    src: "https://github.com/lkytal/GM/raw/master/icon/atom.png",
     href: "https://www.google.com/search?newwindow=1&safe=off&q=${text}"
   }, {
-    id: "UserEngine2",
+    id: "UserEngine_dataURL",
     title: "Example Engine use dataURL",
     description: "DataURL引擎示例 / Example Engine use dataURL",
     src: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAIAAACQkWg2AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAAFiUAABYlAUlSJPAAAAA0SURBVDhPY/z//z8DKYAJShMNSNYAdRIjIyOEjwdAVNLNScgA7jysAUh7J41IDbROrQwMAOdoEhG0gLSFAAAAAElFTkSuQmCC",
     href: "https://www.google.com/search?q=${text}%20site:${domain}"
+  }, {
+    id: "UserEngine_function",
+    title: "Example of User Engine use function",
+    description: "function自定义引擎示例 / Example of user engine use function",
+    src: "https://github.com/lkytal/GM/raw/master/icon/atom.png",
+    function: "alert('action on ' + domain); OpenUrl(text);"
   }]
 };
 
@@ -366,25 +373,6 @@ fixPos = function (sel, e) {
   }
   $('#ShowUpBox').css("top", offsetTop + "px").css("left", offsetLeft - m_left + fix + "px");
   return $('#popupTip').css('margin-left', m_left - 20 - fix);
-};
-
-OnEngine = function (e) {
-  var link;
-  link = $(this).data('link');
-  if (link.indexOf('javascript:') === 0) {
-    eval(link.slice('javascript:'.length));
-    return false;
-  }
-  if (isChrome()) {
-    //log "chrome"
-    GM_openInTab(link, {
-      active: GetOpt("Focus_st") === 1
-    });
-  } else {
-    GM_openInTab(link, !GetOpt("Focus_st"));
-  }
-  hideBar(100);
-  return false;
 };
 
 PopupInit = function () {
@@ -689,6 +677,29 @@ GetTextboxSelection = function () {
   return "";
 };
 
+OpenUrl = function (link) {
+  if (isChrome()) {
+    //log "chrome"
+    return GM_openInTab(link, {
+      active: GetOpt("Focus_st") === 1
+    });
+  } else {
+    return GM_openInTab(link, !GetOpt("Focus_st"));
+  }
+};
+
+OnEngine = function (e) {
+  var link;
+  link = $(this).data('link');
+  if (link.indexOf('javascript:') === 0) {
+    eval(link.slice('javascript:'.length));
+    return false;
+  }
+  OpenUrl(link);
+  hideBar(100);
+  return false;
+};
+
 ShowBar = function (event) {
   var do_timeout_hide, e, engine, j, k, l, len, len1, len2, paraList, ref, ref1, ref2, sel, setHref;
   hideBar();
@@ -729,10 +740,9 @@ ShowBar = function (event) {
     "\\${url}": location.href
   };
   setHref = function (engine) {
-    var $engine, href, para, value;
+    var $engine, href, para, runFunction, value;
     $engine = $("#" + engine.id + "Icon");
     if (engine.href != null) {
-      //log engine.id + " : " + engine.href
       href = engine.href;
       for (para in paraList) {
         if (!hasProp.call(paraList, para)) continue;
@@ -745,6 +755,19 @@ ShowBar = function (event) {
     } else if (engine.action != null) {
       $engine.off('click');
       return $engine.on('click', engine.action);
+    } else if (engine.function != null) {
+      log("func " + engine.id + " : " + engine.function);
+      runFunction = function (func) {
+        console.log(popData.rawText, popData.text, document.domain, location.url);
+        return Function('"use strict";return (' + func + ')')()(popData.rawText, popData.text, document.domain, location.url, OpenUrl);
+      };
+      $engine.off('click');
+      return $engine.on('click', function () {
+        // func.apply(null, [popData.rawText, popData.text, popData.domain, popData.url])
+        runFunction("function action(rawText, text, domain, url, OpenUrl) {" + engine.function + "}");
+        hideBar(100);
+        return false;
+      });
     } else {
       return console.log('empty engine', engine);
     }
@@ -832,7 +855,7 @@ OpenSet = function () {
 };
 
 SettingWin = function () {
-  var chsJSON, engJSON, engine, engineOptionList, generateEngineOption, generateOption, item, j, len, option, optionList, ref;
+  var engine, engineOptionList, exampleJSON, generateEngineOption, generateOption, item, j, len, option, optionList, ref;
   addAdditionalCSS();
   $('#popup_setting_bg').remove();
   generateOption = function (option) {
@@ -861,25 +884,8 @@ SettingWin = function () {
     }
     return results;
   }().join(' ');
-  engJSON = `[
-    {
-        id: "UserEngine",
-        title: "Example Engine",
-        description: "Example of user-defined engine",
-        src: "http://lkytal.qiniudn.com/ic.ico",
-        href: "https://www.google.com/search?q=\${text}"
-    }
-]`;
-  chsJSON = `[
-    {
-        id: "UserEngine",
-        title: "Example Engine",
-        description: "自定义引擎示例",
-        src: "http://lkytal.qiniudn.com/ic.ico",
-        href: "https://www.google.com/search?q=\${text}"
-    }
-]`;
-  $("body").append(`<div id='popup_setting_bg'> <div id='popup_setting_win'> <div id='popup_title'>PopUp Search Setting</div> <div id='popup_content'> <div id='tabs_box'> <div id='popup_tab1' class='popup_tab popup_selected'>选项 / General</div> <div id='popup_tab2' class='popup_tab'>搜索引擎 / Engines</div> <div id='popup_tab3' class='popup_tab'>自定义 / Customize</div> <div id='popup_tab4' class='popup_tab'>关于 / About</div> </div> <div id='page_box'> <div id='option_box'> <div id='popup_tab1Page'> ${optionList} </div> <div id='popup_tab2Page'> ${engineOptionList} </div> <div id='popup_tab3Page'> <div id='editTitle'> <div><b>请阅读帮助! / Read help FRIST !</b></div> <span id='popHelp'><u>Help</u></span> <span id='popReset'><u>Reset</u></span> </div> <textarea id='popup_engines'></textarea> </div> <div id='popup_tab4Page'> <h3>Authored by Lkytal</h3> <p> You can redistribute it under <a href='http://creativecommons.org/licenses/by-nc-sa/4.0/'> Creative Commons Attribution-NonCommercial-ShareAlike Licence </a> </p> <p class='contact-line'> Source Code at<br> Git OSChina <a class='tab-text' href='https://git.oschina.net/coldfire/GM'> https://git.oschina.net/coldfire/GM </a> <br /> Github <a class='tab-text' href='https://github.com/lkytal/GM'> https://github.com/lkytal/GM </a> </p> <p> Contact:<br> Github <a class='tab-text' href='https://github.com/lkytal'> https://github.com/lkytal/ </a> <br> Greasy fork <a class='tab-text' href='https://greasyfork.org/en/users/152-lkytal'> https://greasyfork.org/en/users/152-lkytal </a> </p> </div> </div> <div id='btnArea'> <div id='popup_save' class='setting_btn'>Save</div> <div id='popup_close' class='setting_btn'>Close</div> </div> </div> </div> </div> <div id='popup_help_bg'> <div id='popup_help_win'> <div id='popup_help_content'> <div id='helpLang'> <span id='engHead' class='popup_head_selected'>English</span> <span id='chsHead'>中文</span> </div> <div id='help_box'> <div id='engContent'> The content of custom engine should be in standard JSON format, in forms of following: <pre> ${engJSON} </pre> The 'id' should be unique for every entry and must NOT contain any space character, the 'title' and the 'description' can be any text you like, the 'src' indicates the icon of every item, should be the URL to an image or be a <a href='http://dataurl.net/#about'>DataURL</a>. The 'href' is the link to be open upon click, you may have noticed the '\${text}' variable, which will be replaced by selected text. Available variables are listed below: <ul> <li>\${text} : will be replaced by the selected text (Url encoded, should use this by default)</li> <li>\${rawText} : will be replaced by the original selected text</li> <li>\${domain} : will be replaced by the domain of current URL</li> <li>\${url} : will be replaced by the current web page's URL</li> </ul> Note: You can't modify built-in engines directly, however, you can disable them and add your own. </div> <div id='chsContent'> 自定义引擎内容应当是合法的JSON格式, 如下 <pre> ${chsJSON} </pre> 每一项的 id 必须各不相同且不能含有空格, title 和 description 可以随意填写, src 是该项的图标, 可以是指向图标的 url 或者是一个 <a href='http://dataurl.net/#about'>DataURL</a>. href 是引擎的 url 链接, 其中可以包含诸如 \${text} 这样的变量, 变量的大小写必须正确, 可用的变量有: <ul> <li>\${text} : 代表选中文字, 经过 url encoding, 一般应当使用此项</li> <li>\${rawText} : 代表未经 encoding 的原始选中文字</li> <li>\${domain} : 代表当前页面的域名</li> <li>\${url} : 代表当前页面的 url 地址</li> </ul> 注意: 内置引擎无法直接修改, 你可以禁用它们然后添加你自定义的引擎 </div> </div> <div id='help_btnArea'> <div id='popup_help_close' class='setting_btn'>Close</div> </div> </div> </div> </div> </div>`);
+  exampleJSON = JSON.stringify(popData.defaultEngines, null, 4);
+  $("body").append(`<div id='popup_setting_bg'> <div id='popup_setting_win'> <div id='popup_title'>PopUp Search Setting</div> <div id='popup_content'> <div id='tabs_box'> <div id='popup_tab1' class='popup_tab popup_selected'>选项 / General</div> <div id='popup_tab2' class='popup_tab'>搜索引擎 / Engines</div> <div id='popup_tab3' class='popup_tab'>自定义 / Customize</div> <div id='popup_tab4' class='popup_tab'>关于 / About</div> </div> <div id='page_box'> <div id='option_box'> <div id='popup_tab1Page'> ${optionList} </div> <div id='popup_tab2Page'> ${engineOptionList} </div> <div id='popup_tab3Page'> <div id='editTitle'> <div><b>请阅读帮助! / Read help FRIST !</b></div> <span id='popHelp'><u>Help</u></span> <span id='popReset'><u>Reset</u></span> </div> <textarea id='popup_engines'></textarea> </div> <div id='popup_tab4Page'> <h3>Authored by Lkytal</h3> <p> You can redistribute it under <a href='http://creativecommons.org/licenses/by-nc-sa/4.0/'> Creative Commons Attribution-NonCommercial-ShareAlike Licence </a> </p> <p class='contact-line'> Source Code at<br> Git OSChina <a class='tab-text' href='https://git.oschina.net/coldfire/GM'> https://git.oschina.net/coldfire/GM </a> <br /> Github <a class='tab-text' href='https://github.com/lkytal/GM'> https://github.com/lkytal/GM </a> </p> <p> Contact:<br> Github <a class='tab-text' href='https://github.com/lkytal'> https://github.com/lkytal/ </a> <br> Greasy fork <a class='tab-text' href='https://greasyfork.org/en/users/152-lkytal'> https://greasyfork.org/en/users/152-lkytal </a> </p> </div> </div> <div id='btnArea'> <div id='popup_save' class='setting_btn'>Save</div> <div id='popup_close' class='setting_btn'>Close</div> </div> </div> </div> </div> <div id='popup_help_bg'> <div id='popup_help_win'> <div id='popup_help_content'> <div id='helpLang'> <span id='engHead' class='popup_head_selected'>English</span> <span id='chsHead'>中文</span> </div> <div id='help_box'> <div id='engContent'> The content of custom engine should be in standard JSON format, in forms of following: <pre> ${exampleJSON} </pre> The 'id' should be unique for every entry and must NOT contain any space character, the 'title' and the 'description' can be any text you like, the 'src' indicates the icon of every item, should be the URL to an image or be a <a href='http://dataurl.net/#about'>DataURL</a>. The 'href' is the link to be open upon click, you may have noticed the '\${text}' variable, which will be replaced by selected text. Available variables are listed below: <ul> <li>\${text} : will be replaced by the selected text (Url encoded, should use this by default)</li> <li>\${rawText} : will be replaced by the original selected text</li> <li>\${domain} : will be replaced by the domain of current URL</li> <li>\${url} : will be replaced by the current web page's URL</li> </ul> When using 'function' style, all above variable is usable. Besides, you can directly call 'OpenUrl' to open a link. Note: You can't modify built-in engines directly, however, you can disable them and add your own. </div> <div id='chsContent'> 自定义引擎内容应当是合法的JSON格式, 如下 <pre> ${exampleJSON} </pre> 每一项的 id 必须各不相同且不能含有空格, title 和 description 可以随意填写, src 是该项的图标, 可以是指向图标的 url 或者是一个 <a href='http://dataurl.net/#about'>DataURL</a>. href 是引擎的 url 链接, 其中可以包含诸如 \${text} 这样的变量, 变量的大小写必须正确, 可用的变量有: <ul> <li>\${text} : 代表选中文字, 经过 url encoding, 一般应当使用此项</li> <li>\${rawText} : 代表未经 encoding 的原始选中文字</li> <li>\${domain} : 代表当前页面的域名</li> <li>\${url} : 代表当前页面的 url 地址</li> </ul> 当使用function的时候, 以上变量都可以直接调用. 此外, 可以直接调用OpenUrl函数来打开新链接 注意: 内置引擎无法直接修改, 你可以禁用它们然后添加你自定义的引擎 </div> </div> <div id='help_btnArea'> <div id='popup_help_close' class='setting_btn'>Close</div> </div> </div> </div> </div> </div>`);
   $("#popup_setting_bg, #popup_help_bg").hide();
   $("#tabs_box > .popup_tab").on("click", function (e) {
     $("#tabs_box > .popup_tab").removeClass("popup_selected");
