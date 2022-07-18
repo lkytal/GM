@@ -3,7 +3,7 @@
 // @name:zh					Popup Search: 快捷搜索
 // @author					lkytal
 // @namespace				Lkytal
-// @version					5.1.4
+// @version					5.1.5
 // @icon					https://github.com/lkytal/GM/raw/master/icons/search.png
 // @homepage				https://lkytal.github.io/
 // @homepageURL				https://lkytal.github.io/GM
@@ -31,7 +31,9 @@
 // @inject-into				auto
 // @require					https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.6.0.min.js
 // @connect					google.com
-// @connect					translate.google.cn
+// @connect					google.cn
+// @connect					caiyunai.com
+// @connect					deepl.com
 // @charset					UTF-8
 // @supportURL				https://github.com/lkytal/GM/issues
 // @updateURL				https://git.oschina.net/coldfire/GM/raw/master/meta/popsearch.meta.js
@@ -69,6 +71,8 @@ var CopyText,
     needPrefix,
     onCopy,
     onTranslate,
+    parseTranslationCaiyun,
+    parseTranslationDeepl,
     parseTranslationGoogle,
     popData,
     hasProp = {}.hasOwnProperty;
@@ -112,6 +116,14 @@ popData = {
     text: "自动复制选中文字 / Auto copy selections",
     defaultValue: 0
   }, {
+    id: "AutoCopy_tbox_st",
+    text: "自动复制在文本框也生效 / Enable Autocopy in textboxes",
+    defaultValue: 0
+  }, {
+    id: "Textbox_st",
+    text: "不在文本框内显示 / Ignore selections in textboxes",
+    defaultValue: 0
+  }, {
     id: "Fade_st",
     text: "超时自动隐藏 / Hide after timeout",
     defaultValue: 1
@@ -140,10 +152,6 @@ popData = {
     text: "仅按下Ctrl时显示 / Only when ctrl pressed",
     defaultValue: 0
   }, {
-    id: "Textbox_st",
-    text: "不在文本框内显示 / Ignore selections in textboxes",
-    defaultValue: 0
-  }, {
     id: "userEngine_st",
     text: "自定义引擎 / Enable Customize",
     defaultValue: 0
@@ -167,13 +175,29 @@ popData = {
 popData.engines = [{
   id: "Trans_st",
   title: "Translate",
-  description: "翻译文本 / Translate selection",
+  description: "Google翻译 / Translate selection (Google)",
   defaultState: 1,
   src: popData.icons.translateIcon,
   action: function () {
-    return onTranslate();
+    return onTranslate('google');
   }
 }, {
+  // {
+  // 	id: "Trans_caiyun_st"
+  // 	title: "Translate (Caiyun)"
+  // 	description: "彩云小译翻译文本 / Translate selection (Caiyun)"
+  // 	defaultState: 0
+  // 	src: popData.icons.translateIcon
+  // 	action: () -> onTranslate('caiyun')
+  // },
+  // {
+  // 	id: "Trans_deepl_st"
+  // 	title: "Translate (Deepl)"
+  // 	description: "Deepl翻译文本 / Translate selection (Deepl)"
+  // 	defaultState: 0
+  // 	src: popData.icons.translateIcon
+  // 	action: () -> onTranslate('deepl')
+  // },
   id: "Copy_st",
   title: "Copy",
   description: "复制文本 / Copy selection",
@@ -440,39 +464,105 @@ ajaxError = function (res) {
 };
 
 onCopy = function () {
-  CopyText(popData.rawText);
+  CopyText();
   return hideBar();
 };
 
-onTranslate = function () {
+onTranslate = function (engine) {
   popData.bTrans = 1;
   $("#transPanel").empty().append(`<div style='padding:10px;'><img src='${popData.icons.pending}' /></div>`).show();
   $('#popupWrapper').hide();
   fixPos(document.defaultView.getSelection());
-  return doRequest(0, 2000);
+  return doRequest(engine, 0, 2000);
 };
 
-doRequest = function (i, wait) {
+doRequest = function (engine, i, wait) {
   var ErrHandle, lang;
   ErrHandle = function () {
-    return doRequest(i + 1, wait + 2000);
+    return doRequest(engine, i + 1, wait + 2000);
   };
   if (i >= 2) {
     ErrHandle = ajaxError;
   }
   lang = navigator.language || navigator.userLanguage || "zh-CN";
-  return GM_xmlhttpRequest({
-    method: 'POST',
-    url: `https://translate.google.com/translate_a/single?client=gtx&dj=1&q=${popData.text}&sl=auto&tl=${lang}&hl=${lang}&ie=UTF-8&oe=UTF-8&source=icon&dt=t&dt=bd`,
-    headers: {
-      'Content-Type': 'application/x-www-form-urlencoded',
-      "Accept-Encoding": "gzip, deflate"
-    },
-    timeout: wait,
-    onload: parseTranslationGoogle,
-    onerror: ErrHandle,
-    ontimeout: ErrHandle
-  });
+  if (engine === 'google') {
+    return GM_xmlhttpRequest({
+      method: 'POST',
+      url: `https://translate.google.com/translate_a/single?client=gtx&dj=1&q=${popData.text}&sl=auto&tl=${lang}&hl=${lang}&ie=UTF-8&oe=UTF-8&source=icon&dt=t&dt=bd`,
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+        "Accept-Encoding": "gzip, deflate"
+      },
+      timeout: wait,
+      onload: parseTranslationGoogle,
+      onerror: ErrHandle,
+      ontimeout: ErrHandle
+    });
+  } else if (engine === 'deepl') {
+    return GM_xmlhttpRequest({
+      method: 'POST',
+      url: "https://api-free.deepl.com/v2/translate??auth_key=aa09f88d-ab75-3488-b8a3-18ad27a35870:fx",
+      data: "auth_key=aa09f88d-ab75-3488-b8a3-18ad27a35870:fx&target_lang=ZH&text=" + popData.text,
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded'
+      },
+      timeout: wait,
+      onload: parseTranslationDeepl,
+      onerror: ErrHandle,
+      ontimeout: ErrHandle
+    });
+  } else {
+    return GM_xmlhttpRequest({
+      method: 'POST',
+      url: "http://api.interpreter.caiyunai.com/v1/translator",
+      headers: {
+        'Content-Type': 'application/json',
+        "X-Authorization": "token " + "3975l6lr5pcbvidl6jl2"
+      },
+      data: JSON.stringify({
+        "source": [popData.text],
+        "trans_type": "auto2zh",
+        "request_id": "demo",
+        "detect": true
+      }),
+      timeout: wait,
+      onload: parseTranslationCaiyun,
+      onerror: ErrHandle,
+      ontimeout: ErrHandle
+    });
+  }
+};
+
+parseTranslationDeepl = function (responseDetails) {
+  var RTxt, Result;
+  if (!popData.bTrans) {
+    return;
+  }
+  try {
+    RTxt = JSON.parse(responseDetails.responseText);
+  } catch (error) {
+    log(JSON.stringify(responseDetails));
+    return ajaxError(responseDetails);
+  }
+  Result = `<div id=\"tranRst\" style=\"font-size:13px;overflow:auto;padding:5px 12px;\"> <div style=\"line-height:200%;font-size:13px;\"> ${RTxt.translations[0].text} </div> </div>`;
+  $('#transPanel').empty().append(Result).show();
+  fixPos(document.defaultView.getSelection());
+};
+
+parseTranslationCaiyun = function (responseDetails) {
+  var RTxt, Result;
+  if (!popData.bTrans) {
+    return;
+  }
+  try {
+    RTxt = JSON.parse(responseDetails.responseText);
+    log(JSON.stringify(RTxt));
+  } catch (error) {
+    return ajaxError(responseDetails);
+  }
+  Result = `<div id=\"tranRst\" style=\"font-size:13px;overflow:auto;padding:5px 12px;\"> <div style=\"line-height:200%;font-size:13px;\"> ${RTxt.target[0]} </div> </div>`;
+  $('#transPanel').empty().append(Result).show();
+  fixPos(document.defaultView.getSelection());
 };
 
 parseTranslationGoogle = function (responseDetails) {
@@ -556,6 +646,9 @@ $(document).on("keydown", function (event) {
       return False;
     }
   }
+  if (event.ctrlKey && event.altKey && event.key === "p") {
+    return ShowBar();
+  }
 });
 
 eventFromTextbox = function (eventList) {
@@ -601,19 +694,25 @@ ShowBar = function (event) {
   hideBar();
   sel = document.defaultView.getSelection();
   if (InTextBox(sel) || eventFromTextbox([event, popData.mousedownEvent])) {
-    if (GetOpt("Textbox_st")) {
-      return;
-    }
     popData.rawText = GetTextboxSelection().trim();
   } else {
-    popData.rawText = document.defaultView.getSelection().toString().trim();
-    if (GetOpt("AutoCopy_st")) {
-      //only for none text area
+    popData.rawText = sel.toString().trim();
+  }
+  if (GetOpt("AutoCopy_st")) {
+    if (InTextBox(sel) || eventFromTextbox([event, popData.mousedownEvent])) {
+      if (GetOpt("AutoCopy_tbox_st")) {
+        // none text areas?
+        CopyText(popData.rawText);
+      }
+    } else {
       CopyText(popData.rawText);
     }
   }
   popData.text = encodeURIComponent(popData.rawText);
   if (popData.rawText === '') {
+    return;
+  }
+  if (GetOpt("Textbox_st")) {
     return;
   }
   ref = popData.fadeEvent;
@@ -693,7 +792,7 @@ needPrefix = function (url) {
 CopyText = function (selText) {
   var e;
   if (selText == null) {
-    selText = document.defaultView.getSelection().toString();
+    selText = popData.rawText;
   }
   if (selText === '') {
     return;
